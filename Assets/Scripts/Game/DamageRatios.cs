@@ -7,65 +7,91 @@ namespace AssemblyCSharp
 
 	public static class DamageRatios
 	{
-
 		public static float getRatio (ArmorType targetArmor, AttackType unitAttack)
 		{
-			switch (armor) {
+			float ratio = 1.00f;
+
+			switch (targetArmor) {
 			case ArmorType.Unarmored:
 				switch (unitAttack) {
 				case AttackType.Magic:
-					return 1.15f;
+					ratio = 1.15f;
+					break;
 				case AttackType.Normal:
-					return 1.15f;
+					ratio = 1.15f;
+					break;
 				case AttackType.Pierce:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.Blunt:
-					return 1.15f;
+					ratio = 1.15f;
+					break;
 				case AttackType.True:
-					return 1.15f;
+					ratio = 1.15f;
+					break;
 				}
-					
+				break;
 
 			case ArmorType.Light:
 				switch (unitAttack) {
 				case AttackType.Magic:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.Normal:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.Pierce:
-					return 0.80f;
+					ratio = 0.80f;
+					break;
 				case AttackType.Blunt:
-					return 1.10f;
+					ratio = 1.10f;
+					break;
 				case AttackType.True:
-					return 1.00f;
+					ratio = 1.00f;
+					break;
 				}
+				break;
 			case ArmorType.Medium:
 				switch (unitAttack) {
 				case AttackType.Magic:
-					return 0.80f;
+					ratio = 0.80f;
+					break;
 				case AttackType.Normal:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.Pierce:
-					return 1.10f;
+					ratio = 1.10f;
+					break;
 				case AttackType.Blunt:
-					return 1.00f;
+					ratio = 1.00f;
+					break;
 				case AttackType.True:
-					return 1.00f;
+					ratio = 1.00f;
+					break;
 				}
+				break;
 			case ArmorType.Heavy:
 				switch (unitAttack) {
 				case AttackType.Magic:
-					return 1.40f;
+					ratio = 1.40f;
+					break;
 				case AttackType.Normal:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.Pierce:
-					return 1.20f;
+					ratio = 1.20f;
+					break;
 				case AttackType.Blunt:
-					return 0.90f;
+					ratio = 0.90f;
+					break;
 				case AttackType.True:
-					return 1.00f;
+					ratio = 1.00f;
+					break;
 				}
+				break;
 			}
+
+			return ratio;
 		}
 	}
 }

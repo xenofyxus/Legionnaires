@@ -6,7 +6,7 @@ namespace AssemblyCSharp.Spells
 	{
 		protected override void ApplyEffect (UnitBehaviour target)
 		{
-			target.HP -= 15;
+			target.maxHP -= 15;
 		}
 	}
 }
