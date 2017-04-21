@@ -9,29 +9,33 @@ namespace Game.Units.Spells.OnHits
 	[System.Serializable]
 	public abstract class OnHit : MonoBehaviour
 	{
-		public int hitChance;
+		[Range(1, 100)]
+		public int hitChance = 100;
 
 		private const int minHitChance = 1;
 		private const int maxHitChance = 100;
 
-		public void Hit(UnitBehaviour target)
-		{
-			if (hitChance <= 0) {
-				throw new System.ArgumentOutOfRangeException ("Hit chance must be more than 0 and equal to or less than 100");
-			} else if (hitChance > 100) {
-				throw new System.ArgumentOutOfRangeException ("Hit chance must be more than 0 and equal to or less than 100");
-			} else {
-				if (Random.Range(minHitChance, maxHitChance + 1) <= hitChance) {
-					ApplyEffect (target);
-				}
-			}
+        protected UnitBehaviour owner;
 
+        void Start()
+        {
+            owner = gameObject.GetComponent<UnitBehaviour>();
+        }
+
+		public int? Hit(int baseDamage, UnitBehaviour target)
+		{
+			if(Random.Range(minHitChance, maxHitChance + 1) <= hitChance)
+			{
+				return ApplyEffect(baseDamage, target);
+			}
+            return null;
 		}
+
 		/// <summary>
 		/// Base method for applying on hit effects defined by derived classes.
 		/// </summary>
 		/// <param name="target">Target unit to apply the effect on.</param>
-		protected abstract void ApplyEffect (UnitBehaviour target);
+		protected abstract int? ApplyEffect(int baseDamage, UnitBehaviour target);
 	}
 }
 

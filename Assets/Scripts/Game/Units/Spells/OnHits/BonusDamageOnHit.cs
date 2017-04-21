@@ -7,9 +7,9 @@ namespace Game.Units.Spells.OnHits
 	{
 		public int damage;
 
-		protected override void ApplyEffect (Game.Units.UnitBehaviour target)
+		protected override int? ApplyEffect (int baseDamage, Game.Units.UnitBehaviour target)
 		{
-			target.hp -= damage;
+            return baseDamage + damage;
 		}
 	}
 }

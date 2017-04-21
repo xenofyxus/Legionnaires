@@ -4,9 +4,9 @@ namespace Game.Units.Spells.OnHits
 {
 	public class DotOnHit : OnHit
 	{
-		protected override void ApplyEffect (UnitBehaviour target)
+		protected override int? ApplyEffect (int baseDamage, UnitBehaviour target)
 		{
-			target.hp -= 15;
+            throw new NotImplementedException();
 		}
 	}
 }

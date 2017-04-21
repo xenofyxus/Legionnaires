@@ -13,58 +13,48 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or sets the type of the armor.
 		/// </summary>
-		/// <value>The type of the armor.</value>
 		public ArmorType armorType;
 
 		/// <summary>
 		/// Gets or sets the type of the attack.
 		/// </summary>
-		/// <value>The type of the attack.</value>
 		public AttackType attackType;
 
 		/// <summary>
 		/// Gets or sets the aura spells.
 		/// </summary>
-		/// <value>The aura spells.</value>
-		private Spells.Auras.Aura[] auras;
+		private Spells.Auras.Aura aura;
 
 		/// <summary>
 		/// Gets or sets the on hit spells.
 		/// </summary>
-		/// <value>The on hit spells.</value>
-		private Spells.OnHits.OnHit[] onHits;
+		private Spells.OnHits.OnHit onHit;
+
+        // TODO: Add buffs
 
 		/// <summary>
 		/// Gets or sets the attack range.
 		/// </summary>
-		/// <value>The range.</value>
 		public int range;
 
 		/// <summary>
 		/// Gets or sets the projectile. Set to null if there should be none.
 		/// </summary>
-		/// <value>The projectile.</value>
-		/*public Projectile Projectile {
-			get;
-			set;
-		}*/
+        public GameObject projectile;
 
 		/// <summary>
 		/// Gets or sets the movement speed.
 		/// </summary>
-		/// <value>The movement speed.</value>
 		public float movementSpeed;
 
 		/// <summary>
 		/// Gets or sets the attack speed.
 		/// </summary>
-		/// <value>The attack speed.</value>
 		public float attackSpeed;
 
 		/// <summary>
 		/// Gets or sets the Hit Points.
 		/// </summary>
-		/// <value>The Hit Points.</value>
 		public float hp;
 
 		/// <summary>
@@ -76,7 +66,6 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or sets the maximum damage.
 		/// </summary>
-		/// <value>The maximum damage.</value>
 		public int damageMax;
 
 		/// <summary>
@@ -87,22 +76,33 @@ namespace Game.Units
 
 		void Start()
 		{
-			onHits = gameObject.GetComponents<Spells.OnHits.OnHit>();
-			auras = gameObject.GetComponents<Spells.Auras.Aura>();
+			onHit = gameObject.GetComponent<Spells.OnHits.OnHit>();
+			aura = gameObject.GetComponent<Spells.Auras.Aura>();
 		}
 
-		public void Attack(UnitBehaviour unit)
+		void OnUpdate()
 		{
-			
+
 		}
+
+        protected void Attack(UnitBehaviour unit)
+		{
+            
+		}
+
+        /// <summary>
+        /// Gets the target to attack.
+        /// </summary>
+        /// <returns>The target.</returns>
+        protected abstract UnitBehaviour GetTarget();
 	}
 
 	public enum ArmorType
 	{
 		Unarmored,
 		Light,
-		Heavy,
-		Medium
+        Medium,
+		Heavy
 	}
 
 	public enum AttackType
