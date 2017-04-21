@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AssemblyCSharp
+namespace Game.Units
 {
 
 	public static class DamageRatios

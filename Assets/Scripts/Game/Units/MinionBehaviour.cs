@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AssemblyCSharp
+namespace Game.Units
 {
 	public class MinionBehaviour : UnitBehaviour
 	{

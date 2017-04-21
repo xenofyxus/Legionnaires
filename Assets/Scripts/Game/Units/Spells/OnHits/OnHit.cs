@@ -4,7 +4,7 @@
  */
 using UnityEngine;
 
-namespace AssemblyCSharp.Spells
+namespace Game.Units.Spells.OnHits
 {
 	[System.Serializable]
 	public abstract class OnHit : MonoBehaviour

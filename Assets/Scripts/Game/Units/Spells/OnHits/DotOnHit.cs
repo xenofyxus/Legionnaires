@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace AssemblyCSharp.Spells
+namespace Game.Units.Spells.OnHits
 {
 	public class DotOnHit : OnHit
 	{
 		protected override void ApplyEffect (UnitBehaviour target)
 		{
-			target.maxHP -= 15;
+			target.hp -= 15;
 		}
 	}
 }

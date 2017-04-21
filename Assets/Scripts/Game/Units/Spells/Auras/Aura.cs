@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AssemblyCSharp.Spells
+namespace Game.Units.Spells.Auras
 {
 	public class Aura
 	{
