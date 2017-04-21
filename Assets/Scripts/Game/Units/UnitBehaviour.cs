@@ -8,109 +8,155 @@ using UnityEngine;
 
 namespace Game.Units
 {
-	public abstract class UnitBehaviour : MonoBehaviour
-	{
-		/// <summary>
-		/// Gets or sets the type of the armor.
-		/// </summary>
-		public ArmorType armorType;
+    public abstract class UnitBehaviour : MonoBehaviour
+    {
+        /// <summary>
+        /// Gets or sets the type of the armor.
+        /// </summary>
+        public ArmorType armorType;
 
-		/// <summary>
-		/// Gets or sets the type of the attack.
-		/// </summary>
-		public AttackType attackType;
+        /// <summary>
+        /// Gets or sets the type of the attack.
+        /// </summary>
+        public AttackType attackType;
 
-		/// <summary>
-		/// Gets or sets the aura spells.
-		/// </summary>
-		private Spells.Auras.Aura aura;
+        private Spells.Auras.Aura aura;
 
-		/// <summary>
-		/// Gets or sets the on hit spells.
-		/// </summary>
-		private Spells.OnHits.OnHit onHit;
+        private Spells.OnHits.OnHit onHit;
 
-        // TODO: Add buffs
+        private List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
 
-		/// <summary>
-		/// Gets or sets the attack range.
-		/// </summary>
-		public int range;
+        /// <summary>
+        /// Gets or sets the attack range.
+        /// </summary>
+        [Tooltip("Attack range in <units>")]
+        public float range;
 
-		/// <summary>
-		/// Gets or sets the projectile. Set to null if there should be none.
-		/// </summary>
+        /// <summary>
+        /// Gets or sets the projectile. Set to null if there should be none.
+        /// </summary>
+        [Tooltip("The projectile prefab to use, leave empty if no projectile is wanted")]
         public GameObject projectile;
 
-		/// <summary>
-		/// Gets or sets the movement speed.
-		/// </summary>
-		public float movementSpeed;
+        /// <summary>
+        /// Gets or sets the movement speed.
+        /// </summary>
+        [Tooltip("Movement speed in <units> per second")]
+        public float movementSpeed;
 
-		/// <summary>
-		/// Gets or sets the attack speed.
-		/// </summary>
-		public float attackSpeed;
+        /// <summary>
+        /// Gets or sets the attack speed.
+        /// </summary>
+        [Tooltip("Number of attacks per second")]
+        public float attackSpeed;
 
-		/// <summary>
-		/// Gets or sets the Hit Points.
-		/// </summary>
-		public float hp;
+        /// <summary>
+        /// Gets or sets the Hit Points.
+        /// </summary>
+        [Tooltip("Amount of Hit Points")]
+        public float hp;
 
-		/// <summary>
-		/// The HP reg defined in +HP/sec.
-		/// </summary>
-		public float hpReg;
+        /// <summary>
+        /// The HP reg defined in +HP/sec.
+        /// </summary>
+        [Tooltip("Amount of Hit Points to be generated per second")]
+        public float hpReg;
 
 
-		/// <summary>
-		/// Gets or sets the maximum damage.
-		/// </summary>
-		public int damageMax;
+        /// <summary>
+        /// Gets or sets the maximum damage.
+        /// </summary>
+        [Tooltip("Maximum damage, must be higher or equal to Damage Min")]
+        public float damageMax;
 
-		/// <summary>
-		/// Gets or sets the minimum damage.FFFFF
-		/// </summary>
-		/// <value>The minimum damage.</value>
-		public int damageMin;
+        /// <summary>
+        /// Gets or sets the minimum damage.FFFFF
+        /// </summary>
+        /// <value>The minimum damage.</value>
+        [Tooltip("Minimum damage, must be lower or equal to Damage Max")]
+        public float damageMin;
 
-		void Start()
-		{
-			onHit = gameObject.GetComponent<Spells.OnHits.OnHit>();
-			aura = gameObject.GetComponent<Spells.Auras.Aura>();
-		}
+        private float attackDeltaTime = -1;
 
-		void OnUpdate()
-		{
+        void Start()
+        {
+            onHit = GetComponent<Spells.OnHits.OnHit>();
+            aura = gameObject.GetComponent<Spells.Auras.Aura>();
+        }
 
-		}
+        void Update()
+        {
+            UnitBehaviour target = GetTarget();
 
-        protected void Attack(UnitBehaviour unit)
-		{
-            
-		}
+            if(target == null)
+                return;
+
+            if(attackDeltaTime >= 0)
+            {
+                attackDeltaTime += Time.deltaTime;
+                if(attackDeltaTime >= 1f / attackSpeed)
+                {
+                    attackDeltaTime = -1;
+                }
+            }
+
+            if(Vector2.Distance(transform.position, target.transform.position) <= range)
+            {
+                if(attackDeltaTime == -1)
+                {
+                    attackDeltaTime = 0;
+
+                    float damage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+
+                    if(onHit)
+                    {
+                        float? newDamage = onHit.Hit(damage, target);
+                        if(newDamage!=null)
+                            damage = (int)newDamage;
+                    }
+
+                    damage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                    target.SendMessage("ApplyDamage", damage);
+                }
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+            }
+        }
+
+        public void ApplyDamage(int damage)
+        {
+            hp -= damage;
+            if(hp < 1)
+            {
+                // TODO: maybe remove aura buffs?
+                GameObject.Destroy(gameObject);
+            }
+        }
 
         /// <summary>
         /// Gets the target to attack.
         /// </summary>
         /// <returns>The target.</returns>
         protected abstract UnitBehaviour GetTarget();
-	}
+    }
 
-	public enum ArmorType
-	{
-		Unarmored,
-		Light,
+    public enum ArmorType
+    {
+        Unarmored,
+        Light,
         Medium,
-		Heavy
-	}
+        Heavy
+    }
 
-	public enum AttackType
-	{
-		Magic,
-		Normal,
-		Pierce,
-		Blunt,
-		True
-	}
+    public enum AttackType
+    {
+        Magic,
+        Normal,
+        Pierce,
+        Blunt,
+        True
+    }
 }

@@ -7,7 +7,7 @@ namespace Game.Units
 
 	public static class DamageRatios
 	{
-		public static float getRatio (ArmorType targetArmor, AttackType unitAttack)
+		public static float GetRatio (ArmorType targetArmor, AttackType unitAttack)
 		{
 			float ratio = 1.00f;
 

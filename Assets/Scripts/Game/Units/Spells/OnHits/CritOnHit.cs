@@ -6,9 +6,9 @@ namespace Game.Units.Spells.OnHits
     {
         public float multiplier;
 
-        protected override int? ApplyEffect(int baseDamage, UnitBehaviour target)
+        protected override float? ApplyEffect(float baseDamage, UnitBehaviour target)
         {
-            return (int)((float)baseDamage * multiplier);
+            return (int?)(baseDamage * multiplier);
         }
     }
 }

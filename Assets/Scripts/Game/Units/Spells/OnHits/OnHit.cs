@@ -22,7 +22,7 @@ namespace Game.Units.Spells.OnHits
             owner = gameObject.GetComponent<UnitBehaviour>();
         }
 
-		public int? Hit(int baseDamage, UnitBehaviour target)
+		public float? Hit(float baseDamage, UnitBehaviour target)
 		{
 			if(Random.Range(minHitChance, maxHitChance + 1) <= hitChance)
 			{
@@ -35,7 +35,7 @@ namespace Game.Units.Spells.OnHits
 		/// Base method for applying on hit effects defined by derived classes.
 		/// </summary>
 		/// <param name="target">Target unit to apply the effect on.</param>
-		protected abstract int? ApplyEffect(int baseDamage, UnitBehaviour target);
+		protected abstract float? ApplyEffect(float baseDamage, UnitBehaviour target);
 	}
 }
 
