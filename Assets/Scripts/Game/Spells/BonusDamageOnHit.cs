@@ -9,7 +9,7 @@ namespace AssemblyCSharp.Spells
 
 		protected override void ApplyEffect (AssemblyCSharp.UnitBehaviour target)
 		{
-			target.HP -= damage;
+			target.maxHP -= damage;
 		}
 	}
 }
