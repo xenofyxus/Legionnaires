@@ -21,8 +21,11 @@ namespace Game.Units
                         closestEnemy = enemies[i];
                     }
                 }
-                return closestEnemy.GetComponent<UnitBehaviour>();
-            }
+				if (Vector2.Distance (transform.position, closestEnemy.transform.position) < 6) {
+					return closestEnemy.GetComponent<UnitBehaviour>();
+				}
+
+			}
             return null;
 		}
 
@@ -47,6 +50,12 @@ namespace Game.Units
             }
             return enemyBehaviours;
         }
+			
+		protected override Vector2 GetPreferredTargetPosition ()
+		{
+			Vector2 defaultPosition = new Vector2(transform.position.x, -15);
+			return defaultPosition;
+		}
 	}
 }
 

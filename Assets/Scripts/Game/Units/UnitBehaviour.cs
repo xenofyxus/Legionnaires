@@ -108,11 +108,23 @@ namespace Game.Units
 
         void Update()
         {
+            Vector2 defaultTarget = new Vector2(Mathf.Infinity, Mathf.Infinity);
+
             UnitBehaviour target = GetTarget();
 
-            if(target != null)
+            if(target == null)
             {
+                defaultTarget = GetPreferredTargetPosition();
 
+                if(defaultTarget.x == Mathf.Infinity)
+                {
+                    return;
+                }
+                transform.position = Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
+            }
+            else
+            {
                 if(attackDeltaTime >= 0)
                 {
                     attackDeltaTime += Time.deltaTime;
@@ -174,7 +186,7 @@ namespace Game.Units
         /// <summary>
         /// Applies the damage.
         /// </summary>
-        /// <returns><c>true</c>, if damage was applyed, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if the unit died, <c>false</c> otherwise.</returns>
         /// <param name="damage">Damage.</param>
         /// <returns>True if the unit dies</returns>
         public bool ApplyDamage(float damage)
@@ -219,6 +231,8 @@ namespace Game.Units
         protected abstract UnitBehaviour[] GetFriendlies();
 
         protected abstract UnitBehaviour[] GetEnemies();
+
+        protected abstract Vector2 GetPreferredTargetPosition();
     }
 
     public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);

@@ -1,9 +1,14 @@
-﻿using System;
+﻿//Legionnaires
+//Author: Alexander Krantz
+//Updates: visionRange added by Daniel Karlsson, Victor Carle
+//
+
+using System;
 using UnityEngine;
 
 namespace Game.Units
 {
-    public class LegionnaireBehaviour : UnitBehaviour
+	public class LegionnaireBehaviour : UnitBehaviour
     {
         public int cost;
 
@@ -22,7 +27,11 @@ namespace Game.Units
                         closestEnemy = enemies[i];
                     }
                 }
-                return closestEnemy.GetComponent<UnitBehaviour>();
+				//Added visionRange returns enemy if in vision.
+				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 5) {
+					return closestEnemy.GetComponent<UnitBehaviour>();
+				}
+                return null;
             }
             return null;
         }
@@ -47,6 +56,13 @@ namespace Game.Units
                 enemyBehaviours[i] = enemies[i].GetComponent<UnitBehaviour>();
             }
             return enemyBehaviours;
+        }
+
+
+		protected override Vector2 GetPreferredTargetPosition ()
+		{
+			Vector2 defaultTarget = new Vector2 (Mathf.Infinity, Mathf.Infinity);
+			return defaultTarget;
         }
     }
 }
