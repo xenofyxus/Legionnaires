@@ -88,41 +88,44 @@ namespace Game.Units
         {
             UnitBehaviour target = GetTarget();
 
-            if(target == null)
-                return;
-
-            if(attackDeltaTime >= 0)
+            if(target != null)
             {
-                attackDeltaTime += Time.deltaTime;
-                if(attackDeltaTime >= 1f / attackSpeed)
+
+                if(attackDeltaTime >= 0)
                 {
-                    attackDeltaTime = -1;
-                }
-            }
-
-            if(Vector2.Distance(transform.position, target.transform.position) <= range)
-            {
-                if(attackDeltaTime == -1)
-                {
-                    attackDeltaTime = 0;
-
-                    float damage = UnityEngine.Random.Range(damageMin, damageMax + 1);
-
-                    if(onHit)
+                    attackDeltaTime += Time.deltaTime;
+                    if(attackDeltaTime >= 1f / attackSpeed)
                     {
-                        float? newDamage = onHit.Hit(damage, target);
-                        if(newDamage!=null)
-                            damage = (int)newDamage;
+                        attackDeltaTime = -1;
                     }
-
-                    damage *= DamageRatios.GetRatio(target.armorType, attackType);
-
-                    target.SendMessage("ApplyDamage", damage);
                 }
-            }
-            else
-            {
-                transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+
+                if(Vector2.Distance(transform.position, target.transform.position) <= range)
+                {
+                    if(attackDeltaTime == -1)
+                    {
+                        attackDeltaTime = 0;
+
+                        float damage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+
+                        if(onHit)
+                        {
+                            float? newDamage = onHit.Hit(damage, target);
+                            if(newDamage != null)
+                                damage = (int)newDamage;
+                        }
+
+                        damage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                        target.SendMessage("ApplyDamage", damage);
+                    }
+                }
+                else
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+                }
+
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360*Time.deltaTime);
             }
         }
 
@@ -131,7 +134,7 @@ namespace Game.Units
             hp -= damage;
             if(hp < 1)
             {
-                // TODO: maybe remove aura buffs?
+                // TODO maybe remove aura buffs?
                 GameObject.Destroy(gameObject);
             }
         }

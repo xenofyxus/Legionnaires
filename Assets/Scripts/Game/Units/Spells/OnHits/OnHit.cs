@@ -35,6 +35,7 @@ namespace Game.Units.Spells.OnHits
 		/// Base method for applying on hit effects defined by derived classes.
 		/// </summary>
 		/// <param name="target">Target unit to apply the effect on.</param>
+        /// <returns>>The new modified damage to use when applying it do the enemy</returns>
 		protected abstract float? ApplyEffect(float baseDamage, UnitBehaviour target);
 	}
 }
