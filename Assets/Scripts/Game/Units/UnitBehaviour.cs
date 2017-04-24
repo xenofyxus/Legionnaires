@@ -151,7 +151,8 @@ namespace Game.Units
         Unarmored,
         Light,
         Medium,
-        Heavy
+        Heavy,
+		Invulnerable
     }
 
     public enum AttackType
