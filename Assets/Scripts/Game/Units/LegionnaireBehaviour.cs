@@ -36,7 +36,7 @@ namespace Game.Units
             return null;
         }
 
-        protected override UnitBehaviour[] GetFriendlies()
+        public override UnitBehaviour[] GetFriendlies()
         {
             GameObject[] friendlies = GameObject.FindGameObjectsWithTag("Legionnaire");
             UnitBehaviour[] friendlyBehaviours = new UnitBehaviour[friendlies.Length];
@@ -47,7 +47,7 @@ namespace Game.Units
             return friendlyBehaviours;
         }
 
-        protected override UnitBehaviour[] GetEnemies()
+        public override UnitBehaviour[] GetEnemies()
         {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Minion");
             UnitBehaviour[] enemyBehaviours = new UnitBehaviour[enemies.Length];

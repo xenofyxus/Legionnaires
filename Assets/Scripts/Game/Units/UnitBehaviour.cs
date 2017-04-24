@@ -234,9 +234,9 @@ namespace Game.Units
         /// <returns>The target.</returns>
         protected abstract UnitBehaviour GetTarget();
 
-        protected abstract UnitBehaviour[] GetFriendlies();
+        public abstract UnitBehaviour[] GetFriendlies();
 
-        protected abstract UnitBehaviour[] GetEnemies();
+        public abstract UnitBehaviour[] GetEnemies();
 
         protected abstract Vector2 GetPreferredTargetPosition();
     }
