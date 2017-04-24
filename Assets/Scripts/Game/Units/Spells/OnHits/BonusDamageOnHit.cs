@@ -7,9 +7,10 @@ namespace Game.Units.Spells.OnHits
 	{
 		public float damage;
 
-		protected override float? ApplyEffect (float baseDamage, Game.Units.UnitBehaviour target)
+        protected override float ApplyEffect (float baseDamage, UnitBehaviour target, UnitBehaviour owner, out PostDamageEffect postDamageEffect)
 		{
-            return baseDamage + damage;
+            postDamageEffect = null;
+            return damage;
 		}
 	}
 }

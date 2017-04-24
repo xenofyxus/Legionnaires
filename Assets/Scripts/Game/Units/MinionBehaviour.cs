@@ -25,6 +25,28 @@ namespace Game.Units
             }
             return null;
 		}
+
+        protected override UnitBehaviour[] GetFriendlies()
+        {
+            GameObject[] friendlies = GameObject.FindGameObjectsWithTag("Minion");
+            UnitBehaviour[] friendlyBehaviours = new UnitBehaviour[friendlies.Length];
+            for(int i = 0; i < friendlies.Length; i++)
+            {
+                friendlyBehaviours[i] = friendlies[i].GetComponent<UnitBehaviour>();
+            }
+            return friendlyBehaviours;
+        }
+
+        protected override UnitBehaviour[] GetEnemies()
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Legionnaire");
+            UnitBehaviour[] enemyBehaviours = new UnitBehaviour[enemies.Length];
+            for(int i = 0; i < enemies.Length; i++)
+            {
+                enemyBehaviours[i] = enemies[i].GetComponent<UnitBehaviour>();
+            }
+            return enemyBehaviours;
+        }
 	}
 }
 
