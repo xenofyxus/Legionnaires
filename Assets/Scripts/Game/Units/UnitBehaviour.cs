@@ -86,10 +86,19 @@ namespace Game.Units
 
         void Update()
         {
+			Vector2 defaultTarget = new Vector2 (Mathf.Infinity, Mathf.Infinity);
+
             UnitBehaviour target = GetTarget();
 
-            if(target == null)
-                return;
+			if (target == null) {
+				defaultTarget = GetPreferredTargetPosition ();
+
+				if(defaultTarget.x == Mathf.Infinity){
+					return;
+				}
+				transform.position = Vector2.MoveTowards (transform.position, defaultTarget, movementSpeed * Time.deltaTime);
+				return;
+			}
 
             if(attackDeltaTime >= 0)
             {
@@ -121,8 +130,8 @@ namespace Game.Units
                 }
             }
             else
-            {
-                transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+			{
+				transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
             }
         }
 
@@ -141,6 +150,8 @@ namespace Game.Units
         /// </summary>
         /// <returns>The target.</returns>
         protected abstract UnitBehaviour GetTarget();
+
+		protected abstract Vector2 GetPreferredTargetPosition();
     }
 
     public enum ArmorType

@@ -1,7 +1,7 @@
-﻿//Author: Victor och Daniel
+﻿//Author: Victor Carle och Daniel Karlsson
 //Date: 20/04/2017
-//Edited by:
-//Edit date:
+//
+//
 
 using System.Collections;
 using System.Collections.Generic;
