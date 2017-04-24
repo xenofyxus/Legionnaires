@@ -84,10 +84,12 @@ namespace Game.Units
 
         private float attackDeltaTime = -1;
 
+		Animator anim;
+
         void Start()
         {
+			anim = GetComponent<Animator> ();
             hpMax = hp;
-
             onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
             auras.AddRange(GetComponents<Spells.Auras.Aura>());
             foreach(var aura in auras)
@@ -122,7 +124,9 @@ namespace Game.Units
                 }
                 transform.position = Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
-            }
+				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+				anim.SetBool("fight", false);
+			}
             else
             {
                 if(attackDeltaTime >= 0)
@@ -169,12 +173,14 @@ namespace Game.Units
                         if(ApplyDamage(-totalHeals))
                             return;
                     }
+					anim.SetBool("fight", true);
                 }
                 else
                 {
                     transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+					anim.SetBool("fight", false);
                 }
-
+				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
             }
 
