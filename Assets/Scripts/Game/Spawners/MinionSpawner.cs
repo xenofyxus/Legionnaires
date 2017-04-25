@@ -1,7 +1,7 @@
 ﻿/// Legionnaires
 /// <summary>
 /// Minion spawner.
-/// </summary>
+/// summary>
 
 //Author: Daniel Karlsson, Victor Carle
 //Updates:
@@ -15,38 +15,46 @@ using UnityEngine;
 public class MinionSpawner : MonoBehaviour {
 
 	public GameObject minionToSpawn;
+	public GameObject legionnaireSpawner;
+	private GameObject[] waveObjects;
 
-	private double timer = 0.0;
-	private int i = 0;
+	private bool newWave;
 
-	private int MinX = -3;
-	private int MaxX = 3;
-	private int MinY = 16;
-	private int MaxY = 17;
+	private int numberOfUnits = 25;
+	private float instantiatetimer = 10f; //time until next wave starts.
+
+	private float MinX = -3;
+	private float MaxX = 3;
+	private float MinY = 16;
+	private float MaxY = 17;
 
 	void Start () {
-
 	}
 
 	void Update () {
+		waveObjects = GameObject.FindGameObjectsWithTag ("Minion");
+		if (waveObjects.Length == 0) {
+			legionnaireSpawner.GetComponent<LegionnaireSpawner> ().Reset ();
 
-		timer += Time.deltaTime;
-
-		if (timer > 0.7 && i < 10) {
-
-			int spawnsPerTic = 0;
-
-			while (spawnsPerTic < 4) {
-
-				int x = Random.Range (MinX, MaxX);
-				int y = Random.Range (MinY, MaxY);
-
-				Instantiate (minionToSpawn, new Vector2 (x, y), transform.rotation);
-				i++;
-				spawnsPerTic++;
-			}
-			timer = 0.0;
+			newWave = true;
 		}
-
+		if (newWave) {
+			NextWave ();
+		}
+	}
+	void NextWave(){
+		instantiatetimer -= Time.deltaTime;
+		if (instantiatetimer <= 0) {
+			instantiatetimer = 1f;
+			for (int i = 0; i < 4; i++) {
+				float x = Random.Range (MinX, MaxX);
+				float y = Random.Range (MinY, MaxY);
+				Instantiate (minionToSpawn, new Vector2 (x, y), transform.rotation);
+			}
+		}
+		if(waveObjects.Length > numberOfUnits){
+			instantiatetimer = 10f;
+			newWave = false;
+		}
 	}
 }
