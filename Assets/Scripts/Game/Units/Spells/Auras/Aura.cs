@@ -4,8 +4,10 @@ using UnityEngine;
 namespace Game.Units.Spells.Auras
 {
     public abstract class Aura : MonoBehaviour
-	{
+    {
         public AuraTarget target;
+
+        private UnitBehaviour[] units;
 
         public void Apply(UnitBehaviour[] units)
         {
@@ -13,20 +15,22 @@ namespace Game.Units.Spells.Auras
             {
                 Applying(unit);
             }
+            this.units = units;
         }
 
         protected abstract void Applying(UnitBehaviour unit);
 
-        public void Remove(UnitBehaviour[] units)
+        public void Remove()
         {
             foreach(var unit in units)
             {
-                Removing(unit);
+                if(unit != null)
+                    Removing(unit);
             }
         }
 
         protected abstract void Removing(UnitBehaviour unit);
-	}
+    }
 
     public enum AuraTarget
     {

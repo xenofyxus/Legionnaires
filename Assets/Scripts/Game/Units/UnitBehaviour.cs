@@ -84,11 +84,14 @@ namespace Game.Units
 
         private float attackDeltaTime = -1;
 
-		Animator anim;
+        Animator anim;
+
+        private Rigidbody2D rigidBody;
 
         void Start()
         {
-			anim = GetComponent<Animator> ();
+            rigidBody = GetComponent<Rigidbody2D>();
+            anim = GetComponent<Animator>();
             hpMax = hp;
             onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
             auras.AddRange(GetComponents<Spells.Auras.Aura>());
@@ -110,34 +113,33 @@ namespace Game.Units
 
         void Update()
         {
-            Vector2 defaultTarget = new Vector2(Mathf.Infinity, Mathf.Infinity);
-
             UnitBehaviour target = GetTarget();
+
+            if(attackDeltaTime >= 0)
+            {
+                attackDeltaTime += Time.deltaTime;
+                if(attackDeltaTime >= 1f / attackSpeed)
+                {
+                    attackDeltaTime = -1;
+                }
+            }
+
+            Vector2 lastPosition = transform.position;
 
             if(target == null)
             {
-                defaultTarget = GetPreferredTargetPosition();
+                Vector2 defaultTarget = GetDefaultTargetPosition();
 
-                if(defaultTarget.x == Mathf.Infinity)
+                if(defaultTarget.x != Mathf.Infinity)
                 {
-                    return;
+                    rigidBody.MovePosition(Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime));
+                    rigidBody.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime).eulerAngles.z);
+                    anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                    anim.SetBool("fight", false);
                 }
-                transform.position = Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
-				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-				anim.SetBool("fight", false);
-			}
+            }
             else
             {
-                if(attackDeltaTime >= 0)
-                {
-                    attackDeltaTime += Time.deltaTime;
-                    if(attackDeltaTime >= 1f / attackSpeed)
-                    {
-                        attackDeltaTime = -1;
-                    }
-                }
-
                 if(Vector2.Distance(transform.position, target.transform.position) <= range)
                 {
                     if(attackDeltaTime == -1)
@@ -173,15 +175,24 @@ namespace Game.Units
                         if(ApplyDamage(-totalHeals))
                             return;
                     }
-					anim.SetBool("fight", true);
+                    anim.SetBool("fight", true);
                 }
                 else
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
-					anim.SetBool("fight", false);
+                    rigidBody.MovePosition(Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime));
+                    anim.SetBool("fight", false);
                 }
-				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
+                anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                rigidBody.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime).eulerAngles.z);
+            }
+
+            if(lastPosition == (Vector2)transform.position)
+            {
+                rigidBody.isKinematic = true;
+            }
+            else
+            {
+                rigidBody.isKinematic = false;
             }
 
             // Applies negative damage which gives negative hp regeneration the ability to kill this unit
@@ -202,17 +213,7 @@ namespace Game.Units
             {
                 foreach(var aura in auras)
                 {
-                    switch(aura.target)
-                    {
-                        case Spells.Auras.AuraTarget.Friendlies:
-                            aura.Remove(GetFriendlies());
-                            break;
-                        case Spells.Auras.AuraTarget.Enemies:
-                            aura.Remove(GetEnemies());
-                            break;
-                        default:
-                            break;
-                    }
+                    aura.Remove();
                 }
                 foreach(var buff in buffs)
                 {
@@ -238,7 +239,7 @@ namespace Game.Units
 
         public abstract UnitBehaviour[] GetEnemies();
 
-        protected abstract Vector2 GetPreferredTargetPosition();
+        protected abstract Vector2 GetDefaultTargetPosition();
     }
 
     public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);

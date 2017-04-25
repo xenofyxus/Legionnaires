@@ -51,7 +51,7 @@ namespace Game.Units
             return enemyBehaviours;
         }
 			
-		protected override Vector2 GetPreferredTargetPosition ()
+		protected override Vector2 GetDefaultTargetPosition ()
 		{
 			Vector2 defaultPosition = new Vector2(transform.position.x, -15);
 			return defaultPosition;

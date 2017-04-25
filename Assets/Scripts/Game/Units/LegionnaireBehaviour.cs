@@ -59,7 +59,7 @@ namespace Game.Units
         }
 
 
-		protected override Vector2 GetPreferredTargetPosition ()
+		protected override Vector2 GetDefaultTargetPosition ()
 		{
 			Vector2 defaultTarget = new Vector2 (Mathf.Infinity, Mathf.Infinity);
 			return defaultTarget;
