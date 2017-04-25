@@ -2,6 +2,7 @@
  * Author: Alexander Krantz
  * Author: Anton Anderzén
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,11 +21,14 @@ namespace Game.Units
         /// </summary>
         public AttackType attackType;
 
-        private Spells.Auras.Aura aura;
+        [NonSerialized]
+        public List<Spells.Auras.Aura> auras = new List<Game.Units.Spells.Auras.Aura>();
 
-        private Spells.OnHits.OnHit onHit;
+        [NonSerialized]
+        public List<Spells.OnHits.OnHit> onHits = new List<Game.Units.Spells.OnHits.OnHit>();
 
-        private List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
+        [NonSerialized]
+        public List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
 
         /// <summary>
         /// Gets or sets the attack range.
@@ -56,12 +60,14 @@ namespace Game.Units
         [Tooltip("Amount of Hit Points")]
         public float hp;
 
+        [NonSerialized]
+        public float hpMax;
+
         /// <summary>
         /// The HP reg defined in +HP/sec.
         /// </summary>
         [Tooltip("Amount of Hit Points to be generated per second")]
         public float hpReg;
-
 
         /// <summary>
         /// Gets or sets the maximum damage.
@@ -78,71 +84,148 @@ namespace Game.Units
 
         private float attackDeltaTime = -1;
 
+		Animator anim;
+
         void Start()
         {
-            onHit = GetComponent<Spells.OnHits.OnHit>();
-            aura = gameObject.GetComponent<Spells.Auras.Aura>();
+			anim = GetComponent<Animator> ();
+            hpMax = hp;
+            onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
+            auras.AddRange(GetComponents<Spells.Auras.Aura>());
+            foreach(var aura in auras)
+            {
+                switch(aura.target)
+                {
+                    case Spells.Auras.AuraTarget.Friendlies:
+                        aura.Apply(GetFriendlies());
+                        break;
+                    case Spells.Auras.AuraTarget.Enemies:
+                        aura.Apply(GetEnemies());
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         void Update()
         {
-			Vector2 defaultTarget = new Vector2 (Mathf.Infinity, Mathf.Infinity);
+            Vector2 defaultTarget = new Vector2(Mathf.Infinity, Mathf.Infinity);
 
             UnitBehaviour target = GetTarget();
 
-			if (target == null) {
-				defaultTarget = GetPreferredTargetPosition ();
+            if(target == null)
+            {
+                defaultTarget = GetPreferredTargetPosition();
 
-				if(defaultTarget.x == Mathf.Infinity){
-					return;
-				}
-				transform.position = Vector2.MoveTowards (transform.position, defaultTarget, movementSpeed * Time.deltaTime);
-				return;
+                if(defaultTarget.x == Mathf.Infinity)
+                {
+                    return;
+                }
+                transform.position = Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
+				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+				anim.SetBool("fight", false);
 			}
-
-            if(attackDeltaTime >= 0)
-            {
-                attackDeltaTime += Time.deltaTime;
-                if(attackDeltaTime >= 1f / attackSpeed)
-                {
-                    attackDeltaTime = -1;
-                }
-            }
-
-            if(Vector2.Distance(transform.position, target.transform.position) <= range)
-            {
-                if(attackDeltaTime == -1)
-                {
-                    attackDeltaTime = 0;
-
-                    float damage = UnityEngine.Random.Range(damageMin, damageMax + 1);
-
-                    if(onHit)
-                    {
-                        float? newDamage = onHit.Hit(damage, target);
-                        if(newDamage!=null)
-                            damage = (int)newDamage;
-                    }
-
-                    damage *= DamageRatios.GetRatio(target.armorType, attackType);
-
-                    target.SendMessage("ApplyDamage", damage);
-                }
-            }
             else
-			{
-				transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+            {
+                if(attackDeltaTime >= 0)
+                {
+                    attackDeltaTime += Time.deltaTime;
+                    if(attackDeltaTime >= 1f / attackSpeed)
+                    {
+                        attackDeltaTime = -1;
+                    }
+                }
+
+                if(Vector2.Distance(transform.position, target.transform.position) <= range)
+                {
+                    if(attackDeltaTime == -1)
+                    {
+                        attackDeltaTime = 0;
+
+                        float baseDamage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+
+                        float totalDamage = baseDamage;
+
+                        var postDamageEffects = new List<PostDamageEffect>();
+
+                        foreach(Spells.OnHits.OnHit onHit in onHits)
+                        {
+                            PostDamageEffect postDamageEffect;
+                            totalDamage += onHit.Hit(baseDamage, target, this, out postDamageEffect);
+                            if(postDamageEffect != null)
+                                postDamageEffects.Add(postDamageEffect);
+                        }
+
+                        totalDamage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                        target.ApplyDamage(totalDamage);
+
+                        float totalHeals = 0;
+
+                        foreach(var postDamageEffect in postDamageEffects)
+                        {
+                            totalHeals += postDamageEffect(totalDamage, target, this);
+                        }
+
+                        // Applies negative damage which gives negative heals the ability to kill this unit
+                        if(ApplyDamage(-totalHeals))
+                            return;
+                    }
+					anim.SetBool("fight", true);
+                }
+                else
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+					anim.SetBool("fight", false);
+                }
+				anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
             }
+
+            // Applies negative damage which gives negative hp regeneration the ability to kill this unit
+            if(ApplyDamage(-hpReg * Time.deltaTime))
+                return;
         }
 
-        public void ApplyDamage(int damage)
+        /// <summary>
+        /// Applies the damage.
+        /// </summary>
+        /// <returns><c>true</c>, if the unit died, <c>false</c> otherwise.</returns>
+        /// <param name="damage">Damage.</param>
+        /// <returns>True if the unit dies</returns>
+        public bool ApplyDamage(float damage)
         {
             hp -= damage;
             if(hp < 1)
             {
-                // TODO: maybe remove aura buffs?
+                foreach(var aura in auras)
+                {
+                    switch(aura.target)
+                    {
+                        case Spells.Auras.AuraTarget.Friendlies:
+                            aura.Remove(GetFriendlies());
+                            break;
+                        case Spells.Auras.AuraTarget.Enemies:
+                            aura.Remove(GetEnemies());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                foreach(var buff in buffs)
+                {
+                    buff.Remove();
+                }
                 GameObject.Destroy(gameObject);
+                return true;
             }
+            else if(hp > hpMax)
+            {
+                hp = hpMax;
+            }
+            return false;
         }
 
         /// <summary>
@@ -151,8 +234,14 @@ namespace Game.Units
         /// <returns>The target.</returns>
         protected abstract UnitBehaviour GetTarget();
 
-		protected abstract Vector2 GetPreferredTargetPosition();
+        public abstract UnitBehaviour[] GetFriendlies();
+
+        public abstract UnitBehaviour[] GetEnemies();
+
+        protected abstract Vector2 GetPreferredTargetPosition();
     }
+
+    public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);
 
     public enum ArmorType
     {
@@ -160,7 +249,7 @@ namespace Game.Units
         Light,
         Medium,
         Heavy,
-		Invulnerable
+        Invulnerable
     }
 
     public enum AttackType

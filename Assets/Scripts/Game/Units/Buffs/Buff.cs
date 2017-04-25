@@ -5,17 +5,27 @@ namespace Game.Units.Buffs
 {
     public abstract class Buff : MonoBehaviour
     {
-        public int duration;
+        public float duration = 0;
 
-        [NonSerialized]
-        public GameObject auraOwner;
+        public UnitBehaviour owner;
 
-        [NonSerialized]
-        public bool isAura;
+        public abstract void Apply();
 
-        public abstract void Apply(UnitBehaviour unit);
+        public abstract void Remove();
 
-        public abstract void Remove(UnitBehaviour unit);
+        void Update()
+        {
+            if(duration > -1)
+                duration -= Time.deltaTime;
+            if(duration < 0)
+            {
+                if(owner.buffs.Remove(this))
+                {
+                    Remove();
+                    GameObject.Destroy(this);
+                }
+            }
+        }
     }
 }
 
