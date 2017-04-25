@@ -26,9 +26,9 @@ public class MinionSpawner : MonoBehaviour {
 	private GameObject[] waveObjects;
 
 	private bool newWave;
-
-	private int numberOfUnits = 25;
-	private float instantiatetimer = 10f; //time until next wave starts.
+	private int numberOfUnitsInWave = 25;
+	private int numberOfUnitsSpawned = 0;
+	private float instantiatetimer = 5f; //time until next wave starts.
 
 	private float MinX = -3;
 	private float MaxX = 3;
@@ -60,11 +60,13 @@ public class MinionSpawner : MonoBehaviour {
 				float x = Random.Range (MinX, MaxX);
 				float y = Random.Range (MinY, MaxY);
 				Instantiate (waveObjList[waveNumber], new Vector2 (x, y), transform.rotation);
+				numberOfUnitsSpawned++;
 			}
 		}
-		if(waveObjects.Length > numberOfUnits){
-			instantiatetimer = 10f;
+		if(numberOfUnitsSpawned > numberOfUnitsInWave){
+			instantiatetimer = 5f;
 			waveNumber++;
+			numberOfUnitsSpawned = 0;
 			if (waveNumber == waveObjList.Length) {
 				waveNumber = 0;
 			}
