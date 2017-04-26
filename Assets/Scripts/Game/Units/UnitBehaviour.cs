@@ -86,11 +86,12 @@ namespace Game.Units
 
         Animator anim;
 
-        private Rigidbody2D rigidBody;
+        Collider2D[] colliders = new Collider2D[100];
+        CircleCollider2D circleCollider;
 
         void Start()
         {
-            rigidBody = GetComponent<Rigidbody2D>();
+            circleCollider = GetComponent<CircleCollider2D>();
             anim = GetComponent<Animator>();
             hpMax = hp;
             onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
@@ -109,6 +110,7 @@ namespace Game.Units
                         break;
                 }
             }
+
         }
 
         void Update()
@@ -132,10 +134,13 @@ namespace Game.Units
 
                 if(defaultTarget.x != Mathf.Infinity)
                 {
-                    rigidBody.MovePosition(Vector2.MoveTowards(transform.position, defaultTarget, movementSpeed * Time.deltaTime));
-                    rigidBody.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime).eulerAngles.z);
-                    anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-                    anim.SetBool("fight", false);
+                    MoveTowards(defaultTarget);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
+                    if(anim != null)
+                    {
+                        anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                        anim.SetBool("fight", false);
+                    }
                 }
             }
             else
@@ -175,25 +180,21 @@ namespace Game.Units
                         if(ApplyDamage(-totalHeals))
                             return;
                     }
-                    anim.SetBool("fight", true);
+                    if(anim != null)
+                        anim.SetBool("fight", true);
                 }
                 else
                 {
-                    rigidBody.MovePosition(Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime));
-                    anim.SetBool("fight", false);
+                    MoveTowards(target.transform.position);
+                    if(anim != null)
+                        anim.SetBool("fight", false);
                 }
-                anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-                rigidBody.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime).eulerAngles.z);
+                if(anim != null)
+                    anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
             }
 
-            if(lastPosition == (Vector2)transform.position)
-            {
-                rigidBody.isKinematic = true;
-            }
-            else
-            {
-                rigidBody.isKinematic = false;
-            }
+            lastPosition = transform.position;
 
             // Applies negative damage which gives negative hp regeneration the ability to kill this unit
             if(ApplyDamage(-hpReg * Time.deltaTime))
@@ -201,7 +202,28 @@ namespace Game.Units
         }
 
         /// <summary>
-        /// Applies the damage.
+        /// Moves the Unit towards a position and checks for collision.
+        /// </summary>
+        /// <param name="targetPos">Target position.</param>
+        void MoveTowards(Vector2 targetPos)
+        {
+            Vector2 velocity = Vector2.ClampMagnitude(targetPos - (Vector2)transform.position, movementSpeed * Time.deltaTime);
+            transform.position = (Vector2)transform.position + velocity;
+
+            Vector2 collisionOffset = Vector2.zero;
+            int colliderCount = circleCollider.OverlapCollider(new ContactFilter2D(), colliders);
+            for(int i = 0; i < colliderCount; i++)
+            {
+                Collider2D collider = colliders[i];
+                ColliderDistance2D colliderDistance = circleCollider.Distance(collider);
+                collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
+            }
+            
+            transform.position = (Vector2)transform.position + collisionOffset;
+        }
+
+        /// <summary>
+        /// Applies damage.
         /// </summary>
         /// <returns><c>true</c>, if the unit died, <c>false</c> otherwise.</returns>
         /// <param name="damage">Damage.</param>
@@ -235,10 +257,22 @@ namespace Game.Units
         /// <returns>The target.</returns>
         protected abstract UnitBehaviour GetTarget();
 
+        /// <summary>
+        /// Gets all friendlies.
+        /// </summary>
+        /// <returns>The friendlies.</returns>
         public abstract UnitBehaviour[] GetFriendlies();
 
+        /// <summary>
+        /// Gets all enemies.
+        /// </summary>
+        /// <returns>The enemies.</returns>
         public abstract UnitBehaviour[] GetEnemies();
 
+        /// <summary>
+        /// Gets the default target position.
+        /// </summary>
+        /// <returns>The default target position.</returns>
         protected abstract Vector2 GetDefaultTargetPosition();
     }
 
