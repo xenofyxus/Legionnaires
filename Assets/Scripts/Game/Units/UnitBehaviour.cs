@@ -6,6 +6,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using System.Reflection;
 
 namespace Game.Units
 {
@@ -41,6 +43,12 @@ namespace Game.Units
         /// </summary>
         [Tooltip("The projectile prefab to use, leave empty if no projectile is wanted")]
         public GameObject projectile;
+
+        /// <summary>
+        /// The projectile offset along the unit's forward vector.
+        /// </summary>
+        [Tooltip("The offset from the center where the projectile will spawn, y axis is along the unit's forward vector")]
+        public Vector2 projectileOffset;
 
         /// <summary>
         /// Gets or sets the movement speed.
@@ -151,34 +159,56 @@ namespace Game.Units
                     {
                         attackDeltaTime = 0;
 
-                        float baseDamage = UnityEngine.Random.Range(damageMin, damageMax + 1);
 
-                        float totalDamage = baseDamage;
-
-                        var postDamageEffects = new List<PostDamageEffect>();
-
-                        foreach(Spells.OnHits.OnHit onHit in onHits)
+                        if(projectile == null)
                         {
-                            PostDamageEffect postDamageEffect;
-                            totalDamage += onHit.Hit(baseDamage, target, this, out postDamageEffect);
-                            if(postDamageEffect != null)
-                                postDamageEffects.Add(postDamageEffect);
+                            float baseDamage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+
+                            float totalDamage = baseDamage;
+
+                            var postDamageEffects = new List<PostDamageEffect>();
+
+                            foreach(Spells.OnHits.OnHit onHit in onHits)
+                            {
+                                PostDamageEffect postDamageEffect;
+                                totalDamage += onHit.Hit(baseDamage, target, this, out postDamageEffect);
+                                if(postDamageEffect != null)
+                                    postDamageEffects.Add(postDamageEffect);
+                            }
+
+                            totalDamage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                            target.ApplyDamage(totalDamage);
+
+                            float totalHeals = 0;
+
+                            foreach(var postDamageEffect in postDamageEffects)
+                            {
+                                totalHeals += postDamageEffect(totalDamage, target, this);
+                            }
+
+                            // Applies negative damage which gives negative heals the ability to kill this unit
+                            if(ApplyDamage(-totalHeals))
+                                return;
                         }
-
-                        totalDamage *= DamageRatios.GetRatio(target.armorType, attackType);
-
-                        target.ApplyDamage(totalDamage);
-
-                        float totalHeals = 0;
-
-                        foreach(var postDamageEffect in postDamageEffects)
+                        else
                         {
-                            totalHeals += postDamageEffect(totalDamage, target, this);
-                        }
+                            ProjectileBehaviour newProjectile = Instantiate(projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour>();
+                            newProjectile.transform.RotateAround(transform.position, Vector3.forward, Quaternion.Angle(Quaternion.AngleAxis(0, Vector3.forward), transform.rotation));
+                            newProjectile.transform.rotation = transform.rotation;
+                            newProjectile.owner = this;
+                            newProjectile.target = target;
 
-                        // Applies negative damage which gives negative heals the ability to kill this unit
-                        if(ApplyDamage(-totalHeals))
-                            return;
+                            foreach(Spells.OnHits.OnHit onHit in onHits)
+                            {
+                                Spells.OnHits.OnHit newOnHit = (Spells.OnHits.OnHit)newProjectile.gameObject.AddComponent(onHit.GetType());
+                                FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+                                foreach(FieldInfo fieldInfo in fieldInfos)
+                                {
+                                    fieldInfo.SetValue(newOnHit, fieldInfo.GetValue(onHit));
+                                }
+                            }
+                        }
                     }
                     if(anim != null)
                         anim.SetBool("fight", true);
@@ -215,8 +245,11 @@ namespace Game.Units
             for(int i = 0; i < colliderCount; i++)
             {
                 Collider2D collider = colliders[i];
-                ColliderDistance2D colliderDistance = circleCollider.Distance(collider);
-                collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
+                if(collider.GetComponent<ProjectileBehaviour>() == null)
+                {
+                    ColliderDistance2D colliderDistance = circleCollider.Distance(collider);
+                    collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
+                }
             }
             
             transform.position = (Vector2)transform.position + collisionOffset;
