@@ -43,7 +43,7 @@ namespace Game.Units
         private float rangeBase;
 
         [NonSerialized]
-        public StatModifier rangeModifier;
+        public StatModifier rangeModifier=new StatModifier();
 
         /// <summary>
         /// Gets or sets the movement speed.
@@ -54,7 +54,7 @@ namespace Game.Units
         private float movementSpeedBase;
 
         [NonSerialized]
-        public StatModifier movementSpeedModifier;
+        public StatModifier movementSpeedModifier=new StatModifier();
 
         /// <summary>
         /// Gets or sets the attack speed.
@@ -65,7 +65,7 @@ namespace Game.Units
         private float attackSpeedBase;
 
         [NonSerialized]
-        public StatModifier attackSpeedModifier;
+        public StatModifier attackSpeedModifier=new StatModifier();
 
         /// <summary>
         /// Gets or sets the Hit Points.
@@ -79,7 +79,7 @@ namespace Game.Units
         private float hpMaxBase;
 
         [NonSerialized]
-        public StatModifier hpMaxModifier;
+        public StatModifier hpMaxModifier=new StatModifier();
 
         /// <summary>
         /// The HP reg defined in +HP/sec.
@@ -90,7 +90,7 @@ namespace Game.Units
         private float hpRegBase;
 
         [NonSerialized]
-        public StatModifier hpRegModifier;
+        public StatModifier hpRegModifier=new StatModifier();
 
         /// <summary>
         /// Gets or sets the maximum damage.
@@ -101,7 +101,7 @@ namespace Game.Units
         private float damageMaxBase;
 
         [NonSerialized]
-        public StatModifier damageMaxModifier;
+        public StatModifier damageMaxModifier=new StatModifier();
 
         /// <summary>
         /// Gets or sets the minimum damage.FFFFF
@@ -113,7 +113,7 @@ namespace Game.Units
         private float damageMinBase;
 
         [NonSerialized]
-        public StatModifier damageMinModifier;
+        public StatModifier damageMinModifier=new StatModifier();
 
         [Header("Projectile")]
 
@@ -224,7 +224,6 @@ namespace Game.Units
                     if(attackDeltaTime == -1)
                     {
                         attackDeltaTime = 0;
-
 
                         if(projectile == null)
                         {
