@@ -11,7 +11,7 @@ namespace Game.Units
         /// The movement speed in <units> per second.
         /// </summary>
         [Tooltip("Movement speed in <units> per second")]
-        public float movementSpeed;
+        public float movementSpeed = 2;
 
         [NonSerialized]
         public UnitBehaviour owner;
@@ -51,7 +51,7 @@ namespace Game.Units
         {
             if(target != null)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
+                transform.rotation = Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position);
                 transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
                 targetPosition = target.transform.position;
                 if(thisCollider.Distance(targetCollider).isOverlapped)
@@ -93,7 +93,7 @@ namespace Game.Units
             }
             else
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, targetPosition - (Vector2)transform.position), 360 * Time.deltaTime);
+                transform.rotation = Quaternion.FromToRotation(Vector2.down, targetPosition - (Vector2)transform.position);
                 transform.position = Vector2.MoveTowards(transform.position, targetPosition, movementSpeed * Time.deltaTime);
                 if((Vector2)transform.position == targetPosition)
                     GameObject.Destroy(gameObject);

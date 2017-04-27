@@ -10,6 +10,7 @@ namespace Game.Units
 {
 	public class LegionnaireBehaviour : UnitBehaviour
     {
+        [Header("Legionnaire specific attributes")]
         public int cost;
 
         public int supply;
