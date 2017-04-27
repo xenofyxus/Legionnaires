@@ -3,25 +3,37 @@ using UnityEngine;
 
 namespace Game.Units.Buffs
 {
-	public abstract class Buff : MonoBehaviour
-	{
-		public float duration = 0;
+    public abstract class Buff : MonoBehaviour
+    {
+        public float duration = 0;
 
-		public UnitBehaviour owner;
+        public UnitBehaviour owner;
 
-		public abstract void Apply ();
+        protected abstract void Apply();
 
-		public abstract void Remove ();
+        public void Remove()
+        {
+            Removing();
+            GameObject.Destroy(this);
+        }
 
-		void Update ()
-		{
-			if (duration > 0)
-				duration -= Time.deltaTime;
-			else {
-				Remove ();
-				GameObject.Destroy (this);
-			}
-		}
-	}
+        protected abstract void Removing();
+
+        void Start()
+        {
+            owner = GetComponent<UnitBehaviour>();
+            Apply();
+        }
+
+        void Update()
+        {
+            if(duration > 0)
+                duration -= Time.deltaTime;
+            else
+            {
+                Remove();
+            }
+        }
+    }
 }
 
