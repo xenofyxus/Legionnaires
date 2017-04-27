@@ -40,17 +40,32 @@ namespace Game.Units
         [Tooltip("Attack range in <units>")]
         public float range;
 
+        private float rangeBase;
+
+        [NonSerialized]
+        public StatModifier rangeModifier;
+
         /// <summary>
         /// Gets or sets the movement speed.
         /// </summary>
         [Tooltip("Movement speed in <units> per second")]
         public float movementSpeed;
 
+        private float movementSpeedBase;
+
+        [NonSerialized]
+        public StatModifier movementSpeedModifier;
+
         /// <summary>
         /// Gets or sets the attack speed.
         /// </summary>
         [Tooltip("Number of attacks per second")]
         public float attackSpeed;
+
+        private float attackSpeedBase;
+
+        [NonSerialized]
+        public StatModifier attackSpeedModifier;
 
         /// <summary>
         /// Gets or sets the Hit Points.
@@ -61,11 +76,21 @@ namespace Game.Units
         [NonSerialized]
         public float hpMax;
 
+        private float hpMaxBase;
+
+        [NonSerialized]
+        public StatModifier hpMaxModifier;
+
         /// <summary>
         /// The HP reg defined in +HP/sec.
         /// </summary>
         [Tooltip("Amount of Hit Points to be generated per second")]
         public float hpReg;
+
+        private float hpRegBase;
+
+        [NonSerialized]
+        public StatModifier hpRegModifier;
 
         /// <summary>
         /// Gets or sets the maximum damage.
@@ -73,12 +98,22 @@ namespace Game.Units
         [Tooltip("Maximum damage, must be higher or equal to Damage Min")]
         public float damageMax;
 
+        private float damageMaxBase;
+
+        [NonSerialized]
+        public StatModifier damageMaxModifier;
+
         /// <summary>
         /// Gets or sets the minimum damage.FFFFF
         /// </summary>
         /// <value>The minimum damage.</value>
         [Tooltip("Minimum damage, must be lower or equal to Damage Max")]
         public float damageMin;
+
+        private float damageMinBase;
+
+        [NonSerialized]
+        public StatModifier damageMinModifier;
 
         [Header("Projectile")]
 
@@ -109,9 +144,12 @@ namespace Game.Units
 
         void Start()
         {
-            circleCollider = GetComponent<CircleCollider2D>();
-            anim = GetComponent<Animator>();
             hpMax = hp;
+
+            circleCollider = GetComponent<CircleCollider2D>();
+
+            anim = GetComponent<Animator>();
+
             onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
             auras.AddRange(GetComponents<Spells.Auras.Aura>());
             foreach(var aura in auras)
@@ -129,11 +167,26 @@ namespace Game.Units
                 }
             }
 
+            // Setting base stats
+            rangeBase = range;
+            movementSpeedBase = movementSpeed;
+            attackSpeedBase = attackSpeed;
+            hpMaxBase = hpMax;
+            hpRegBase = hpReg;
+            damageMaxBase = damageMax;
+            damageMinBase = damageMin;
         }
 
         void Update()
         {
-            UnitBehaviour target = GetTarget();
+            // Updating stats according to modifiers
+            range = rangeModifier.Modify(rangeBase);
+            movementSpeed = movementSpeedModifier.Modify(movementSpeedBase);
+            attackSpeed = attackSpeedModifier.Modify(attackSpeedBase);
+            hpMax = hpMaxModifier.Modify(hpMaxBase);
+            hpReg = hpRegModifier.Modify(hpRegBase);
+            damageMax = damageMaxModifier.Modify(damageMaxBase);
+            damageMin = damageMinModifier.Modify(damageMinBase);
 
             if(attackDeltaTime >= 0)
             {
@@ -145,6 +198,8 @@ namespace Game.Units
             }
 
             Vector2 lastPosition = transform.position;
+
+            UnitBehaviour target = GetTarget();
 
             if(target == null)
             {
@@ -163,7 +218,8 @@ namespace Game.Units
             }
             else
             {
-                if(Vector2.Distance(transform.position, target.transform.position) <= range)
+                Collider2D targetCollider = target.GetComponent<Collider2D>();
+                if(circleCollider.Distance(targetCollider).distance <= range)
                 {
                     if(attackDeltaTime == -1)
                     {

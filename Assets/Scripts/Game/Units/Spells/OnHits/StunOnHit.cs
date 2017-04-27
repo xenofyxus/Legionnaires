@@ -19,7 +19,6 @@ namespace Game.Units.Spells.OnHits
 			postDamageEffect = null;
 
 			if (activeBuff == null) {
-				stunBuff.setStats (target.movementSpeed, target.attackSpeed);
 				stunBuff.owner = target;
 				stunBuff.duration = stunDuration;
 				stunBuff.Apply ();

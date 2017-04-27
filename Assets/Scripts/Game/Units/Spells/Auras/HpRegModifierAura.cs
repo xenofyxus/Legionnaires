@@ -8,20 +8,14 @@ namespace Game.Units.Spells.Auras
     {
         public float hpRegModifier = 0f;
 
-        Dictionary<UnitBehaviour, float> hpRegDeltas = new Dictionary<UnitBehaviour, float>();
-
         protected override void Applying(UnitBehaviour unit)
         {
-            unit.hpReg += hpRegModifier;
+            unit.hpRegModifier.Adders.Add(hpRegModifier);
         }
 
         protected override void Removing(UnitBehaviour unit)
         {
-            float hpRegDelta;
-            if(hpRegDeltas.TryGetValue(unit, out hpRegDelta))
-            {
-                unit.hpReg -= hpRegModifier;
-            }
+            unit.hpRegModifier.Adders.Add(hpRegModifier);
         }
     }
 }

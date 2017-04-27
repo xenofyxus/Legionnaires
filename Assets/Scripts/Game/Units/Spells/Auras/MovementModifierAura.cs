@@ -10,12 +10,12 @@ namespace Game.Units.Spells.Auras
 
         protected override void Applying(UnitBehaviour unit)
         {
-            unit.movementSpeed *= movementSpeedMultiplier;
+            unit.movementSpeedModifier.Multipliers.Add(movementSpeedMultiplier);
         }
 
         protected override void Removing(UnitBehaviour unit)
         {
-            unit.movementSpeed /= movementSpeedMultiplier;
+            unit.movementSpeedModifier.Multipliers.Remove(movementSpeedMultiplier);
         }
     }
 }

@@ -3,25 +3,19 @@ using UnityEngine;
 
 namespace Game.Units.Buffs
 {
-	public class StunBuff : Buff
-	{
-		float movementSpeed;
-		float attackSpeed;
+    public class StunBuff : Buff
+    {
+        public override void Apply()
+        {	
+            owner.attackSpeedModifier.Multipliers.Add(0);
+            owner.movementSpeedModifier.Multipliers.Add(0);
+        }
 
-		public override void Apply(){	
-			owner.attackSpeed = 0;
-			owner.movementSpeed = 0;
-		}
-
-		public override void Remove(){
-			owner.attackSpeed = attackSpeed;
-			owner.movementSpeed = movementSpeed;
-		}
-
-		public void setStats(float movementS, float attackS){
-			movementSpeed = movementS;
-			attackSpeed = attackS;
-		}
-	}
+        public override void Remove()
+        {
+            owner.attackSpeedModifier.Multipliers.Remove(0);
+            owner.movementSpeedModifier.Multipliers.Remove(0);
+        }
+    }
 }
 
