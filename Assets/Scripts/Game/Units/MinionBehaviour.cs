@@ -5,6 +5,7 @@ namespace Game.Units
 {
 	public class MinionBehaviour : UnitBehaviour
 	{
+        [Header("Minion specific attributes")]
 		public int value;
 
         // TODO: Add king as secondary target

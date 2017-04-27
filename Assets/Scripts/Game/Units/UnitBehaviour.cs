@@ -13,6 +13,17 @@ namespace Game.Units
 {
     public abstract class UnitBehaviour : MonoBehaviour
     {
+        [NonSerialized]
+        public List<Spells.Auras.Aura> auras = new List<Game.Units.Spells.Auras.Aura>();
+
+        [NonSerialized]
+        public List<Spells.OnHits.OnHit> onHits = new List<Game.Units.Spells.OnHits.OnHit>();
+
+        [NonSerialized]
+        public List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
+
+        [Header("Unit Stats")]
+
         /// <summary>
         /// Gets or sets the type of the armor.
         /// </summary>
@@ -23,32 +34,11 @@ namespace Game.Units
         /// </summary>
         public AttackType attackType;
 
-        [NonSerialized]
-        public List<Spells.Auras.Aura> auras = new List<Game.Units.Spells.Auras.Aura>();
-
-        [NonSerialized]
-        public List<Spells.OnHits.OnHit> onHits = new List<Game.Units.Spells.OnHits.OnHit>();
-
-        [NonSerialized]
-        public List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
-
         /// <summary>
         /// Gets or sets the attack range.
         /// </summary>
         [Tooltip("Attack range in <units>")]
         public float range;
-
-        /// <summary>
-        /// Gets or sets the projectile. Set to null if there should be none.
-        /// </summary>
-        [Tooltip("The projectile prefab to use, leave empty if no projectile is wanted")]
-        public GameObject projectile;
-
-        /// <summary>
-        /// The projectile offset along the unit's forward vector.
-        /// </summary>
-        [Tooltip("The offset from the center where the projectile will spawn, y axis is along the unit's forward vector")]
-        public Vector2 projectileOffset;
 
         /// <summary>
         /// Gets or sets the movement speed.
@@ -89,6 +79,26 @@ namespace Game.Units
         /// <value>The minimum damage.</value>
         [Tooltip("Minimum damage, must be lower or equal to Damage Max")]
         public float damageMin;
+
+        [Header("Projectile")]
+
+        /// <summary>
+        /// Gets or sets the projectile. Set to null if there should be none.
+        /// </summary>
+        [Tooltip("The projectile prefab to use, leave empty if no projectile is wanted")]
+        public GameObject projectile;
+
+        /// <summary>
+        /// The projectile offset along the unit's back vector.
+        /// </summary>
+        [Tooltip("The offset from the center where the projectile will spawn, y axis is along the unit's back vector")]
+        public Vector2 projectileOffset;
+
+        /// <summary>
+        /// The projectile speed.
+        /// </summary>
+        [Tooltip("The speed of the projectile, set to anything above 0 to override the projectile's default setting")]
+        public float projectileSpeed;
 
         private float attackDeltaTime = -1;
 
@@ -194,10 +204,12 @@ namespace Game.Units
                         else
                         {
                             ProjectileBehaviour newProjectile = Instantiate(projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour>();
-                            newProjectile.transform.RotateAround(transform.position, Vector3.forward, Quaternion.Angle(Quaternion.AngleAxis(0, Vector3.forward), transform.rotation));
+                            newProjectile.transform.RotateAround(transform.position, Vector3.forward, Quaternion.AngleAxis(transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
                             newProjectile.transform.rotation = transform.rotation;
                             newProjectile.owner = this;
                             newProjectile.target = target;
+                            if(projectileSpeed > 0)
+                                newProjectile.movementSpeed = projectileSpeed;
 
                             foreach(Spells.OnHits.OnHit onHit in onHits)
                             {
