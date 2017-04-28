@@ -181,6 +181,12 @@ namespace Game.Units
                 {
                     MoveTowards(defaultTarget.Value);
                 }
+                else
+                {
+                    // TODO Fix and sync
+                    anim.SetBool("fight", false);
+                    anim.SetFloat("speed", 1f / 0f);
+                }
             }
             else
             {
@@ -245,10 +251,11 @@ namespace Game.Units
                     }
                     if(anim != null)
                     {
+                        // TODO Fix and sync
                         anim.SetBool("fight", true);
-                        anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                        anim.SetFloat("speed", (1f / attackSpeed) / 3 * Time.deltaTime);
                     }
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
+                    RotateTowards(target.transform.position);
                 }
                 else
                 {
@@ -295,14 +302,20 @@ namespace Game.Units
             }
             
             transform.position = (Vector2)transform.position + collisionOffset;
-            Quaternion targetRotation = Quaternion.FromToRotation(Vector2.down, targetPos - (Vector2)transform.position);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
+            RotateTowards(targetPos);
 
             if(anim != null)
             {
-                anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                // TODO Fix and sync
+                anim.SetFloat("speed", 1f / movementSpeed * Time.deltaTime);
                 anim.SetBool("fight", false);
             }
+        }
+
+        void RotateTowards(Vector2 targetPos)
+        {
+            Quaternion targetRotation = Quaternion.FromToRotation(Vector2.down, targetPos - (Vector2)transform.position);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
         }
 
         /// <summary>
@@ -359,7 +372,7 @@ namespace Game.Units
         Light,
         Medium,
         Heavy,
-		KingArmor,
+        KingArmor,
         Invulnerable
     }
 

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Game.Units
 {
-	public class LegionnaireBehaviour : UnitBehaviour
+    public class LegionnaireBehaviour : UnitBehaviour
     {
         [Header("Legionnaire specific attributes")]
         public int cost;
@@ -26,14 +26,14 @@ namespace Game.Units
         void OnDestroy()
         {
             legionnaires.Remove(this);
-		}
+        }
 
         protected override UnitBehaviour GetTarget()
         {
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Minion");
+            UnitBehaviour[] enemies = GetEnemies();
             if(enemies.Length > 0)
             {
-                GameObject closestEnemy = enemies[0];
+                UnitBehaviour closestEnemy = enemies[0];
                 for(int i = 1; i < enemies.Length; i++)
                 {
                     if(Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
@@ -41,10 +41,11 @@ namespace Game.Units
                         closestEnemy = enemies[i];
                     }
                 }
-				//Added visionRange returns enemy if in vision.
-				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 5) {
-					return closestEnemy.GetComponent<UnitBehaviour>();
-				}
+                //Added visionRange returns enemy if in vision.
+                if(Vector2.Distance(transform.position, closestEnemy.transform.position) < 5)
+                {
+                    return closestEnemy;
+                }
                 return null;
             }
             return null;
@@ -52,29 +53,17 @@ namespace Game.Units
 
         public override UnitBehaviour[] GetFriendlies()
         {
-            GameObject[] friendlies = GameObject.FindGameObjectsWithTag("Legionnaire");
-            UnitBehaviour[] friendlyBehaviours = new UnitBehaviour[friendlies.Length];
-            for(int i = 0; i < friendlies.Length; i++)
-            {
-                friendlyBehaviours[i] = friendlies[i].GetComponent<UnitBehaviour>();
-            }
-            return friendlyBehaviours;
+            return legionnaires.ToArray();
         }
 
         public override UnitBehaviour[] GetEnemies()
         {
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Minion");
-            UnitBehaviour[] enemyBehaviours = new UnitBehaviour[enemies.Length];
-            for(int i = 0; i < enemies.Length; i++)
-            {
-                enemyBehaviours[i] = enemies[i].GetComponent<UnitBehaviour>();
-            }
-            return enemyBehaviours;
+            return MinionBehaviour.minions.ToArray();
         }
 
-		protected override Vector2? GetDefaultTargetPosition ()
-		{
-			return null;
+        protected override Vector2? GetDefaultTargetPosition()
+        {
+            return null;
         }
     }
 }

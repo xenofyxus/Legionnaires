@@ -34,7 +34,8 @@ namespace Game.Units.Buffs
 
         void OnDestroy()
         {
-            Remove();
+            if(owner != null)
+                Remove();
         }
     }
 }
