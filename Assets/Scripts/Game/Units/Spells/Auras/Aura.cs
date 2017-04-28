@@ -9,27 +9,41 @@ namespace Game.Units.Spells.Auras
 
         private UnitBehaviour[] units;
 
-        public void Apply(UnitBehaviour[] units)
+        protected abstract void Apply(UnitBehaviour unit);
+
+        protected abstract void Remove(UnitBehaviour unit);
+
+        void Start()
         {
+            UnitBehaviour owner = GetComponent<UnitBehaviour>();
+
+            switch(target)
+            {
+                case AuraTarget.Friendlies:
+                    units = owner.GetFriendlies();
+                    break;
+                case AuraTarget.Enemies:
+                    units = owner.GetEnemies();
+                    break;
+                default:
+                    break;
+            }
+
             foreach(var unit in units)
             {
-                Applying(unit);
+                if(unit != null)
+                    Apply(unit);
             }
-            this.units = units;
         }
 
-        protected abstract void Applying(UnitBehaviour unit);
-
-        public void Remove()
+        void OnDestroy()
         {
             foreach(var unit in units)
             {
                 if(unit != null)
-                    Removing(unit);
+                    Remove(unit);
             }
         }
-
-        protected abstract void Removing(UnitBehaviour unit);
     }
 
     public enum AuraTarget

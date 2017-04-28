@@ -17,47 +17,74 @@ namespace Game.Units.Spells.OnHits
         [UnityEngine.Range(0f, 20f)]
         public float duration;
 
-        protected override float ApplyEffect(float baseDamage, UnitBehaviour target, UnitBehaviour owner, out PostDamageEffect postDamageEffect)
+        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             Buffs.DotBuff[] activeDots = target.GetComponents<Buffs.DotBuff>();
             Buffs.DotBuff activeDot = null;
 
+
             foreach(Buffs.DotBuff dot in activeDots)
             {
-                if(dot.id == dotName)
+                DotMetaData dotMetaData = dot.metaData as DotMetaData;
+                if(dotMetaData.dotName == dotName)
                 {
                     activeDot = dot;
                     break;
                 }
             }
 
+
             if(activeDot == null)
             {
                 Buffs.DotBuff dot = target.gameObject.AddComponent<Buffs.DotBuff>();
-                dot.id = dotName;
+
+                dot.metaData = new DotMetaData(dotName);
+                DotMetaData dotMetaData = dot.metaData as DotMetaData;
+
+                dotMetaData.stacks = 1;
+
                 dot.duration = duration;
-                dot.totalDamage = totalDamage;
-                dot.stackMultiplier = stackMultiplier;
-                dot.stacks = 1;
-            }
-            else if(activeDot.stacks < maxStacks)
-            {
-                int newStacks = activeDot.stacks + 1;
-                activeDot.Remove();
-                Buffs.DotBuff newDot = target.gameObject.AddComponent<Buffs.DotBuff>();
-                newDot.id = dotName;
-                newDot.duration = duration;
-                newDot.totalDamage = totalDamage;
-                newDot.stackMultiplier = stackMultiplier;
-                newDot.stacks = newStacks;
+                dot.totalDamage = (float)Math.Pow(stackMultiplier, 0) * totalDamage;
             }
             else
             {
-                activeDot.duration = duration;
+                DotMetaData activeDotMetaData = activeDot.metaData as DotMetaData;
+                if(activeDotMetaData.stacks < maxStacks)
+                {
+                    int newStacks = activeDotMetaData.stacks + 1;
+                    Destroy(activeDot);
+
+                    Buffs.DotBuff newDot = target.gameObject.AddComponent<Buffs.DotBuff>();
+
+                    newDot.metaData = new DotMetaData(dotName);
+                    DotMetaData newDotMetaData = newDot.metaData as DotMetaData;
+
+                    newDotMetaData.stacks = newStacks;
+
+                    newDot.duration = duration;
+                    newDot.totalDamage = (float)Math.Pow(stackMultiplier, newStacks - 1) * totalDamage;
+                }
+                else
+                {
+                    activeDot.duration = duration;
+                }
             }
 
             postDamageEffect = null;
             return 0f;
+        }
+
+        private class DotMetaData
+        {
+            public string dotName;
+
+            public int stacks;
+
+            public DotMetaData(string dotName)
+            {
+                this.dotName = dotName;
+                this.stacks = 1;
+            }
         }
     }
 }

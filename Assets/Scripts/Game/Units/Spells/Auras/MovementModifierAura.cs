@@ -8,12 +8,12 @@ namespace Game.Units.Spells.Auras
         [UnityEngine.Range(0.5f, 2f)]
         public float movementSpeedMultiplier;
 
-        protected override void Applying(UnitBehaviour unit)
+        protected override void Apply(UnitBehaviour unit)
         {
             unit.movementSpeedModifier.Multipliers.Add(movementSpeedMultiplier);
         }
 
-        protected override void Removing(UnitBehaviour unit)
+        protected override void Remove(UnitBehaviour unit)
         {
             unit.movementSpeedModifier.Multipliers.Remove(movementSpeedMultiplier);
         }

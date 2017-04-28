@@ -11,7 +11,7 @@ namespace Game.Units.Buffs
             owner.movementSpeedModifier.Multipliers.Add(0);
         }
 
-        protected override void Removing()
+        protected override void Remove()
         {
             owner.attackSpeedModifier.Multipliers.Remove(0);
             owner.movementSpeedModifier.Multipliers.Remove(0);

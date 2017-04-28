@@ -12,7 +12,7 @@ namespace Game.Units.Spells.OnHits
         public float stunDuration;
         //private int activeStun = 0;
 			
-        protected override float ApplyEffect(float baseDamage, UnitBehaviour target, UnitBehaviour owner, out PostDamageEffect postDamageEffect)
+        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             Buffs.StunBuff activeBuff = target.gameObject.GetComponent<Buffs.StunBuff>();
             Buffs.StunBuff stunBuff = target.gameObject.AddComponent<Buffs.StunBuff>();
@@ -25,12 +25,12 @@ namespace Game.Units.Spells.OnHits
             }
             else if(activeBuff.duration > stunBuff.duration)
             {
-                stunBuff.Remove();
+                Destroy(stunBuff);
                 return 0f;
             }
             else
             {
-                activeBuff.Remove();
+                Destroy(activeBuff);
                 stunBuff.duration = stunDuration;
                 return 0f;
             }

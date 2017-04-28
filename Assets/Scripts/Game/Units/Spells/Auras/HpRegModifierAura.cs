@@ -8,12 +8,12 @@ namespace Game.Units.Spells.Auras
     {
         public float hpRegModifier = 0f;
 
-        protected override void Applying(UnitBehaviour unit)
+        protected override void Apply(UnitBehaviour unit)
         {
             unit.hpRegModifier.Adders.Add(hpRegModifier);
         }
 
-        protected override void Removing(UnitBehaviour unit)
+        protected override void Remove(UnitBehaviour unit)
         {
             unit.hpRegModifier.Adders.Add(hpRegModifier);
         }

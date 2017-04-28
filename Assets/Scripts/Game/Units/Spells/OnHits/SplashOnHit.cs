@@ -9,7 +9,7 @@ namespace Game.Units.Spells.OnHits
 
         public float range;
 
-        protected override float ApplyEffect(float baseDamage, UnitBehaviour target, UnitBehaviour owner, out PostDamageEffect postDamageEffect)
+        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = HandlePostDamageEffect;
             return 0f;

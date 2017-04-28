@@ -11,7 +11,7 @@ namespace Game.Units
         /// The movement speed in <units> per second.
         /// </summary>
         [Tooltip("Movement speed in <units> per second")]
-        public float movementSpeed = 2;
+        public float movementSpeed = 2f;
 
         [NonSerialized]
         public UnitBehaviour owner;
@@ -20,7 +20,7 @@ namespace Game.Units
         private float damageMin;
         private AttackType attackType;
 
-        private List<Spells.OnHits.OnHit> onHits = new List<Game.Units.Spells.OnHits.OnHit>();
+        private List<Spells.OnHits.OnHit> onHits = new List<Spells.OnHits.OnHit>();
 
         /// <summary>
         /// The target which this projectile is flying towards and going to deal damage to.
@@ -65,7 +65,7 @@ namespace Game.Units
                     foreach(Spells.OnHits.OnHit onHit in onHits)
                     {
                         PostDamageEffect postDamageEffect;
-                        totalDamage += onHit.Hit(baseDamage, target, owner, out postDamageEffect);
+                        totalDamage += onHit.Hit(baseDamage, target, out postDamageEffect);
                         if(postDamageEffect != null)
                             postDamageEffects.Add(postDamageEffect);
                     }

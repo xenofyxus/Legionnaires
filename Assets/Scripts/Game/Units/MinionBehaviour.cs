@@ -1,16 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Units
 {
-	public class MinionBehaviour : UnitBehaviour
-	{
+    public class MinionBehaviour : UnitBehaviour
+    {
         [Header("Minion specific attributes")]
-		public int value;
+        public int value;
+
+        public static List<MinionBehaviour> minions = new List<MinionBehaviour>();
+
+        void Awake()
+        {
+            minions.Add(this);
+        }
+
+        void OnDestroy()
+        {
+            minions.Remove(this);
+        }
 
         // TODO: Add king as secondary target
         protected override UnitBehaviour GetTarget()
-		{
+        {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Legionnaire");
             if(enemies.Length > 0)
             {
@@ -22,13 +35,14 @@ namespace Game.Units
                         closestEnemy = enemies[i];
                     }
                 }
-				if (Vector2.Distance (transform.position, closestEnemy.transform.position) < 6) {
-					return closestEnemy.GetComponent<UnitBehaviour>();
-				}
+                if(Vector2.Distance(transform.position, closestEnemy.transform.position) < 6)
+                {
+                    return closestEnemy.GetComponent<UnitBehaviour>();
+                }
 
-			}
+            }
             return null;
-		}
+        }
 
         public override UnitBehaviour[] GetFriendlies()
         {
@@ -51,12 +65,11 @@ namespace Game.Units
             }
             return enemyBehaviours;
         }
-			
-		protected override Vector2 GetDefaultTargetPosition ()
-		{
-			Vector2 defaultPosition = new Vector2(transform.position.x, -15);
-			return defaultPosition;
-		}
-	}
+
+        protected override Vector2? GetDefaultTargetPosition()
+        {
+            return new Vector2(transform.position.x, -15);
+        }
+    }
 }
 

@@ -13,15 +13,6 @@ namespace Game.Units
 {
     public abstract class UnitBehaviour : MonoBehaviour
     {
-        [NonSerialized]
-        public List<Spells.Auras.Aura> auras = new List<Game.Units.Spells.Auras.Aura>();
-
-        [NonSerialized]
-        public List<Spells.OnHits.OnHit> onHits = new List<Game.Units.Spells.OnHits.OnHit>();
-
-        [NonSerialized]
-        public List<Buffs.Buff> buffs = new List<Game.Units.Buffs.Buff>();
-
         [Header("Unit Stats")]
 
         /// <summary>
@@ -43,7 +34,7 @@ namespace Game.Units
         private float rangeBase;
 
         [NonSerialized]
-        public StatModifier rangeModifier=new StatModifier();
+        public StatModifier rangeModifier = new StatModifier();
 
         /// <summary>
         /// Gets or sets the movement speed.
@@ -54,7 +45,7 @@ namespace Game.Units
         private float movementSpeedBase;
 
         [NonSerialized]
-        public StatModifier movementSpeedModifier=new StatModifier();
+        public StatModifier movementSpeedModifier = new StatModifier();
 
         /// <summary>
         /// Gets or sets the attack speed.
@@ -65,7 +56,7 @@ namespace Game.Units
         private float attackSpeedBase;
 
         [NonSerialized]
-        public StatModifier attackSpeedModifier=new StatModifier();
+        public StatModifier attackSpeedModifier = new StatModifier();
 
         /// <summary>
         /// Gets or sets the Hit Points.
@@ -79,7 +70,7 @@ namespace Game.Units
         private float hpMaxBase;
 
         [NonSerialized]
-        public StatModifier hpMaxModifier=new StatModifier();
+        public StatModifier hpMaxModifier = new StatModifier();
 
         /// <summary>
         /// The HP reg defined in +HP/sec.
@@ -90,7 +81,7 @@ namespace Game.Units
         private float hpRegBase;
 
         [NonSerialized]
-        public StatModifier hpRegModifier=new StatModifier();
+        public StatModifier hpRegModifier = new StatModifier();
 
         /// <summary>
         /// Gets or sets the maximum damage.
@@ -101,7 +92,7 @@ namespace Game.Units
         private float damageMaxBase;
 
         [NonSerialized]
-        public StatModifier damageMaxModifier=new StatModifier();
+        public StatModifier damageMaxModifier = new StatModifier();
 
         /// <summary>
         /// Gets or sets the minimum damage.FFFFF
@@ -113,7 +104,7 @@ namespace Game.Units
         private float damageMinBase;
 
         [NonSerialized]
-        public StatModifier damageMinModifier=new StatModifier();
+        public StatModifier damageMinModifier = new StatModifier();
 
         [Header("Projectile")]
 
@@ -135,37 +126,16 @@ namespace Game.Units
         [Tooltip("The speed of the projectile, set to anything above 0 to override the projectile's default setting")]
         public float projectileSpeed;
 
-        private float attackDeltaTime = -1;
+        private float attackDelayTimer = 0;
 
         Animator anim;
 
-        Collider2D[] colliders = new Collider2D[100];
-        CircleCollider2D circleCollider;
+        Collider2D[] otherColliders = new Collider2D[100];
+        CircleCollider2D thisCollider;
 
         void Start()
         {
             hpMax = hp;
-
-            circleCollider = GetComponent<CircleCollider2D>();
-
-            anim = GetComponent<Animator>();
-
-            onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
-            auras.AddRange(GetComponents<Spells.Auras.Aura>());
-            foreach(var aura in auras)
-            {
-                switch(aura.target)
-                {
-                    case Spells.Auras.AuraTarget.Friendlies:
-                        aura.Apply(GetFriendlies());
-                        break;
-                    case Spells.Auras.AuraTarget.Enemies:
-                        aura.Apply(GetEnemies());
-                        break;
-                    default:
-                        break;
-                }
-            }
 
             // Setting base stats
             rangeBase = range;
@@ -175,6 +145,10 @@ namespace Game.Units
             hpRegBase = hpReg;
             damageMaxBase = damageMax;
             damageMinBase = damageMin;
+
+            thisCollider = GetComponent<CircleCollider2D>();
+
+            anim = GetComponent<Animator>();
         }
 
         void Update()
@@ -188,42 +162,34 @@ namespace Game.Units
             damageMax = damageMaxModifier.Modify(damageMaxBase);
             damageMin = damageMinModifier.Modify(damageMinBase);
 
-            if(attackDeltaTime >= 0)
+            if(attackDelayTimer > 0)
             {
-                attackDeltaTime += Time.deltaTime;
-                if(attackDeltaTime >= 1f / attackSpeed)
+                attackDelayTimer += Time.deltaTime;
+                if(attackDelayTimer >= 1f / attackSpeed)
                 {
-                    attackDeltaTime = -1;
+                    attackDelayTimer = 0;
                 }
             }
-
-            Vector2 lastPosition = transform.position;
 
             UnitBehaviour target = GetTarget();
 
             if(target == null)
             {
-                Vector2 defaultTarget = GetDefaultTargetPosition();
+                Vector2? defaultTarget = GetDefaultTargetPosition();
 
-                if(defaultTarget.x != Mathf.Infinity)
+                if(defaultTarget.HasValue)
                 {
-                    MoveTowards(defaultTarget);
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, defaultTarget - (Vector2)transform.position), 360 * Time.deltaTime);
-                    if(anim != null)
-                    {
-                        anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-                        anim.SetBool("fight", false);
-                    }
+                    MoveTowards(defaultTarget.Value);
                 }
             }
             else
             {
                 Collider2D targetCollider = target.GetComponent<Collider2D>();
-                if(circleCollider.Distance(targetCollider).distance <= range)
+                if(thisCollider.Distance(targetCollider).distance <= range)
                 {
-                    if(attackDeltaTime == -1)
+                    if(attackDelayTimer == 0)
                     {
-                        attackDeltaTime = 0;
+                        attackDelayTimer += Time.deltaTime;
 
                         if(projectile == null)
                         {
@@ -233,10 +199,10 @@ namespace Game.Units
 
                             var postDamageEffects = new List<PostDamageEffect>();
 
-                            foreach(Spells.OnHits.OnHit onHit in onHits)
+                            foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
                             {
                                 PostDamageEffect postDamageEffect;
-                                totalDamage += onHit.Hit(baseDamage, target, this, out postDamageEffect);
+                                totalDamage += onHit.Hit(baseDamage, target, out postDamageEffect);
                                 if(postDamageEffect != null)
                                     postDamageEffects.Add(postDamageEffect);
                             }
@@ -245,15 +211,15 @@ namespace Game.Units
 
                             target.ApplyDamage(totalDamage);
 
-                            float totalHeals = 0;
+                            float totalHeal = 0;
 
                             foreach(var postDamageEffect in postDamageEffects)
                             {
-                                totalHeals += postDamageEffect(totalDamage, target, this);
+                                totalHeal += postDamageEffect(totalDamage, target, this);
                             }
 
                             // Applies negative damage which gives negative heals the ability to kill this unit
-                            if(ApplyDamage(-totalHeals))
+                            if(ApplyDamage(-totalHeal))
                                 return;
                         }
                         else
@@ -266,7 +232,7 @@ namespace Game.Units
                             if(projectileSpeed > 0)
                                 newProjectile.movementSpeed = projectileSpeed;
 
-                            foreach(Spells.OnHits.OnHit onHit in onHits)
+                            foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
                             {
                                 Spells.OnHits.OnHit newOnHit = (Spells.OnHits.OnHit)newProjectile.gameObject.AddComponent(onHit.GetType());
                                 FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
@@ -278,24 +244,33 @@ namespace Game.Units
                         }
                     }
                     if(anim != null)
+                    {
                         anim.SetBool("fight", true);
+                        anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                    }
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
                 }
                 else
                 {
                     MoveTowards(target.transform.position);
-                    if(anim != null)
-                        anim.SetBool("fight", false);
                 }
-                if(anim != null)
-                    anim.SetFloat("speed", movementSpeed * Time.deltaTime);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.FromToRotation(Vector2.down, target.transform.position - transform.position), 360 * Time.deltaTime);
             }
-
-            lastPosition = transform.position;
 
             // Applies negative damage which gives negative hp regeneration the ability to kill this unit
             if(ApplyDamage(-hpReg * Time.deltaTime))
                 return;
+        }
+
+        void OnDestroy()
+        {
+            foreach(var aura in GetComponents<Spells.Auras.Aura>())
+            {
+                Destroy(aura);
+            }
+            foreach(var buff in GetComponents<Buffs.Buff>())
+            {
+                Destroy(buff);
+            }
         }
 
         /// <summary>
@@ -308,18 +283,26 @@ namespace Game.Units
             transform.position = (Vector2)transform.position + velocity;
 
             Vector2 collisionOffset = Vector2.zero;
-            int colliderCount = circleCollider.OverlapCollider(new ContactFilter2D(), colliders);
+            int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D(), otherColliders);
             for(int i = 0; i < colliderCount; i++)
             {
-                Collider2D collider = colliders[i];
+                Collider2D collider = otherColliders[i];
                 if(collider.GetComponent<ProjectileBehaviour>() == null)
                 {
-                    ColliderDistance2D colliderDistance = circleCollider.Distance(collider);
+                    ColliderDistance2D colliderDistance = thisCollider.Distance(collider);
                     collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
                 }
             }
             
             transform.position = (Vector2)transform.position + collisionOffset;
+            Quaternion targetRotation = Quaternion.FromToRotation(Vector2.down, targetPos - (Vector2)transform.position);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
+
+            if(anim != null)
+            {
+                anim.SetFloat("speed", movementSpeed * Time.deltaTime);
+                anim.SetBool("fight", false);
+            }
         }
 
         /// <summary>
@@ -333,14 +316,6 @@ namespace Game.Units
             hp -= damage;
             if(hp < 1)
             {
-                foreach(var aura in auras)
-                {
-                    aura.Remove();
-                }
-                foreach(var buff in buffs)
-                {
-                    buff.Remove();
-                }
                 GameObject.Destroy(gameObject);
                 return true;
             }
@@ -373,7 +348,7 @@ namespace Game.Units
         /// Gets the default target position.
         /// </summary>
         /// <returns>The default target position.</returns>
-        protected abstract Vector2 GetDefaultTargetPosition();
+        protected abstract Vector2? GetDefaultTargetPosition();
     }
 
     public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);

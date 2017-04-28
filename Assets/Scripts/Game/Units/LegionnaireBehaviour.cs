@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Units
@@ -14,6 +15,18 @@ namespace Game.Units
         public int cost;
 
         public int supply;
+
+        public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
+
+        void Awake()
+        {
+            legionnaires.Add(this);
+        }
+
+        void OnDestroy()
+        {
+            legionnaires.Remove(this);
+        }
 
         protected override UnitBehaviour GetTarget()
         {
@@ -60,10 +73,9 @@ namespace Game.Units
         }
 
 
-		protected override Vector2 GetDefaultTargetPosition ()
+		protected override Vector2? GetDefaultTargetPosition ()
 		{
-			Vector2 defaultTarget = new Vector2 (Mathf.Infinity, Mathf.Infinity);
-			return defaultTarget;
+			return null;
         }
     }
 }

@@ -5,23 +5,17 @@ namespace Game.Units.Buffs
 {
     public class DotBuff:Buff
     {
-        public string id;
-
-        public int stacks;
-
-        public float stackMultiplier;
-
         public float totalDamage;
 
         private float hpRegModifier;
 
         protected override void Apply()
         {
-            hpRegModifier = -(Mathf.Pow(stackMultiplier, stacks - 1) * totalDamage / duration);
+            hpRegModifier = -(totalDamage / duration);
             owner.hpRegModifier.Adders.Add(hpRegModifier);
         }
 
-        protected override void Removing()
+        protected override void Remove()
         {
             owner.hpRegModifier.Adders.Remove(hpRegModifier);
         }

@@ -7,17 +7,14 @@ namespace Game.Units.Buffs
     {
         public float duration = 0;
 
-        public UnitBehaviour owner;
+        [NonSerialized]
+        public object metaData;
+
+        protected UnitBehaviour owner;
 
         protected abstract void Apply();
 
-        public void Remove()
-        {
-            Removing();
-            GameObject.Destroy(this);
-        }
-
-        protected abstract void Removing();
+        protected abstract void Remove();
 
         void Start()
         {
@@ -31,8 +28,13 @@ namespace Game.Units.Buffs
                 duration -= Time.deltaTime;
             else
             {
-                Remove();
+                Destroy(this);
             }
+        }
+
+        void OnDestroy()
+        {
+            Remove();
         }
     }
 }
