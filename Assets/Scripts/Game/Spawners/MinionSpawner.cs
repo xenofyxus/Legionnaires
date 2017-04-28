@@ -24,6 +24,7 @@ public class MinionSpawner : MonoBehaviour
 	private GameObject[] waveObjects;
 
 	private bool newWave;
+	public bool playerReady = false;
 	private int numberOfUnitsSpawned = 0;
 	private float instantiateTimer = 5f;
 	//time until next wave starts.
@@ -44,7 +45,7 @@ public class MinionSpawner : MonoBehaviour
 			legionnaireSpawner.GetComponent<LegionnaireSpawner> ().Reset ();
 			newWave = true;
 		}
-		if (newWave) {
+		if (newWave && playerReady) {
 			NextWave ();
 		}
 	}
@@ -77,8 +78,13 @@ public class MinionSpawner : MonoBehaviour
 			if (waveNumber == waveObjList.Count) {
 				waveNumber = 0;
 			}
+			playerReady = false;
 			newWave = false;
 		}
+	}
+
+	public void PLayerReady(){
+		playerReady = true;
 	}
 }
 
