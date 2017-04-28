@@ -359,6 +359,7 @@ namespace Game.Units
         Light,
         Medium,
         Heavy,
+		KingArmor,
         Invulnerable
     }
 
