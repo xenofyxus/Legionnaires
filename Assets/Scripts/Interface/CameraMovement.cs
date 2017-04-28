@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour {
 
-	private GameObject[] remainingMinions;
+	private GameObject getLegionnaires;
 
 	void Start () {
 
 	}
 	void LateUpdate()
 	{
-		remainingMinions = GameObject.FindGameObjectsWithTag ("Minion");
-		if (remainingMinions [0].transform.position.y < Camera.main.transform.position.y && Camera.main.transform.position.y > -7.3) {
+		
+		if (Game.Units.LegionnaireBehaviour.legionnaires.Count == 0 && Game.Units.MinionBehaviour.minions.Count != 0) {
 
-			Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, new Vector3 (0, remainingMinions [0].transform.position.y, -10), 3 * Time.deltaTime);
+			if (Game.Units.MinionBehaviour.minions [0].transform.position.y < Camera.main.transform.position.y && Camera.main.transform.position.y > -7.3) {
+				Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, new Vector3 (0, Game.Units.MinionBehaviour.minions [0].transform.position.y, -10), 3 * Time.deltaTime);
+			}
 		}
 	}
 }

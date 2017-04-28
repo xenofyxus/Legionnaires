@@ -16,7 +16,6 @@ namespace Game.Units
 	
         public int supply;
 
-		public GameObject cameraMovement;
         public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
 
         void Awake()
@@ -27,9 +26,6 @@ namespace Game.Units
         void OnDestroy()
         {
             legionnaires.Remove(this);
-			if (legionnaires.Count == 0) {
-				Instantiate(cameraMovement, new Vector3 (0, 0, 0), transform.rotation);
-			}
 		}
 
         protected override UnitBehaviour GetTarget()
