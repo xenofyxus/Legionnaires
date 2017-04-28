@@ -22,6 +22,10 @@ namespace Game.Units
 
 			switch (targetArmor) {
 
+			case ArmorType.KingArmor:
+				ratio = 0.80f;
+				break;
+
 			case ArmorType.Invulnerable:
 				ratio = 0.00f;
 				break;
