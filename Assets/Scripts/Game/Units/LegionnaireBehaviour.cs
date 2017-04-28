@@ -72,7 +72,6 @@ namespace Game.Units
             return enemyBehaviours;
         }
 
-
 		protected override Vector2? GetDefaultTargetPosition ()
 		{
 			return null;
