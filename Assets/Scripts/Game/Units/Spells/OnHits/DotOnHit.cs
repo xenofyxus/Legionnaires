@@ -5,8 +5,6 @@ namespace Game.Units.Spells.OnHits
 {
     public class DotOnHit : OnHit
     {
-        public string dotName;
-
         public float totalDamage;
 
         public int maxStacks;
@@ -26,7 +24,7 @@ namespace Game.Units.Spells.OnHits
             foreach(Buffs.DotBuff dot in activeDots)
             {
                 DotMetaData dotMetaData = dot.metaData as DotMetaData;
-                if(dotMetaData.dotName == dotName)
+                if(dotMetaData.dotName == spellName)
                 {
                     activeDot = dot;
                     break;
@@ -38,7 +36,7 @@ namespace Game.Units.Spells.OnHits
             {
                 Buffs.DotBuff dot = target.gameObject.AddComponent<Buffs.DotBuff>();
 
-                dot.metaData = new DotMetaData(dotName);
+                dot.metaData = new DotMetaData(spellName);
                 DotMetaData dotMetaData = dot.metaData as DotMetaData;
 
                 dotMetaData.stacks = 1;
@@ -56,7 +54,7 @@ namespace Game.Units.Spells.OnHits
 
                     Buffs.DotBuff newDot = target.gameObject.AddComponent<Buffs.DotBuff>();
 
-                    newDot.metaData = new DotMetaData(dotName);
+                    newDot.metaData = new DotMetaData(spellName);
                     DotMetaData newDotMetaData = newDot.metaData as DotMetaData;
 
                     newDotMetaData.stacks = newStacks;

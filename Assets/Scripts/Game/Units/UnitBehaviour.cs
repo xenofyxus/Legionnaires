@@ -186,6 +186,7 @@ namespace Game.Units
                     // TODO Fix and sync
                     anim.SetBool("fight", false);
                     anim.SetFloat("speed", 1f / 0f);
+
                 }
             }
             else
@@ -343,7 +344,7 @@ namespace Game.Units
         /// Gets the target to attack.
         /// </summary>
         /// <returns>The target.</returns>
-        protected abstract UnitBehaviour GetTarget();
+        public abstract UnitBehaviour GetTarget();
 
         /// <summary>
         /// Gets all friendlies.
@@ -361,7 +362,7 @@ namespace Game.Units
         /// Gets the default target position.
         /// </summary>
         /// <returns>The default target position.</returns>
-        protected abstract Vector2? GetDefaultTargetPosition();
+        public abstract Vector2? GetDefaultTargetPosition();
     }
 
     public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);
@@ -372,7 +373,7 @@ namespace Game.Units
         Light,
         Medium,
         Heavy,
-        KingArmor,
+        BossArmor,
         Invulnerable
     }
 

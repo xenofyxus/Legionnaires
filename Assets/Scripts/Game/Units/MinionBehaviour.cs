@@ -21,7 +21,7 @@ namespace Game.Units
             minions.Remove(this);
         }
 
-        protected override UnitBehaviour GetTarget()
+        public override UnitBehaviour GetTarget()
         {
             UnitBehaviour[] enemies = GetEnemies();
             if(enemies.Length > 0)
@@ -63,7 +63,7 @@ namespace Game.Units
             return enemies;
         }
 
-        protected override Vector2? GetDefaultTargetPosition()
+        public override Vector2? GetDefaultTargetPosition()
         {
             return new Vector2(transform.position.x, -15);
         }

@@ -5,6 +5,17 @@ namespace Game.Units.Spells.Auras
 {
     public abstract class Aura : MonoBehaviour
     {
+        [Header("Spell info")]
+
+        public string spellName;
+
+        [Multiline()]
+        public string description;
+
+        public Sprite icon;
+
+        [Header("Spell data")]
+
         public AuraTarget target;
 
         private UnitBehaviour[] units;

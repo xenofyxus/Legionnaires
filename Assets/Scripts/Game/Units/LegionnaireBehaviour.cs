@@ -28,7 +28,7 @@ namespace Game.Units
             legionnaires.Remove(this);
         }
 
-        protected override UnitBehaviour GetTarget()
+        public override UnitBehaviour GetTarget()
         {
             UnitBehaviour[] enemies = GetEnemies();
             if(enemies.Length > 0)
@@ -61,7 +61,7 @@ namespace Game.Units
             return MinionBehaviour.minions.ToArray();
         }
 
-        protected override Vector2? GetDefaultTargetPosition()
+        public override Vector2? GetDefaultTargetPosition()
         {
             return null;
         }

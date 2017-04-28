@@ -9,6 +9,17 @@ namespace Game.Units.Spells.OnHits
     [System.Serializable]
     public abstract class OnHit : MonoBehaviour
     {
+        [Header("Spell info")]
+
+        public string spellName;
+
+        [Multiline()]
+        public string description;
+
+        public Sprite icon;
+
+        [Header("Spell data")]
+
         [Range(1, 100)]
         public int hitChance = 100;
 

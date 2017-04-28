@@ -11,7 +11,7 @@ namespace Game.Units
 
         private const float viewDistance = 8;
 
-        protected override UnitBehaviour GetTarget()
+        public override UnitBehaviour GetTarget()
         {
             if(stickedTarget == null)
             {
@@ -65,7 +65,7 @@ namespace Game.Units
             return LegionnaireBehaviour.legionnaires.ToArray();
         }
 
-        protected override Vector2? GetDefaultTargetPosition()
+        public override Vector2? GetDefaultTargetPosition()
         {
             return null;
         }
