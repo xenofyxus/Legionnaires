@@ -13,7 +13,7 @@ namespace Game.Units
     {
         [Header("Legionnaire specific attributes")]
         public int cost;
-
+	
         public int supply;
 
         public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
@@ -26,7 +26,7 @@ namespace Game.Units
         void OnDestroy()
         {
             legionnaires.Remove(this);
-        }
+		}
 
         protected override UnitBehaviour GetTarget()
         {
