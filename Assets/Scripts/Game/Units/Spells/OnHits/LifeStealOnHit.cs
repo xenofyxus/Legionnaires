@@ -6,15 +6,14 @@ namespace Game.Units.Spells.OnHits
     {
         public float healingMultiplier;
 
-        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        protected override void Apply(float baseDamage, StatModifier modifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = HandlePostDamageEffect;
-            return 0;
         }
 
-        float HandlePostDamageEffect(float damage, UnitBehaviour target, UnitBehaviour owner)
+        void HandlePostDamageEffect(float damage, StatModifier healModifier, UnitBehaviour target)
         {
-            return damage * healingMultiplier;
+            healModifier.Adders.Add(damage * healingMultiplier);
         }
     }
 }

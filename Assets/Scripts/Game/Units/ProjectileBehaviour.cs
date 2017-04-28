@@ -56,35 +56,43 @@ namespace Game.Units
                 targetPosition = target.transform.position;
                 if(thisCollider.Distance(targetCollider).isOverlapped)
                 {
-                    float baseDamage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+                    float damage = UnityEngine.Random.Range(damageMin, damageMax);
 
-                    float totalDamage = baseDamage;
+                    StatModifier damageModifier = new StatModifier();
 
                     var postDamageEffects = new List<PostDamageEffect>();
 
-                    foreach(Spells.OnHits.OnHit onHit in onHits)
+                    foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
                     {
                         PostDamageEffect postDamageEffect;
-                        totalDamage += onHit.Hit(baseDamage, target, out postDamageEffect);
+                        onHit.Hit(damage, damageModifier, target, out postDamageEffect);
                         if(postDamageEffect != null)
                             postDamageEffects.Add(postDamageEffect);
                     }
 
-                    totalDamage *= DamageRatios.GetRatio(target.armorType, attackType);
+                    foreach(Spells.WhenHits.WhenHit whenHit in target.GetComponents<Spells.WhenHits.WhenHit>())
+                    {
+                        whenHit.Hit(damage, damageModifier, owner);
+                    }
 
-                    target.ApplyDamage(totalDamage);
+                    damage = damageModifier.Modify(damage);
 
-                    float totalHeals = 0;
+                    damage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                    target.ApplyDamage(damage);
+
+                    StatModifier healModifier = new StatModifier();
 
                     foreach(var postDamageEffect in postDamageEffects)
                     {
-                        totalHeals += postDamageEffect(totalDamage, target, owner);
+                        postDamageEffect(damage, healModifier, target);
                     }
 
                     if(owner != null)
                     {
+                        
                         // Applies negative damage which gives negative heals the ability to kill the owner
-                        if(owner.ApplyDamage(-totalHeals))
+                        if(owner.ApplyDamage(-healModifier.Modify(0)))
                             return;
                     }
 

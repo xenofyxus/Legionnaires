@@ -9,13 +9,12 @@ namespace Game.Units.Spells.OnHits
 
         public float range;
 
-        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        protected override void Apply(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = HandlePostDamageEffect;
-            return 0f;
         }
 
-        float HandlePostDamageEffect (float damage, UnitBehaviour target, UnitBehaviour owner)
+        void HandlePostDamageEffect (float damage, StatModifier healModifier, UnitBehaviour target)
         {
             foreach(var enemy in target.GetFriendlies())
             {
@@ -24,7 +23,6 @@ namespace Game.Units.Spells.OnHits
                     enemy.ApplyDamage(damage * damageMultiplier);
                 }
             }
-            return 0f;
         }
     }
 }

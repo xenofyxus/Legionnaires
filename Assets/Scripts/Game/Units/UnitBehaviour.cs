@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System.Reflection;
 
 namespace Game.Units
@@ -200,33 +199,39 @@ namespace Game.Units
 
                         if(projectile == null)
                         {
-                            float baseDamage = UnityEngine.Random.Range(damageMin, damageMax + 1);
+                            float damage = UnityEngine.Random.Range(damageMin, damageMax);
 
-                            float totalDamage = baseDamage;
+                            StatModifier damageModifier = new StatModifier();
 
                             var postDamageEffects = new List<PostDamageEffect>();
 
                             foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
                             {
                                 PostDamageEffect postDamageEffect;
-                                totalDamage += onHit.Hit(baseDamage, target, out postDamageEffect);
+                                onHit.Hit(damage, damageModifier, target, out postDamageEffect);
                                 if(postDamageEffect != null)
                                     postDamageEffects.Add(postDamageEffect);
                             }
 
-                            totalDamage *= DamageRatios.GetRatio(target.armorType, attackType);
+                            foreach(Spells.WhenHits.WhenHit whenHit in target.GetComponents<Spells.WhenHits.WhenHit>())
+                            {
+                                whenHit.Hit(damage, damageModifier, this);
+                            }
 
-                            target.ApplyDamage(totalDamage);
+                            damage = damageModifier.Modify(damage);
 
-                            float totalHeal = 0;
+                            damage *= DamageRatios.GetRatio(target.armorType, attackType);
+
+                            target.ApplyDamage(damage);
+
+                            StatModifier healModifier = new StatModifier();
 
                             foreach(var postDamageEffect in postDamageEffects)
                             {
-                                totalHeal += postDamageEffect(totalDamage, target, this);
+                                postDamageEffect(damage, healModifier, target);
                             }
 
-                            // Applies negative damage which gives negative heals the ability to kill this unit
-                            if(ApplyDamage(-totalHeal))
+                            if(ApplyDamage(-healModifier.Modify(0)))
                                 return;
                         }
                         else
@@ -365,7 +370,7 @@ namespace Game.Units
         public abstract Vector2? GetDefaultTargetPosition();
     }
 
-    public delegate float PostDamageEffect(float damage,UnitBehaviour target,UnitBehaviour owner);
+    public delegate void PostDamageEffect(float damage,StatModifier healModifier,UnitBehaviour target);
 
     public enum ArmorType
     {

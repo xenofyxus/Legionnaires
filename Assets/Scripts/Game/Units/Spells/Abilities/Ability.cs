@@ -36,6 +36,7 @@ namespace Game.Units.Spells.Abilities
         {
             if(cooldownTimer == 0)
             {
+                cooldownTimer += Time.deltaTime;
                 UnitBehaviour target = null;
                 switch(targets)
                 {

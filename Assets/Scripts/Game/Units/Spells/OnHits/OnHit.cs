@@ -23,23 +23,19 @@ namespace Game.Units.Spells.OnHits
         [Range(1, 100)]
         public int hitChance = 100;
 
-        private const int minHitChance = 1;
-        private const int maxHitChance = 100;
-
         /// <summary>
         /// Do not set this owner if you are not adding this OnHit to anything other than a UnitBehaviour
         /// </summary>
         [System.NonSerialized]
         public UnitBehaviour owner;
 
-        public float Hit(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        public void Hit(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = null;
-            if(Random.Range(minHitChance, maxHitChance + 1) <= hitChance)
+            if(Random.Range(1, 101) <= hitChance)
             {
-                return Apply(baseDamage, target, out postDamageEffect);
+                Apply(baseDamage, damageModifier, target, out postDamageEffect);
             }
-            return 0;
         }
 
         /// <summary>
@@ -47,7 +43,7 @@ namespace Game.Units.Spells.OnHits
         /// </summary>
         /// <param name="target">Target unit to apply the effect on.</param>
         /// <returns>>The added damage when applying it do the enemy</returns>
-        protected abstract float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect);
+        protected abstract void Apply(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect);
 
         void Start()
         {

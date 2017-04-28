@@ -15,7 +15,7 @@ namespace Game.Units.Spells.OnHits
         [UnityEngine.Range(0f, 20f)]
         public float duration;
 
-        protected override float Apply(float baseDamage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        protected override void Apply(float baseDamage, StatModifier modifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             Buffs.DotBuff[] activeDots = target.GetComponents<Buffs.DotBuff>();
             Buffs.DotBuff activeDot = null;
@@ -69,7 +69,6 @@ namespace Game.Units.Spells.OnHits
             }
 
             postDamageEffect = null;
-            return 0f;
         }
 
         private class DotMetaData
