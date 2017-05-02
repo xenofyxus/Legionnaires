@@ -7,9 +7,23 @@ namespace Game.Units
 {
     public class KingBehaviour :  UnitBehaviour
     {
+
+        protected static KingBehaviour currentKing;
+
+        public static KingBehaviour CurrentKing
+        {
+            get{ return currentKing; }
+        }
+
         private UnitBehaviour stickedTarget;
 
         private const float viewDistance = 8;
+
+        protected override void Start()
+        {
+            base.Start();
+            currentKing = this;
+        }
 
         public override UnitBehaviour GetTarget()
         {
@@ -57,12 +71,12 @@ namespace Game.Units
 
         public override UnitBehaviour[] GetEnemies()
         {
-            return MinionBehaviour.minions.ToArray();
+            return MinionBehaviour.Minions.ToArray();
         }
 
         public override UnitBehaviour[] GetFriendlies()
         {
-            return LegionnaireBehaviour.legionnaires.ToArray();
+            return LegionnaireBehaviour.Legionnaires.ToArray();
         }
 
         public override Vector2? GetDefaultTargetPosition()

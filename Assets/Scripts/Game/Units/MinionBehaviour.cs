@@ -8,27 +8,32 @@ namespace Game.Units
     {
         [Header("Minion specific attributes")]
 
-		[SerializeField]
-		protected int value;
+        [SerializeField]
+        protected int value;
 
-		public int Value
-		{
-			get{ return value; }
-			set{ this.value = value; }
-		}
+        public int Value
+        {
+            get{ return value; }
+            set{ this.value = value; }
+        }
 
-        public static List<MinionBehaviour> minions = new List<MinionBehaviour>();
+        protected static List<MinionBehaviour> minions = new List<MinionBehaviour>();
+
+        public static List<MinionBehaviour> Minions
+        {
+            get{ return minions; }
+        }
 
         void Awake()
         {
             minions.Add(this);
         }
 
-	    protected override void OnDestroy()
-		{
-			base.OnDestroy();
-			minions.Remove(this);
-		}
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            minions.Remove(this);
+        }
 
         public override UnitBehaviour GetTarget()
         {
@@ -53,23 +58,21 @@ namespace Game.Units
 
         public override UnitBehaviour[] GetFriendlies()
         {
-            return minions.ToArray();
+            List<MinionBehaviour> friendlies = new List<MinionBehaviour>(minions);
+            friendlies.Remove(this);
+            return friendlies.ToArray();
         }
 
         public override UnitBehaviour[] GetEnemies()
         {
-            GameObject kingObject = GameObject.FindGameObjectWithTag("King");
-            UnitBehaviour[] enemies = new UnitBehaviour[LegionnaireBehaviour.legionnaires.Count + (kingObject != null ? 1 : 0)];
-
-            for(int i = 0; i < LegionnaireBehaviour.legionnaires.Count; i++)
+            if(LegionnaireBehaviour.Legionnaires.Count > 0)
             {
-                enemies[i] = LegionnaireBehaviour.legionnaires[i];
+                return LegionnaireBehaviour.Legionnaires.ToArray();
             }
-
-            if(kingObject != null)
-                enemies[enemies.Length - 1] = kingObject.GetComponent<KingBehaviour>();
-            
-            return enemies;
+            else
+            {
+                return new UnitBehaviour[]{ GameObject.Find("King").GetComponent<KingBehaviour>() };
+            }
         }
 
         public override Vector2? GetDefaultTargetPosition()

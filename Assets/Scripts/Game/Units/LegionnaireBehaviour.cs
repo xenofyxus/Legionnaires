@@ -10,28 +10,33 @@ using UnityEngine;
 namespace Game.Units
 {
     public class LegionnaireBehaviour : UnitBehaviour
-	{
+    {
         [Header("Legionnaire specific attributes")]
 
-		[SerializeField]
-		protected int cost;
+        [SerializeField]
+        protected int cost;
 
-		public int Cost
-		{
-			get{ return cost; }
-			set{ cost = value; }
-		}
+        public int Cost
+        {
+            get{ return cost; }
+            set{ cost = value; }
+        }
 
-		[SerializeField]
-		protected int supply;
+        [SerializeField]
+        protected int supply;
 
-		public int Supply
-		{
-			get{ return supply; }
-			set{ supply = value; }
-		}
+        public int Supply
+        {
+            get{ return supply; }
+            set{ supply = value; }
+        }
 
         public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
+
+        public static List<LegionnaireBehaviour> Legionnaires
+        {
+            get{ return legionnaires; }
+        }
 
         void Awake()
         {
@@ -40,7 +45,7 @@ namespace Game.Units
 
         protected override void OnDestroy()
         {
-			base.OnDestroy();
+            base.OnDestroy();
             legionnaires.Remove(this);
         }
 
@@ -69,12 +74,14 @@ namespace Game.Units
 
         public override UnitBehaviour[] GetFriendlies()
         {
-            return legionnaires.ToArray();
+            List<LegionnaireBehaviour> friendlies = new List<LegionnaireBehaviour>(legionnaires);
+            friendlies.Remove(this);
+            return friendlies.ToArray();
         }
 
         public override UnitBehaviour[] GetEnemies()
         {
-            return MinionBehaviour.minions.ToArray();
+            return MinionBehaviour.Minions.ToArray();
         }
 
         public override Vector2? GetDefaultTargetPosition()
