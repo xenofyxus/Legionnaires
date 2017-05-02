@@ -25,17 +25,11 @@ namespace Game.Units.Spells.Buffs
         protected override void Update()
         {
             base.Update();
-            if(tickTimer > 0f)
-            {
-                tickTimer += Time.deltaTime;
-                if(tickTimer >= tickTime)
-                {
-                    tickTimer = 0f;
-                }
-            }
-            else if(tickTimer == 0f)
+            tickTimer += Time.deltaTime;
+            if(tickTimer >= tickTime)
             {
                 ApplyTick((tickTime + (tickTime == 0f ? tickTimer : 0)));
+                tickTimer = 0f;
             }
         }
     }
