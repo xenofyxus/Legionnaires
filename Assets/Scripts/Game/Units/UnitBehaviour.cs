@@ -196,7 +196,6 @@ namespace Game.Units
 
         protected virtual void Update()
         {
-			
             if(!alive)
                 return;
 
@@ -231,9 +230,11 @@ namespace Game.Units
                 }
                 else
                 {
+					
                     Collider2D targetCollider = target.GetComponent<Collider2D>();
                     if(thisCollider.Distance(targetCollider).distance <= range)
                     {
+						anim.SetFloat("speed", 0f);
 						if (attackDelayTimer == 0) 
 						{
 							anim.SetBool ("fight", true);
@@ -284,7 +285,6 @@ namespace Game.Units
                         {
                             // TODO Fix and sync
 
-							anim.SetFloat ("speed", movementSpeed);
                         }
                         RotateTowards(target.transform.position);
                     }
@@ -295,6 +295,7 @@ namespace Game.Units
                 }
             }
 			else {
+				//Pushar speed 0 till animatorn för att stoppa walking animation
 				anim.SetFloat ("speed", 0);
 			}
 
