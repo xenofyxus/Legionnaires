@@ -30,15 +30,15 @@ namespace Game.Units.Spells.WhenHits
             owner = GetComponent<UnitBehaviour>();
         }
 
-        public void Hit(float damage, StatModifier damageModifier, UnitBehaviour attacker)
+        public void Hit(UnitStat damage, UnitBehaviour attacker)
         {
             if(UnityEngine.Random.Range(1, 101) <= effectChance)
             {
-                Apply(damage, damageModifier, attacker);
+                Apply(damage, attacker);
             }
         }
 
-        protected abstract void Apply(float damage, StatModifier damageModifier, UnitBehaviour attacker);
+        protected abstract void Apply(UnitStat damage, UnitBehaviour attacker);
     }
 }
 

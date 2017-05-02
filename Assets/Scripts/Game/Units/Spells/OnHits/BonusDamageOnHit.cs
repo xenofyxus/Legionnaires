@@ -1,16 +1,18 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Units.Spells.OnHits
 {
 	[Serializable]
 	public class BonusDamageOnHit : OnHit
 	{
-		public float damage;
+		[SerializeField]
+		private float bonusDamage = 10f;
 
-        protected override void Apply (float baseDamage, StatModifier modifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+		protected override void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
 		{
-            postDamageEffect = null;
-            modifier.Adders.Add(damage);
+			postDamageEffect = null;
+            damage.AddAdder(bonusDamage);
 		}
 	}
 }

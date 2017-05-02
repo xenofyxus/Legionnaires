@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -6,16 +7,17 @@ namespace Game.Units.Spells.Auras
 {
     public class DamageModifierAura:Aura
     {
+		[SerializeField]
         [Range(0f, 2f)]
-        public float bonusMultiplier = 0f;
+		private float multiplier = 0f;
 
         private Dictionary<UnitBehaviour,OnHits.OnHit> onHits = new Dictionary<UnitBehaviour, Game.Units.Spells.OnHits.OnHit>();
 
         protected override void Apply(UnitBehaviour unit)
         {
             var effect = unit.gameObject.AddComponent<OnHits.CritOnHit>();
-            effect.hitChance = 100;
-            effect.multiplier = bonusMultiplier;
+			effect.HitChance = 100;
+            effect.Multiplier = multiplier;
             onHits.Add(unit, effect);
         }
 

@@ -1,29 +1,44 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Units.Spells.OnHits
 {
-    public class SplashOnHit:OnHit
-    {
-        [UnityEngine.Range(0f,2f)]
-        public float damageMultiplier;
+	public class SplashOnHit:OnHit
+	{
+		[SerializeField]
+		[UnityEngine.Range(0f, 2f)]
+		protected float damageMultiplier;
 
-        public float range;
+		public float DamageMultiplier
+		{
+			get{ return damageMultiplier; }
+			set{ damageMultiplier = value; }
+		}
 
-        protected override void Apply(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
-        {
-            postDamageEffect = HandlePostDamageEffect;
-        }
+		[SerializeField]
+		protected float range;
 
-        void HandlePostDamageEffect (float damage, StatModifier healModifier, UnitBehaviour target)
-        {
-            foreach(var enemy in target.GetFriendlies())
-            {
-                if(UnityEngine.Vector2.Distance(target.transform.position, enemy.transform.position) <= range)
-                {
-                    enemy.ApplyDamage(damage * damageMultiplier);
-                }
-            }
-        }
-    }
+		public float Range
+		{
+			get{ return range; }
+			set{ range = value; }
+		}
+
+		protected override void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+		{
+			postDamageEffect = HandlePostDamageEffect;
+		}
+
+		void HandlePostDamageEffect(float damage, UnitStat healing, UnitBehaviour target)
+		{
+			foreach(var enemy in target.GetFriendlies())
+			{
+				if(UnityEngine.Vector2.Distance(target.transform.position, enemy.transform.position) <= range)
+				{
+					enemy.ApplyDamage(damage * damageMultiplier);
+				}
+			}
+		}
+	}
 }
 

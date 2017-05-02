@@ -1,20 +1,22 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Units.Spells.OnHits
 {
-    public class LifeStealOnHit:OnHit
-    {
-        public float healingMultiplier;
+	public class LifeStealOnHit:OnHit
+	{
+		[SerializeField]
+		protected float healingMultiplier;
 
-        protected override void Apply(float baseDamage, StatModifier modifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
-        {
-            postDamageEffect = HandlePostDamageEffect;
-        }
+		protected override void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+		{
+			postDamageEffect = HandlePostDamageEffect;
+		}
 
-        void HandlePostDamageEffect(float damage, StatModifier healModifier, UnitBehaviour target)
-        {
-            healModifier.Adders.Add(damage * healingMultiplier);
-        }
-    }
+		void HandlePostDamageEffect(float damage, UnitStat healing, UnitBehaviour target)
+		{
+            healing.AddAdder((float)damage * healingMultiplier);
+		}
+	}
 }
 

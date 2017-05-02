@@ -6,7 +6,7 @@ namespace Game.Units.Spells.WhenHits
     {
         public float returnedDamage;
 
-        protected override void Apply(float damage, StatModifier damageModifier, UnitBehaviour attacker)
+        protected override void Apply(UnitStat damage, UnitBehaviour attacker)
         {
             if(attacker != null)
                 attacker.ApplyDamage(returnedDamage);

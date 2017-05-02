@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Reflection;
 
 namespace Game.Units
 {
@@ -20,8 +21,6 @@ namespace Game.Units
         private float damageMin;
         private AttackType attackType;
 
-        private List<Spells.OnHits.OnHit> onHits = new List<Spells.OnHits.OnHit>();
-
         /// <summary>
         /// The target which this projectile is flying towards and going to deal damage to.
         /// </summary>
@@ -36,14 +35,26 @@ namespace Game.Units
         // Use this for initialization
         void Start()
         {
-            damageMax = owner.damageMax;
-            damageMin = owner.damageMin;
-            attackType = owner.attackType;
+			damageMax = owner.DamageMax;
+			damageMin = owner.DamageMin;
+			attackType = owner.AttackType;
 
-            onHits.AddRange(GetComponents<Spells.OnHits.OnHit>());
             targetCollider = target.GetComponent<Collider2D>();
             thisCollider = GetComponent<Collider2D>();
             targetPosition = target.transform.position;
+
+			if(owner != null)
+			{
+				foreach(Spells.OnHits.OnHit onHit in owner.GetComponents<Spells.OnHits.OnHit>())
+				{
+					Spells.OnHits.OnHit newOnHit = (Spells.OnHits.OnHit)gameObject.AddComponent(onHit.GetType());
+					FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+					foreach(FieldInfo fieldInfo in fieldInfos)
+					{
+						fieldInfo.SetValue(newOnHit, fieldInfo.GetValue(onHit));
+					}
+				}
+			}
         }
 	
         // Update is called once per frame
@@ -56,43 +67,33 @@ namespace Game.Units
                 targetPosition = target.transform.position;
                 if(thisCollider.Distance(targetCollider).isOverlapped)
                 {
-                    float damage = UnityEngine.Random.Range(damageMin, damageMax);
-
-                    StatModifier damageModifier = new StatModifier();
+					UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
 
                     var postDamageEffects = new List<PostDamageEffect>();
 
-                    foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
+					foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
                     {
                         PostDamageEffect postDamageEffect;
-                        onHit.Hit(damage, damageModifier, target, out postDamageEffect);
+                        onHit.Hit(damage, target, out postDamageEffect);
                         if(postDamageEffect != null)
                             postDamageEffects.Add(postDamageEffect);
                     }
 
-                    foreach(Spells.WhenHits.WhenHit whenHit in target.GetComponents<Spells.WhenHits.WhenHit>())
-                    {
-                        whenHit.Hit(damage, damageModifier, owner);
-                    }
+					damage *= DamageRatios.GetRatio(target.ArmorType, attackType);
 
-                    damage = damageModifier.Modify(damage);
+					target.ApplyDamage(damage);
 
-                    damage *= DamageRatios.GetRatio(target.armorType, attackType);
-
-                    target.ApplyDamage(damage);
-
-                    StatModifier healModifier = new StatModifier();
+					UnitStat healing = 0f;
 
                     foreach(var postDamageEffect in postDamageEffects)
                     {
-                        postDamageEffect(damage, healModifier, target);
+						postDamageEffect(damage, healing, target);
                     }
 
                     if(owner != null)
                     {
-                        
                         // Applies negative damage which gives negative heals the ability to kill the owner
-                        if(owner.ApplyDamage(-healModifier.Modify(0)))
+                        if(owner.ApplyDamage(-healing))
                             return;
                     }
 

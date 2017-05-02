@@ -8,29 +8,36 @@ namespace Game.Units.Spells.OnHits
     [System.Serializable]
     public class StunOnHit : OnHit
     {
+		[SerializeField]
         [UnityEngine.Range(0f, 5f)]
-        public float stunDuration;
-        //private int activeStun = 0;
+		protected float duration;
+
+		public float Duration
+		{
+			get{ return duration; }
+			set{ duration = value; }
+		}
 			
-        protected override void Apply(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        protected override void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             Buffs.StunBuff activeBuff = target.gameObject.GetComponent<Buffs.StunBuff>();
             Buffs.StunBuff stunBuff = target.gameObject.AddComponent<Buffs.StunBuff>();
-            postDamageEffect = null;
 
             if(activeBuff == null)
             {
-                stunBuff.duration = stunDuration;
+                stunBuff.Duration = duration;
             }
-            else if(activeBuff.duration > stunBuff.duration)
+            else if(activeBuff.Duration > stunBuff.Duration)
             {
                 Destroy(stunBuff);
             }
             else
             {
                 Destroy(activeBuff);
-                stunBuff.duration = stunDuration;
+                stunBuff.Duration = duration;
             }
+
+			postDamageEffect = null;
         }
     }
 }

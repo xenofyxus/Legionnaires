@@ -17,7 +17,7 @@ namespace Game.Units.Spells.Abilities
 
             foreach(Buffs.DefendBuff defendBuff in defendBuffs)
             {
-                DefendMetaData defendBuffMetaData = (DefendMetaData)defendBuff.metaData;
+                DefendMetaData defendBuffMetaData = (DefendMetaData)defendBuff.MetaData;
                 if(defendBuffMetaData.spellName == spellName)
                 {
                     activeBuff = defendBuff;
@@ -28,13 +28,13 @@ namespace Game.Units.Spells.Abilities
             if(activeBuff == null)
             {
                 Buffs.DefendBuff newBuff = unit.gameObject.AddComponent<Buffs.DefendBuff>();
-                newBuff.metaData = new DefendMetaData(spellName);
-                newBuff.duration = duration;
+                newBuff.MetaData = new DefendMetaData(spellName);
+                newBuff.Duration = duration;
                 newBuff.damageMultiplier = damageMultiplier;
             }
             else
             {
-                activeBuff.duration = duration;
+                activeBuff.Duration = duration;
             }
         }
 

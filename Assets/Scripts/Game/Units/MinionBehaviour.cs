@@ -7,7 +7,15 @@ namespace Game.Units
     public class MinionBehaviour : UnitBehaviour
     {
         [Header("Minion specific attributes")]
-        public int value;
+
+		[SerializeField]
+		protected int value;
+
+		public int Value
+		{
+			get{ return value; }
+			set{ this.value = value; }
+		}
 
         public static List<MinionBehaviour> minions = new List<MinionBehaviour>();
 
@@ -16,10 +24,11 @@ namespace Game.Units
             minions.Add(this);
         }
 
-        void OnDestroy()
-        {
-            minions.Remove(this);
-        }
+	    protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			minions.Remove(this);
+		}
 
         public override UnitBehaviour GetTarget()
         {

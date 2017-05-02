@@ -3,40 +3,55 @@ using UnityEngine;
 
 namespace Game.Units.Buffs
 {
-    public abstract class Buff : MonoBehaviour
-    {
-        public float duration = 0;
+	public abstract class Buff : MonoBehaviour
+	{
+		[SerializeField]
+		protected float duration = 0;
 
-        [NonSerialized]
-        public object metaData;
+		public float Duration
+		{
+			get{return duration;}
+			set{duration = value;}
+		}
 
-        protected UnitBehaviour owner;
+		protected object metaData;
 
-        protected abstract void Apply();
+		/// <summary>
+		/// Gets or sets the meta data.
+		/// </summary>
+		public object MetaData
+		{
+			get{return metaData;}
+			set{metaData = value;}
+		}
 
-        protected abstract void Remove();
+		protected UnitBehaviour owner;
 
-        void Start()
-        {
-            owner = GetComponent<UnitBehaviour>();
-            Apply();
-        }
+		protected abstract void Apply();
 
-        void Update()
-        {
-            if(duration > 0)
-                duration -= Time.deltaTime;
-            else
-            {
-                Destroy(this);
-            }
-        }
+		protected abstract void Remove();
 
-        void OnDestroy()
-        {
-            if(owner != null)
-                Remove();
-        }
-    }
+		void Start()
+		{
+			owner = GetComponent<UnitBehaviour>();
+			Apply();
+		}
+
+		void Update()
+		{
+			if(duration > 0)
+				duration -= Time.deltaTime;
+			else
+			{
+				Destroy(this);
+			}
+		}
+
+		void OnDestroy()
+		{
+			if(owner != null)
+				Remove();
+		}
+	}
 }
 

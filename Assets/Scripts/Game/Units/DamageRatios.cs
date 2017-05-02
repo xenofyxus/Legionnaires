@@ -13,7 +13,6 @@ using UnityEngine;
 
 namespace Game.Units
 {
-
 	public static class DamageRatios
 	{
 		public static float GetRatio (ArmorType targetArmor, AttackType unitAttack)

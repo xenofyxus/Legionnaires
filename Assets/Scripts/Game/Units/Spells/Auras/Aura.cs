@@ -3,64 +3,56 @@ using UnityEngine;
 
 namespace Game.Units.Spells.Auras
 {
-    public abstract class Aura : MonoBehaviour
-    {
-        [Header("Spell info")]
+	public abstract class Aura : Spell
+	{
+		[Header("Spell data")]
 
-        public string spellName;
+		[SerializeField]
+		private AuraTarget targets = AuraTarget.Friendlies;
 
-        [Multiline()]
-        public string description;
+		private UnitBehaviour[] units;
 
-        public Sprite icon;
+		protected abstract void Apply(UnitBehaviour unit);
 
-        [Header("Spell data")]
+		protected abstract void Remove(UnitBehaviour unit);
 
-        public AuraTarget target;
+		void Start()
+		{
+			UnitBehaviour owner = GetComponent<UnitBehaviour>();
 
-        private UnitBehaviour[] units;
+			switch(targets)
+			{
+			case AuraTarget.Friendlies:
+				units = owner.GetFriendlies();
+				break;
+			case AuraTarget.Enemies:
+				units = owner.GetEnemies();
+				break;
+			default:
+				break;
+			}
 
-        protected abstract void Apply(UnitBehaviour unit);
+			foreach(var unit in units)
+			{
+				if(unit != null)
+					Apply(unit);
+			}
+		}
 
-        protected abstract void Remove(UnitBehaviour unit);
+		void OnDestroy()
+		{
+			foreach(var unit in units)
+			{
+				if(unit != null)
+					Remove(unit);
+			}
+		}
+	}
 
-        void Start()
-        {
-            UnitBehaviour owner = GetComponent<UnitBehaviour>();
-
-            switch(target)
-            {
-                case AuraTarget.Friendlies:
-                    units = owner.GetFriendlies();
-                    break;
-                case AuraTarget.Enemies:
-                    units = owner.GetEnemies();
-                    break;
-                default:
-                    break;
-            }
-
-            foreach(var unit in units)
-            {
-                if(unit != null)
-                    Apply(unit);
-            }
-        }
-
-        void OnDestroy()
-        {
-            foreach(var unit in units)
-            {
-                if(unit != null)
-                    Remove(unit);
-            }
-        }
-    }
-
-    public enum AuraTarget
-    {
-        Friendlies,
-        Enemies
-    }
+	public enum AuraTarget
+	{
+		Friendlies,
+		Enemies
+	}
 }
 

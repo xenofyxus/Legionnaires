@@ -7,43 +7,48 @@ using UnityEngine;
 namespace Game.Units.Spells.OnHits
 {
     [System.Serializable]
-    public abstract class OnHit : MonoBehaviour
+	public abstract class OnHit : Spell
     {
-        [Header("Spell info")]
+		[Header("Spell data")]
 
-        public string spellName;
-
-        [Multiline()]
-        public string description;
-
-        public Sprite icon;
-
-        [Header("Spell data")]
-
+		[SerializeField]
         [Range(1, 100)]
-        public int hitChance = 100;
+		protected int hitChance = 100;
+
+		public int HitChance
+		{
+			get{ return hitChance; }
+			set{ hitChance = value; }
+		}
+
+        private const int minHitChance = 1;
+        private const int maxHitChance = 100;
 
         /// <summary>
-        /// Do not set this owner if you are not adding this OnHit to anything other than a UnitBehaviour
+        /// Do not set owner if you're adding this OnHit to a UnitBehaviour
         /// </summary>
         [System.NonSerialized]
-        public UnitBehaviour owner;
+		private UnitBehaviour owner;
 
-        public void Hit(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+		public UnitBehaviour Owner
+		{
+			get{ return owner; }
+			set{ owner = value; }
+		}
+
+		public void Hit(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = null;
-            if(Random.Range(1, 101) <= hitChance)
+            if(Random.Range(minHitChance, maxHitChance + 1) <= hitChance)
             {
-                Apply(baseDamage, damageModifier, target, out postDamageEffect);
+				Apply(damage, target, out postDamageEffect);
             }
         }
 
         /// <summary>
         /// Base method for applying on hit effects defined by derived classes.
         /// </summary>
-        /// <param name="target">Target unit to apply the effect on.</param>
-        /// <returns>>The added damage when applying it do the enemy</returns>
-        protected abstract void Apply(float baseDamage, StatModifier damageModifier, UnitBehaviour target, out PostDamageEffect postDamageEffect);
+		protected abstract void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect);
 
         void Start()
         {

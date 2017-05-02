@@ -20,7 +20,7 @@ namespace Interface.Units
 		}
 		void LateUpdate()
 		{
-			HealthBars.fillAmount = unit.hp / unit.hpMax;
+			HealthBars.fillAmount = unit.Hp / unit.HpMax;
 			transform.rotation = rotation;
 		}
 	}

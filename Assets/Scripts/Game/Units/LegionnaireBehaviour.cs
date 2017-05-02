@@ -10,11 +10,26 @@ using UnityEngine;
 namespace Game.Units
 {
     public class LegionnaireBehaviour : UnitBehaviour
-    {
+	{
         [Header("Legionnaire specific attributes")]
-        public int cost;
-	
-        public int supply;
+
+		[SerializeField]
+		protected int cost;
+
+		public int Cost
+		{
+			get{ return cost; }
+			set{ cost = value; }
+		}
+
+		[SerializeField]
+		protected int supply;
+
+		public int Supply
+		{
+			get{ return supply; }
+			set{ supply = value; }
+		}
 
         public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
 
@@ -23,8 +38,9 @@ namespace Game.Units
             legionnaires.Add(this);
         }
 
-        void OnDestroy()
+        protected override void OnDestroy()
         {
+			base.OnDestroy();
             legionnaires.Remove(this);
         }
 

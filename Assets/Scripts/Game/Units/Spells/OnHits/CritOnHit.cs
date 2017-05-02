@@ -4,12 +4,19 @@ namespace Game.Units.Spells.OnHits
 {
     public class CritOnHit : OnHit
     {
-        public float multiplier;
+        [UnityEngine.SerializeField]
+        protected float multiplier;
 
-        protected override void Apply(float baseDamage, StatModifier modifier, UnitBehaviour target, out PostDamageEffect postDamageEffect)
+        public float Multiplier
+        {
+            get{ return multiplier; }
+            set{ multiplier = value; }
+        }
+
+		protected override void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect)
         {
             postDamageEffect = null;
-            modifier.Multipliers.Add(multiplier);
+            damage.AddMultiplier(multiplier);
         }
     }
 }

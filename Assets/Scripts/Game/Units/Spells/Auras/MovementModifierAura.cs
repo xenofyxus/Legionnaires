@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Units.Spells.Auras
 {
     public class MovementModifierAura:Aura
     {
+		[SerializeField]
         [UnityEngine.Range(0.5f, 2f)]
-        public float movementSpeedMultiplier;
+		private float multiplier = 1f;
 
         protected override void Apply(UnitBehaviour unit)
         {
-            unit.movementSpeedModifier.Multipliers.Add(movementSpeedMultiplier);
+			unit.MovementSpeed.AddMultiplier(multiplier);
         }
 
         protected override void Remove(UnitBehaviour unit)
         {
-            unit.movementSpeedModifier.Multipliers.Remove(movementSpeedMultiplier);
+			unit.MovementSpeed.RemoveMultiplier(multiplier);
         }
     }
 }
