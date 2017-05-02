@@ -27,6 +27,7 @@ namespace Game.Units
 		public void AddMultiplier(float multiplier)
 		{
 			multipliers.Add(multiplier);
+			modifiedValueIsUpdated = false;
 		}
 
 		/// <summary>
@@ -36,7 +37,9 @@ namespace Game.Units
 		/// <param name="multiplier">The multiplier.</param>
 		public bool RemoveMultiplier(float multiplier)
 		{
+			modifiedValueIsUpdated = false;
 			return multipliers.Remove(multiplier);
+
 		}
 
 		/// <summary>
@@ -46,6 +49,7 @@ namespace Game.Units
 		public void AddAdder(float adder)
 		{
 			adders.Add(adder);
+			modifiedValueIsUpdated = false;
 		}
 
 		/// <summary>
@@ -55,7 +59,9 @@ namespace Game.Units
 		/// <param name="adder">The adder.</param>
 		public bool RemoveAdder(float adder)
 		{
+			modifiedValueIsUpdated = false;
 			return adders.Remove(adder);
+
 		}
 
 		public static implicit operator float(UnitStat unitStat)

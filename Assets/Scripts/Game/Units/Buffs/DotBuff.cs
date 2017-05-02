@@ -5,6 +5,7 @@ namespace Game.Units.Buffs
 {
 	public class DotBuff:Buff
 	{
+
 		[SerializeField]
 		protected float totalDamage;
 
@@ -26,6 +27,7 @@ namespace Game.Units.Buffs
 		{
 			owner.HpReg.RemoveMultiplier(hpRegModifier);
 		}
+			
 	}
 }
 

@@ -209,83 +209,69 @@ namespace Game.Units
 			}
 
 			UnitBehaviour target = GetTarget();
+			//Only search for a new target when we actually can attack it, freezes the rotation during stun animation
+			if (AttackSpeed != 0) {
+				if (target == null) {
+					Vector2? defaultTarget = GetDefaultTargetPosition ();
 
-			if(target == null)
-			{
-				Vector2? defaultTarget = GetDefaultTargetPosition();
-
-				if(defaultTarget.HasValue)
-				{
-					MoveTowards(defaultTarget.Value);
-				}
-				else
-				{
-					// TODO Fix and sync
-					anim.SetBool("fight", false);
-					anim.SetFloat("speed", 1f / 0f);
-
-				}
-			}
-			else
-			{
-				Collider2D targetCollider = target.GetComponent<Collider2D>();
-				if(thisCollider.Distance(targetCollider).distance <= range)
-				{
-					if(attackDelayTimer == 0)
-					{
-						attackDelayTimer += Time.deltaTime;
-
-						if(projectile == null)
-						{
-							UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
-
-							List<PostDamageEffect> postDamageEffects = new List<PostDamageEffect>();
-
-							foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
-							{
-								PostDamageEffect postDamageEffect;
-								onHit.Hit(damage, target, out postDamageEffect);
-								if(postDamageEffect != null)
-									postDamageEffects.Add(postDamageEffect);
-							}
-
-							damage *= DamageRatios.GetRatio(target.armorType, attackType);
-
-							target.ApplyDamage(damage);
-
-							UnitStat healing = 0f;
-
-							foreach(var postDamageEffect in postDamageEffects)
-							{
-								postDamageEffect(damage, healing, target);
-							}
-
-							// Applies negative damage which gives negative heals the ability to kill this unit
-							if(ApplyDamage(-healing))
-								return;
-						}
-						else
-						{
-							ProjectileBehaviour newProjectile = Instantiate(projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour>();
-							newProjectile.transform.RotateAround(transform.position, Vector3.forward, Quaternion.AngleAxis(transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
-							newProjectile.transform.rotation = transform.rotation;
-							newProjectile.owner = this;
-							newProjectile.target = target;
-							if(projectileSpeed > 0)
-								newProjectile.movementSpeed = projectileSpeed;
-						}
-					}
-					if(anim != null)
-					{
+					if (defaultTarget.HasValue) {
+						MoveTowards (defaultTarget.Value);
+					} else {
 						// TODO Fix and sync
-						anim.SetBool("fight", true);
-						anim.SetFloat("speed", (1f / attackSpeed) / 3 * Time.deltaTime);
+						anim.SetBool ("fight", false);
+						anim.SetFloat ("speed", 1f / 0f);
+
 					}
-					RotateTowards(target.transform.position);
-				}
-				else
-				{
-					MoveTowards(target.transform.position);
+				} else {
+					Collider2D targetCollider = target.GetComponent<Collider2D> ();
+					if (thisCollider.Distance (targetCollider).distance <= range) {
+						if (attackDelayTimer == 0) {
+							attackDelayTimer += Time.deltaTime;
+
+							if (projectile == null) {
+								UnitStat damage = UnityEngine.Random.Range ((int)damageMin, (int)damageMax + 1);
+
+								List<PostDamageEffect> postDamageEffects = new List<PostDamageEffect> ();
+
+								foreach (Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>()) {
+									PostDamageEffect postDamageEffect;
+									onHit.Hit (damage, target, out postDamageEffect);
+									if (postDamageEffect != null)
+										postDamageEffects.Add (postDamageEffect);
+								}
+
+								damage.AddMultiplier(DamageRatios.GetRatio (target.armorType, attackType));
+
+								target.ApplyDamage (damage);
+
+								UnitStat healing = 0f;
+
+								foreach (var postDamageEffect in postDamageEffects) {
+									postDamageEffect (damage, healing, target);
+								}
+
+								// Applies negative damage which gives negative heals the ability to kill this unit
+								if (ApplyDamage (-healing))
+									return;
+							} else {
+								ProjectileBehaviour newProjectile = Instantiate (projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour> ();
+								newProjectile.transform.RotateAround (transform.position, Vector3.forward, Quaternion.AngleAxis (transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
+								newProjectile.transform.rotation = transform.rotation;
+								newProjectile.owner = this;
+								newProjectile.target = target;
+								if (projectileSpeed > 0)
+									newProjectile.movementSpeed = projectileSpeed;
+							}
+						}
+						if (anim != null) {
+							// TODO Fix and sync
+							anim.SetBool ("fight", true);
+							anim.SetFloat ("speed", (1f / attackSpeed) / 3 * Time.deltaTime);
+						}
+						RotateTowards (target.transform.position);
+					} else {
+						MoveTowards (target.transform.position);
+					}
 				}
 			}
 

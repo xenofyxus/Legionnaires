@@ -4,6 +4,7 @@ namespace Game.Units.Buffs
 {
     public class DefendBuff:Buff
     {
+
         public float damageMultiplier = 1f;
 
         private Spells.WhenHits.DefendWhenHit defend;
@@ -20,6 +21,7 @@ namespace Game.Units.Buffs
             if(defend != null)
                 Destroy(defend);
         }
+			
     }
 }
 

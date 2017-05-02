@@ -31,6 +31,7 @@ namespace Game.Units.Buffs
 
 		protected abstract void Remove();
 
+
 		void Start()
 		{
 			owner = GetComponent<UnitBehaviour>();
@@ -49,8 +50,10 @@ namespace Game.Units.Buffs
 
 		void OnDestroy()
 		{
-			if(owner != null)
-				Remove();
+			if (owner != null) {
+				Remove ();
+			}
+			
 		}
 	}
 }
