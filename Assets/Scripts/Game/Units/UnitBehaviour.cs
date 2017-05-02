@@ -196,12 +196,14 @@ namespace Game.Units
 
         protected virtual void Update()
         {
+			
             if(!alive)
                 return;
 
             if(attackDelayTimer > 0)
             {
                 attackDelayTimer += Time.deltaTime;
+				anim.SetBool ("fight", false);
                 if(attackDelayTimer >= 1f / attackSpeed)
                 {
                     attackDelayTimer = 0;
@@ -215,7 +217,6 @@ namespace Game.Units
 			    
                 if(target == null)
                 {
-					anim.SetBool ("fight", false);
                     Vector2? defaultTarget = GetDefaultTargetPosition();
 
                     if(defaultTarget.HasValue)
@@ -225,7 +226,6 @@ namespace Game.Units
                     else
                     {
                         // TODO Fix and sync
-                        anim.SetBool("fight", false);
                         anim.SetFloat("speed", 0f);
                     }
                 }
@@ -234,59 +234,56 @@ namespace Game.Units
                     Collider2D targetCollider = target.GetComponent<Collider2D>();
                     if(thisCollider.Distance(targetCollider).distance <= range)
                     {
-                        if(attackDelayTimer == 0)
-                        {
-                            attackDelayTimer += Time.deltaTime;
+						if (attackDelayTimer == 0) 
+						{
+							anim.SetBool ("fight", true);
+							attackDelayTimer += Time.deltaTime;
 
-                            if(projectile == null)
-                            {
-                                UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
+							if (projectile == null) {
+								UnitStat damage = UnityEngine.Random.Range ((int)damageMin, (int)damageMax + 1);
 
-                                List<PostDamageEffect> postDamageEffects = new List<PostDamageEffect>();
+								List<PostDamageEffect> postDamageEffects = new List<PostDamageEffect> ();
 
-                                foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
-                                {
-                                    PostDamageEffect postDamageEffect;
-                                    onHit.Hit(damage, target, out postDamageEffect);
-                                    if(postDamageEffect != null)
-                                        postDamageEffects.Add(postDamageEffect);
-                                }
+								foreach (Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>()) {
+									PostDamageEffect postDamageEffect;
+									onHit.Hit (damage, target, out postDamageEffect);
+									if (postDamageEffect != null)
+										postDamageEffects.Add (postDamageEffect);
+								}
 
-                                foreach(Spells.WhenHits.WhenHit whenHit in GetComponents<Spells.WhenHits.WhenHit>())
-                                {
-                                    whenHit.Hit(damage, this);
-                                }
+								foreach (Spells.WhenHits.WhenHit whenHit in GetComponents<Spells.WhenHits.WhenHit>()) {
+									whenHit.Hit (damage, this);
+								}
 
-                                damage.AddMultiplier(DamageRatios.GetRatio(target.armorType, attackType));
+								damage.AddMultiplier (DamageRatios.GetRatio (target.armorType, attackType));
 
-                                target.ApplyDamage(damage);
+								target.ApplyDamage (damage);
 
-                                UnitStat healing = 0f;
 
-                                foreach(var postDamageEffect in postDamageEffects)
-                                {
-                                    postDamageEffect(damage, healing, target);
-                                }
+								UnitStat healing = 0f;
 
-                                // Applies negative damage which gives negative heals the ability to kill this unit
-                                if(ApplyDamage(-healing))
-                                    return;
-                            }
-                            else
-                            {
-                                ProjectileBehaviour newProjectile = Instantiate(projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour>();
-                                newProjectile.transform.RotateAround(transform.position, Vector3.forward, Quaternion.AngleAxis(transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
-                                newProjectile.transform.rotation = transform.rotation;
-                                newProjectile.owner = this;
-                                newProjectile.target = target;
-                                if(projectileSpeed > 0)
-                                    newProjectile.movementSpeed = projectileSpeed;
-                            }
-                        }
+								foreach (var postDamageEffect in postDamageEffects) {
+									postDamageEffect (damage, healing, target);
+								}
+
+								// Applies negative damage which gives negative heals the ability to kill this unit
+								if (ApplyDamage (-healing))
+									return;
+							} else {
+								ProjectileBehaviour newProjectile = Instantiate (projectile, (Vector2)transform.position + projectileOffset, transform.rotation).GetComponent<ProjectileBehaviour> ();
+								newProjectile.transform.RotateAround (transform.position, Vector3.forward, Quaternion.AngleAxis (transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
+								newProjectile.transform.rotation = transform.rotation;
+								newProjectile.owner = this;
+								newProjectile.target = target;
+								if (projectileSpeed > 0)
+									newProjectile.movementSpeed = projectileSpeed;
+							}
+						}
+
                         if(anim != null)
                         {
                             // TODO Fix and sync
-							anim.SetBool ("fight", true);
+
 							anim.SetFloat ("speed", movementSpeed);
                         }
                         RotateTowards(target.transform.position);
@@ -298,7 +295,6 @@ namespace Game.Units
                 }
             }
 			else {
-				anim.SetBool ("fight", false);
 				anim.SetFloat ("speed", 0);
 			}
 
@@ -347,7 +343,6 @@ namespace Game.Units
             {
                 // TODO Fix and sync
 				anim.SetFloat("speed", movementSpeed);
-				anim.SetBool("fight", false);
             }
         }
 
