@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Units.Buffs
+namespace Game.Units.Spells.Buffs
 {
 	public class StunBuff : Buff
 	{

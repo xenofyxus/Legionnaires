@@ -16,7 +16,7 @@ namespace Game.Units.Spells.Auras
 
 		protected abstract void Remove(UnitBehaviour unit);
 
-		void Start()
+		protected virtual void Start()
 		{
 			UnitBehaviour owner = GetComponent<UnitBehaviour>();
 
@@ -39,7 +39,7 @@ namespace Game.Units.Spells.Auras
 			}
 		}
 
-		void OnDestroy()
+		protected virtual void OnDestroy()
 		{
 			foreach(var unit in units)
 			{

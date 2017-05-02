@@ -3,17 +3,8 @@ using UnityEngine;
 
 namespace Game.Units.Spells.WhenHits
 {
-    public abstract class WhenHit : MonoBehaviour
+    public abstract class WhenHit : Spell
     {
-        [Header("Spell Info")]
-
-        public string spellName;
-
-        [Multiline]
-        public string description;
-
-        public Sprite icon;
-
         [Header("Spell Data")]
 
         /// <summary>
@@ -25,7 +16,7 @@ namespace Game.Units.Spells.WhenHits
         [NonSerialized]
         public UnitBehaviour owner;
 
-        void Start()
+        protected virtual void Start()
         {
             owner = GetComponent<UnitBehaviour>();
         }

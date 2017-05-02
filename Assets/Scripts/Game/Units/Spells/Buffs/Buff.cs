@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Units.Buffs
+namespace Game.Units.Spells.Buffs
 {
-	public abstract class Buff : MonoBehaviour
+    public abstract class Buff : Spell
 	{
 		[SerializeField]
 		protected float duration = 0;
@@ -38,7 +38,7 @@ namespace Game.Units.Buffs
 			Apply();
 		}
 
-		void Update()
+		protected virtual void Update()
 		{
 			if(duration > 0)
 				duration -= Time.deltaTime;

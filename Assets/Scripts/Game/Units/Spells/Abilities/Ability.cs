@@ -38,12 +38,12 @@ namespace Game.Units.Spells.Abilities
 
 		protected abstract void Apply(UnitBehaviour unit);
 
-		void Start()
+		protected virtual void Start()
 		{
 			owner = GetComponent<UnitBehaviour>();
 		}
 
-		void Update()
+		protected virtual void Update()
 		{
 			if(cooldownTimer == 0)
 			{

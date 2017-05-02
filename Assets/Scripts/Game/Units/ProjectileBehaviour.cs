@@ -48,7 +48,7 @@ namespace Game.Units
 				foreach(Spells.OnHits.OnHit onHit in owner.GetComponents<Spells.OnHits.OnHit>())
 				{
 					Spells.OnHits.OnHit newOnHit = (Spells.OnHits.OnHit)gameObject.AddComponent(onHit.GetType());
-					FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+                    FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 					foreach(FieldInfo fieldInfo in fieldInfos)
 					{
 						fieldInfo.SetValue(newOnHit, fieldInfo.GetValue(onHit));

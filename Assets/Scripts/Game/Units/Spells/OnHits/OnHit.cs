@@ -50,7 +50,7 @@ namespace Game.Units.Spells.OnHits
         /// </summary>
 		protected abstract void Apply(UnitStat damage, UnitBehaviour target, out PostDamageEffect postDamageEffect);
 
-        void Start()
+        protected virtual void Start()
         {
             if(owner == null)
                 owner = GetComponent<UnitBehaviour>();
