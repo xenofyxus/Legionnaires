@@ -215,6 +215,7 @@ namespace Game.Units
 			    
                 if(target == null)
                 {
+					anim.SetBool ("fight", false);
                     Vector2? defaultTarget = GetDefaultTargetPosition();
 
                     if(defaultTarget.HasValue)
@@ -285,8 +286,8 @@ namespace Game.Units
                         if(anim != null)
                         {
                             // TODO Fix and sync
-                            anim.SetBool("fight", true);
-                            anim.SetFloat("speed", attackSpeed);
+							anim.SetBool ("fight", true);
+							anim.SetFloat ("speed", movementSpeed);
                         }
                         RotateTowards(target.transform.position);
                     }
@@ -296,6 +297,10 @@ namespace Game.Units
                     }
                 }
             }
+			else {
+				anim.SetBool ("fight", false);
+				anim.SetFloat ("speed", 0);
+			}
 
             // Applies negative damage which gives negative hp regeneration the ability to kill this unit
             if(ApplyDamage(-hpReg * Time.deltaTime))
@@ -341,8 +346,8 @@ namespace Game.Units
             if(anim != null)
             {
                 // TODO Fix and sync
-                anim.SetFloat("speed", 1f / movementSpeed * Time.deltaTime);
-                anim.SetBool("fight", false);
+				anim.SetFloat("speed", movementSpeed);
+				anim.SetBool("fight", false);
             }
         }
 
