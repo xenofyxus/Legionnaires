@@ -50,7 +50,7 @@ namespace Game.GameInterface
 			if (vectorToMouse.magnitude < 3.5f) {
 				currentMenuItem = (int)(angle / (360 / menuItems));
 			}
-			if (currentMenuItem != -1) {
+			if (currentMenuItem != -1 || vectorToMouse.magnitude > 3.5f) {
 				GameObject.Destroy (this.gameObject);
 			}
 		}
