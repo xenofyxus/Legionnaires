@@ -11,7 +11,6 @@ public class WaveButton : MonoBehaviour {
 	}
 
 	public void BtnPressed() {
-		print ("bajs");
 		playerReady.GetComponent<MinionSpawner> ().PLayerReady ();
 	}
 }
