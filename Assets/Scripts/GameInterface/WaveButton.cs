@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaveButton : MonoBehaviour {
-	public GameObject playerReady;
-	void Start () {
-	}
-	void Update () {
+namespace Game.GameInterface
+{
+	public class WaveButton : MonoBehaviour
+	{
+		public GameObject playerReady;
 
-	}
+		void Start ()
+		{
+		}
 
-	public void BtnPressed() {
-		playerReady.GetComponent<MinionSpawner> ().PLayerReady ();
+		void Update ()
+		{
+
+		}
+
+		public void BtnPressed ()
+		{
+			playerReady.GetComponent<MinionSpawner> ().PlayerReady ();
+		}
 	}
 }

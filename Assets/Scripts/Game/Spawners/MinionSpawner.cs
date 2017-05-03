@@ -13,78 +13,85 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MinionSpawner : MonoBehaviour
+namespace Game.GameInterface
 {
-	
-	private int waveNumber = 0;
-	[Tooltip ("What minion and how many of that minion to Spawn")]
-	public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject> ();
 
-	public GameObject legionnaireSpawner;
-	private GameObject[] waveObjects;
-
-	private bool newWave;
-	public bool playerReady = false;
-	private int numberOfUnitsSpawned = 0;
-	private float instantiateTimer = 5f;
-	//time until next wave starts.
-
-	private float MinX = -3;
-	private float MaxX = 3;
-	private float MinY = 16;
-	private float MaxY = 17;
-
-	void Start ()
+	public class MinionSpawner : MonoBehaviour
 	{
-	}
 
-	void Update ()
-	{
-		waveObjects = GameObject.FindGameObjectsWithTag ("Minion");
-		if (waveObjects.Length == 0) {
-			legionnaireSpawner.GetComponent<LegionnaireSpawner> ().Reset ();
-			newWave = true;
+		private int waveNumber = 0;
+		[Tooltip ("What minion and how many of that minion to Spawn")]
+		public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject> ();
+
+		public GameObject gridScript;
+		private GameObject[] waveObjects;
+
+		private bool newWave;
+		public bool playerReady = false;
+		private int numberOfUnitsSpawned = 0;
+		private float instantiateTimer = 5f;
+		//time until next wave starts.
+		private GameObject gridBuilder;
+		private float MinX = -3;
+		private float MaxX = 3;
+		private float MinY = 16;
+		private float MaxY = 17;
+
+		void Start ()
+		{
+			gridBuilder = GameObject.Find ("GridBuilder");
 		}
-		if (newWave && playerReady) {
-			NextWave ();
+
+		void Update ()
+		{
+			waveObjects = GameObject.FindGameObjectsWithTag ("Minion");
+			if (waveObjects.Length == 0) {
+				gridBuilder.SetActive (true);
+				gridScript.GetComponent<GridScript> ().Reset ();
+				newWave = true;
+			}
+			if (newWave && playerReady) {
+				NextWave ();
+			}
 		}
-	}
 
 
-	void NextWave ()
-	{
+		void NextWave ()
+		{
+			gridBuilder.SetActive (false);
+			for (int i = 0; i < Mathf.Ceil (((float)waveObjList [waveNumber].amountOfMinions) / 4); i++) {
+				instantiateTimer -= Time.deltaTime;
+				if (instantiateTimer <= 0) {
+					instantiateTimer = 2.5f;
+					for (int j = 0; j < 4; j++) {		// Spawning 4 units per "instantiateTimer"-delay
+						if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) {
+							break;
+						}
+						float x = Random.Range (MinX, MaxX);
+						float y = Random.Range (MinY, MaxY);
+						Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
+						numberOfUnitsSpawned++;
 
-		for (int i = 0; i < Mathf.Ceil (((float)waveObjList [waveNumber].amountOfMinions) / 4); i++) {
-			instantiateTimer -= Time.deltaTime;
-			if (instantiateTimer <= 0) {
-				instantiateTimer = 2.5f;
-				for (int j = 0; j < 4; j++) {		// Spawning 4 units per "instantiateTimer"-delay
-					if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) {
-						break;
 					}
-					float x = Random.Range (MinX, MaxX);
-					float y = Random.Range (MinY, MaxY);
-					Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
-					numberOfUnitsSpawned++;
 
 				}
-
+			}
+			if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) { // When done spawning goes on to next wave.
+				instantiateTimer = 5f;
+				waveNumber++;
+				numberOfUnitsSpawned = 0;
+				if (waveNumber == waveObjList.Count) {
+					waveNumber = 0;
+				}
+				playerReady = false;
+				newWave = false;
 			}
 		}
-		if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) { // When done spawning goes on to next wave.
-			instantiateTimer = 5f;
-			waveNumber++;
-			numberOfUnitsSpawned = 0;
-			if (waveNumber == waveObjList.Count) {
-				waveNumber = 0;
-			}
-			playerReady = false;
-			newWave = false;
+
+		public void PlayerReady ()
+		{
+			playerReady = true;
 		}
 	}
 
-	public void PLayerReady(){
-		playerReady = true;
-	}
 }
-
