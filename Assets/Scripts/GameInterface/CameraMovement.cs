@@ -18,5 +18,8 @@ public class CameraMovement : MonoBehaviour {
 				Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, new Vector3 (0, Game.Units.MinionBehaviour.Minions [0].transform.position.y, -10), 3 * Time.deltaTime);
 			}
 		}
+		if(Game.Units.MinionBehaviour.Minions.Count == 0){
+			Camera.main.transform.position = new Vector3 (0f, 7.3f, -10);
+		}
 	}
 }

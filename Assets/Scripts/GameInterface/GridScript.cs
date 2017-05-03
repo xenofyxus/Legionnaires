@@ -36,9 +36,10 @@ namespace Game.GameInterface
 					Instantiate (menu, placeTower, transform.rotation);
 				}
 			}
-			if (TowerMenu.currentMenuItem != -1) {
+			if (TowerMenu.currentMenuItem != -1 && TowerMenu.placeTower == true) {
 				spawnTower ();
 				TowerMenu.currentMenuItem = -1;
+				TowerMenu.placeTower = false;
 			}
 		}
 

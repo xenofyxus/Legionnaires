@@ -14,17 +14,19 @@ namespace Game.GameInterface
 
 		public int menuItems;
 		public static int currentMenuItem = -1;
+		public static bool placeTower;
 		private int oldMenuItem;
-
+		private GameObject buyBTN;
 
 		void Start ()
 		{
+			buyBTN = GameObject.Find ("BUY");
+			buyBTN.SetActive (false);
 			menuItems = buttons.Count;
 			foreach (MenuButton button in buttons) {
 				button.menuImage.color = button.normalColor;
 			}
 			currentMenuItem = -1;
-			oldMenuItem = 0;
 		}
 
 		void Update ()
@@ -47,10 +49,16 @@ namespace Game.GameInterface
 				angle = 360 + angle;
 			}
 
-			if (vectorToMouse.magnitude < 3.5f) {
+			if (vectorToMouse.magnitude < 3.5f && vectorToMouse.magnitude > 1.5f) {
 				currentMenuItem = (int)(angle / (360 / menuItems));
+				buyBTN.SetActive (true);
 			}
-			if (currentMenuItem != -1 || vectorToMouse.magnitude > 3.5f) {
+
+			if (vectorToMouse.magnitude < 1.5f && currentMenuItem != -1) {
+				placeTower = true;
+			}
+
+			if (currentMenuItem != -1 && placeTower == true || vectorToMouse.magnitude > 3.5f) {
 				GameObject.Destroy (this.gameObject);
 			}
 		}
@@ -63,7 +71,6 @@ namespace Game.GameInterface
 		public string name;
 		public Image menuImage;
 		public Color normalColor = Color.white;
-		public Color highlightedColor = Color.grey;
 		public Color pressedColor = Color.gray;
 	}
 
