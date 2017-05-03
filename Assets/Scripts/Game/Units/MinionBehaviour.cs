@@ -69,9 +69,13 @@ namespace Game.Units
             {
                 return LegionnaireBehaviour.Legionnaires.ToArray();
             }
+            else if(KingBehaviour.Current != null)
+            {
+                return new UnitBehaviour[]{ KingBehaviour.Current };
+            }
             else
             {
-                return new UnitBehaviour[]{ GameObject.Find("King").GetComponent<KingBehaviour>() };
+                return new UnitBehaviour[0];
             }
         }
 

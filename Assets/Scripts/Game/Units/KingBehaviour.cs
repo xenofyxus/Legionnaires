@@ -7,13 +7,7 @@ namespace Game.Units
 {
     public class KingBehaviour :  UnitBehaviour
     {
-
-        protected static KingBehaviour currentKing;
-
-        public static KingBehaviour CurrentKing
-        {
-            get{ return currentKing; }
-        }
+        public static KingBehaviour Current{ get; private set; }
 
         private UnitBehaviour stickedTarget;
 
@@ -22,7 +16,7 @@ namespace Game.Units
         protected override void Start()
         {
             base.Start();
-            currentKing = this;
+            Current = this;
         }
 
         public override UnitBehaviour GetTarget()
