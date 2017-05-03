@@ -15,7 +15,7 @@ public class MinionWaveCounter : MonoBehaviour {
 		if(minionCount != tags)
 		{
 			minionCount = tags;
-			myText.text = "Remaining: " + minionCount; 
+			myText.text = "" + minionCount; 
 		} 
 	}
 }
