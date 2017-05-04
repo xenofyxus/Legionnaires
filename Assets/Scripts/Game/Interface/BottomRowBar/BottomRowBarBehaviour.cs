@@ -6,8 +6,17 @@ namespace Game.Interface.BottomRowBar
 {
     public class BottomRowBarBehaviour : MonoBehaviour
     {
-        [SerializeField]
         private GameObject kingUpgrades = null;
+
+        public GameObject KingUpgrades
+        {
+            get
+            {
+                if(kingUpgrades == null)
+                    kingUpgrades = GameObject.Find("GameInterface").transform.Find("KingUpgrades").gameObject;
+                return kingUpgrades;
+            }
+        }
 
         public void ToggleKingMenu()
         {
@@ -17,7 +26,7 @@ namespace Game.Interface.BottomRowBar
             {
                 kingUpgrades.SetActive(false);
 
-                if(tooltipBar.transform.FindChild("King Panel").gameObject.activeSelf)
+                if(tooltipBar.KingPanel.activeSelf)
                 {
                     tooltipBar.SetPanel("Hide");
                 }
