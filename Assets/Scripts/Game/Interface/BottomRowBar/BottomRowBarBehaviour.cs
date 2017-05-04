@@ -22,9 +22,9 @@ namespace Game.Interface.BottomRowBar
         {
             TooltipBar.TooltipBarBehaviour tooltipBar = TooltipBar.TooltipBarBehaviour.Current;
 
-            if(kingUpgrades.activeSelf)
+            if(KingUpgrades.activeSelf)
             {
-                kingUpgrades.SetActive(false);
+                KingUpgrades.SetActive(false);
 
                 if(tooltipBar.KingPanel.activeSelf)
                 {
@@ -33,7 +33,7 @@ namespace Game.Interface.BottomRowBar
             }
             else
             {
-                kingUpgrades.SetActive(true);
+                KingUpgrades.SetActive(true);
 
                 tooltipBar.SetPanel("KingPanel");
             }
