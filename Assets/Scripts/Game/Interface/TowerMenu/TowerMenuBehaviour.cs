@@ -17,6 +17,7 @@ namespace Game.Interface.TowerMenu
 		public int menuItems;
 		public static int currentMenuItem = -1;
 		public static bool placeTower;
+		public static bool sellTower;
 		private int oldMenuItem;
 		private GameObject buyBTN;
 
@@ -53,14 +54,20 @@ namespace Game.Interface.TowerMenu
 
 			if (vectorToMouse.magnitude < 3.5f && vectorToMouse.magnitude > 1.5f) {
 				currentMenuItem = (int)(angle / (360 / menuItems));
-				buyBTN.SetActive (true);
+				if (sellTower == false) {
+					buyBTN.SetActive (true);
+				}
 			}
 
 			if (vectorToMouse.magnitude < 1.5f && currentMenuItem != -1) {
-				placeTower = true;
+				if (sellTower == false) {
+					placeTower = true;
+				} else {
+					sellTower = true;
+				}
 			}
 
-			if (currentMenuItem != -1 && placeTower == true || vectorToMouse.magnitude > 3.5f) {
+			if (currentMenuItem != -1 && (placeTower == true || sellTower == true) || vectorToMouse.magnitude > 3.5f) {
 				GameObject.Destroy (this.gameObject);
 			}
 		}
