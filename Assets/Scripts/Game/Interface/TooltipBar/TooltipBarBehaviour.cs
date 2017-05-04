@@ -54,6 +54,18 @@ namespace Game.Interface.TooltipBar
             }
         }
 
+        private GameObject waveInfoPanel = null;
+
+        public GameObject WaveInfoPanel
+        {
+            get
+            {
+                if(waveInfoPanel == null)
+                    waveInfoPanel = transform.Find("WaveInfo Panel").gameObject;
+                return waveInfoPanel;
+            }
+        }
+
         public void SetPanel(string panelName)
         {
             switch((TooltipBarPanel)System.Enum.Parse(typeof(TooltipBarPanel), panelName, true))
@@ -63,18 +75,28 @@ namespace Game.Interface.TooltipBar
                     TowerPanel.SetActive(true);
                     EconomyPanel.SetActive(false);
                     KingPanel.SetActive(false);
+                    WaveInfoPanel.SetActive(false);
                     break;
                 case TooltipBarPanel.EconomyPanel:
                     gameObject.SetActive(true);
                     TowerPanel.SetActive(false);
                     EconomyPanel.SetActive(true);
                     KingPanel.SetActive(false);
+                    WaveInfoPanel.SetActive(false);
                     break;
                 case TooltipBarPanel.KingPanel:
                     gameObject.SetActive(true);
                     TowerPanel.SetActive(false);
                     EconomyPanel.SetActive(false);
                     KingPanel.SetActive(true);
+                    WaveInfoPanel.SetActive(false);
+                    break;
+                case TooltipBarPanel.WaveInfo:
+                    gameObject.SetActive(true);
+                    TowerPanel.SetActive(false);
+                    EconomyPanel.SetActive(false);
+                    KingPanel.SetActive(false);
+                    WaveInfoPanel.SetActive(true);
                     break;
                 default:
                     gameObject.SetActive(false);
@@ -88,6 +110,7 @@ namespace Game.Interface.TooltipBar
         Hide,
         TowerPanel,
         EconomyPanel,
-        KingPanel
+        KingPanel,
+        WaveInfo
     }
 }

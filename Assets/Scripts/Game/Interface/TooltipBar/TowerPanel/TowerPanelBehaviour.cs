@@ -7,14 +7,14 @@ namespace Game.Interface.TooltipBar.TowerPanel
 {
     public partial class TowerPanelBehaviour : MonoBehaviour
     {
-        private static TowerPanelBehaviour current=null;
+        private static TowerPanelBehaviour current = null;
 
         public static TowerPanelBehaviour Current
         {
             get
             {
                 if(current == null)
-                    current = GameObject.Find("Tower Panel").GetComponent<TowerPanelBehaviour>();
+                    current = TooltipBarBehaviour.Current.TowerPanel.GetComponent<TowerPanelBehaviour>();
                 return current;
             }
         }
@@ -25,7 +25,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
         {
             get
             {
-                if (statsPanel==null)
+                if(statsPanel == null)
                     statsPanel = Current.transform.FindChild("TowerText(Panel)").FindChild("TowerStats(Panel)").gameObject;
                 return statsPanel;
             }

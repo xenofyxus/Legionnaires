@@ -17,6 +17,19 @@ namespace Game.Spawners
 {
     public class MinionSpawnerBehaviour : MonoBehaviour
     {
+
+        private static MinionSpawnerBehaviour current = null;
+
+        public static MinionSpawnerBehaviour Current
+        {
+            get
+            {
+                if(current == null)
+                    current = GameObject.Find("MinionSpawner").GetComponent<MinionSpawnerBehaviour>();
+                return current;
+            }
+        }
+
         public static int waveNumber = 0;
         [Tooltip("What minion and how many of that minion to Spawn")]
         public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject>();
