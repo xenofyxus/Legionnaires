@@ -17,7 +17,7 @@ namespace Game.Spawners
 {
     public class MinionSpawnerBehaviour : MonoBehaviour
     {
-        private int waveNumber = 0;
+        public static int waveNumber = 0;
         [Tooltip("What minion and how many of that minion to Spawn")]
         public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject>();
 
