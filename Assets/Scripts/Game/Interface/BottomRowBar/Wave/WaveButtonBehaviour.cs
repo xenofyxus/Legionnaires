@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.GameInterface
+namespace Game.Interface.BottomRowBar.Wave
 {
-	public class WaveButton : MonoBehaviour
+	public class WaveButtonBehaviour : MonoBehaviour
 	{
 		public GameObject playerReady;
 
@@ -19,7 +19,7 @@ namespace Game.GameInterface
 
 		public void BtnPressed ()
 		{
-			playerReady.GetComponent<MinionSpawner> ().PlayerReady ();
+            playerReady.GetComponent<Spawners. MinionSpawnerBehaviour> ().PlayerReady ();
 		}
 	}
 }

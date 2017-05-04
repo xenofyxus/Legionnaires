@@ -66,7 +66,6 @@ namespace Game.Units
         {
             modifiedValueIsUpdated = false;
             return adders.Remove(adder);
-
         }
 
         public static implicit operator float(UnitStat unitStat)

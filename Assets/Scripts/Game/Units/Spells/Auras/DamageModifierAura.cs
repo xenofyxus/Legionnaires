@@ -11,6 +11,12 @@ namespace Game.Units.Spells.Auras
         [Range(0f, 2f)]
 		private float multiplier = 0f;
 
+        public float Multiplier
+        {
+            get{ return multiplier; }
+            set{ multiplier = value; }
+        }
+
         private Dictionary<UnitBehaviour,OnHits.OnHit> onHits = new Dictionary<UnitBehaviour, Game.Units.Spells.OnHits.OnHit>();
 
         protected override void Apply(UnitBehaviour unit)

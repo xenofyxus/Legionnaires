@@ -5,6 +5,8 @@ namespace Game.Units.Spells.Buffs
 {
     public abstract class Buff : Spell
 	{
+        [Header("Spell data")]
+
 		[SerializeField]
 		protected float duration = 0;
 

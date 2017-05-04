@@ -4,11 +4,25 @@ namespace Game.Units.Spells.Abilities
 {
     public class DefendAbility:Ability
     {
+        [UnityEngine.SerializeField]
         [UnityEngine.Range(0f, 1f)]
-        public float damageMultiplier = 1f;
+        private float damageMultiplier = 1f;
 
+        public float DamageMultiplier
+        {
+            get{ return damageMultiplier; }
+            set{ damageMultiplier = value; }
+        }
+
+        [UnityEngine.SerializeField]
         [UnityEngine.Range(0f, 10f)]
-        public float duration = 0f;
+        private float duration = 0f;
+
+        public float Duration
+        {
+            get{ return duration; }
+            set{ duration = value; }
+        }
 
         protected override void Apply(UnitBehaviour unit)
         {
@@ -30,7 +44,7 @@ namespace Game.Units.Spells.Abilities
                 Buffs.DefendBuff newBuff = unit.gameObject.AddComponent<Buffs.DefendBuff>();
                 newBuff.MetaData = new DefendMetaData(spellName);
                 newBuff.Duration = duration;
-                newBuff.damageMultiplier = damageMultiplier;
+                newBuff.DamageMultiplier = damageMultiplier;
             }
             else
             {

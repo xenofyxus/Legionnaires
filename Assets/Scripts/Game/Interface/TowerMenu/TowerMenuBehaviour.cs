@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.GameInterface
-{	[System.Serializable]
-	public class TowerMenu : MonoBehaviour
+namespace Game.Interface.TowerMenu
+{
+
+    [System.Serializable]
+	public class TowerMenuBehaviour : MonoBehaviour
 	{
 		public List<MenuButton> buttons = new List<MenuButton> ();
 

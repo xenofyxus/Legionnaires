@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.GameInterface
+namespace Game.Interface.GridBuilder
 {
-	public class GridScript : MonoBehaviour
+	public class GridBuilderBehaviour : MonoBehaviour
 	{
 
 		float offSetX = 1.48f;
@@ -36,19 +36,19 @@ namespace Game.GameInterface
 					Instantiate (menu, placeTower, transform.rotation);
 				}
 			}
-			if (TowerMenu.currentMenuItem != -1 && TowerMenu.placeTower == true) {
+            if (TowerMenu.TowerMenuBehaviour.currentMenuItem != -1 && TowerMenu.TowerMenuBehaviour.placeTower == true) {
 				spawnTower ();
-				TowerMenu.currentMenuItem = -1;
-				TowerMenu.placeTower = false;
+                TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+                TowerMenu.TowerMenuBehaviour.placeTower = false;
 			}
 		}
 
 		void spawnTower ()
 		{
-			towersSpawned.Add(Instantiate (towersAvailable [TowerMenu.currentMenuItem], placeTower, transform.rotation));
+            towersSpawned.Add(Instantiate (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem], placeTower, transform.rotation));
 			towerPositions.Add (placeTower);
-			towersSpawnedNotClone.Add (towersAvailable [TowerMenu.currentMenuItem]);
-			towerGridPos [whichSpotX, whichSpotY] = towersAvailable [TowerMenu.currentMenuItem];
+            towersSpawnedNotClone.Add (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem]);
+            towerGridPos [whichSpotX, whichSpotY] = towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem];
 		}
 
 		public void Reset (){

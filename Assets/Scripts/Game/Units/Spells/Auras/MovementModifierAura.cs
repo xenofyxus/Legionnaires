@@ -10,6 +10,12 @@ namespace Game.Units.Spells.Auras
         [UnityEngine.Range(0.5f, 2f)]
 		private float multiplier = 1f;
 
+        public float Multiplier
+        {
+            get{ return multiplier; }
+            set{ multiplier = value; }
+        }
+
         protected override void Apply(UnitBehaviour unit)
         {
 			unit.MovementSpeed.AddMultiplier(multiplier);

@@ -9,6 +9,12 @@ namespace Game.Units.Spells.Auras
 		[SerializeField]
 		private float modifier = 0f;
 
+        public float Modifier
+        {
+            get{ return modifier; }
+            set{ modifier = value; }
+        }
+
         protected override void Apply(UnitBehaviour unit)
         {
 			unit.HpReg.AddAdder(modifier);

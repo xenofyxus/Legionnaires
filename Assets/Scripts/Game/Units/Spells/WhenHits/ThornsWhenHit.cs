@@ -4,7 +4,14 @@ namespace Game.Units.Spells.WhenHits
 {
     public class ThornsWhenHit:WhenHit
     {
-        public float returnedDamage;
+        [UnityEngine.SerializeField]
+        private float returnedDamage;
+
+        public float ReturnedDamage
+        {
+            get{ return returnedDamage; }
+            set{ returnedDamage = value; }
+        }
 
         protected override void Apply(UnitStat damage, UnitBehaviour attacker)
         {
