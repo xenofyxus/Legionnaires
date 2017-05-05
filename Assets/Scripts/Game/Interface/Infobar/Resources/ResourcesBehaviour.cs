@@ -19,6 +19,7 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
+        [SerializeField]
         private int gold = 50;
         private Text goldText = null;
 
@@ -37,7 +38,8 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
-        private int goldIncome = 0;
+        [SerializeField]
+        private int goldIncome = 100;
         private Text goldIncomeText = null;
 
         public int GoldIncome
@@ -55,6 +57,7 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
+        [SerializeField]
         private int wood = 100;
         private Text woodText = null;
 
@@ -73,6 +76,7 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
+        [SerializeField]
         private int woodIncome = 2;
         private Text woodIncomeText = null;
 
@@ -91,7 +95,11 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
-        private int supply;
+        [SerializeField]
+        private float woodIncomeDelay = 5f;
+        private float woodIncomeTimer = 0f;
+
+        private int supply = 0;
         private Text supplyText = null;
 
         public int Supply
@@ -109,6 +117,7 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
+        [SerializeField]
         private int supplyMax = 10;
 
         public int SupplyMax
@@ -126,17 +135,14 @@ namespace Game.Interface.Infobar.Resources
             }
         }
 
-        private float woodIncomeTimer = 0f;
-        private const float woodIncomeDelay = 5f;
-
         void Start()
         {
-            Gold = 50;
-            GoldIncome = 0;
-            Wood = 100;
-            WoodIncome = 2;
-            Supply = 0;
-            SupplyMax = 10;
+            Gold = gold;
+            GoldIncome = goldIncome;
+            Wood = wood;
+            WoodIncome = woodIncome;
+            Supply = supply;
+            SupplyMax = supplyMax;
         }
 
         void Update()
