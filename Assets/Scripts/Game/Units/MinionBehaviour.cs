@@ -33,6 +33,7 @@ namespace Game.Units
         {
             base.OnDestroy();
             minions.Remove(this);
+            Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value;
         }
 
         public override UnitBehaviour GetTarget()

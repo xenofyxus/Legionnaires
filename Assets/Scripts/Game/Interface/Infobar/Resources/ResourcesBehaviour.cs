@@ -14,7 +14,7 @@ namespace Game.Interface.Infobar.Resources
             get
             {
                 if(current == null)
-                    current = GameObject.Find("GameInterface/Infobar(panel)/Resources(panel)").GetComponent<ResourcesBehaviour>();
+                    current = GameObject.Find("GameInterface/Infobar(Panel)/Resources(Panel)").GetComponent<ResourcesBehaviour>();
                 return current;
             }
         }
@@ -127,7 +127,17 @@ namespace Game.Interface.Infobar.Resources
         }
 
         private float woodIncomeTimer = 0f;
-        private const float woodIncomeDelay = 10f;
+        private const float woodIncomeDelay = 5f;
+
+        void Start()
+        {
+            Gold = 50;
+            GoldIncome = 0;
+            Wood = 100;
+            WoodIncome = 2;
+            Supply = 0;
+            SupplyMax = 10;
+        }
 
         void Update()
         {

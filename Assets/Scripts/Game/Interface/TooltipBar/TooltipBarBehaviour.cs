@@ -13,7 +13,7 @@ namespace Game.Interface.TooltipBar
             get
             {
                 if(current == null)
-                    current = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").GetComponent<TooltipBarBehaviour>();
+                    current = GameObject.Find("GameInterface/TooltipBar(Panel)").GetComponent<TooltipBarBehaviour>();
                 return current;
             }
         }
