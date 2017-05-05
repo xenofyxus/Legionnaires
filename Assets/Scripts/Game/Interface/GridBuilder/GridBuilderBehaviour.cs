@@ -14,16 +14,20 @@ namespace Game.Interface.GridBuilder
 		float offSetX = 1.48f;
 		float offSetY = 1.47f;
 
+		int maxSuply = 100;
+		int currentSuply;
+
 		public towerList[] towersAvailable = new towerList[6];
 		public GameObject menu;
 		public GameObject sell;
 		int whichSpotX;
 		int whichSpotY;
 		Vector2 placeTower;
-		GameObject[,] towerGridPos = new GameObject[5, 7];
-		int[,] originalTower = new int[5, 7];
-		Vector2[,] originalVector = new Vector2[5, 7];
-		int[,] whatUpgrade = new int[5, 7];
+		GameObject[,] towerGridPos = new GameObject[5, 7]; //Instantiated tower
+		GameObject[,] towerGridPos2 = new GameObject[5, 7]; //Which exact tower
+		int[,] originalTower = new int[5, 7]; //Which type of tower
+		int[,] whatUpgrade = new int[5, 7]; //Which level the tower has
+		Vector2[,] originalVector = new Vector2[5, 7]; //Tile placed on
 		bool upgradeable;
 		// Use this for initialization
 		void Start ()
@@ -34,8 +38,7 @@ namespace Game.Interface.GridBuilder
 		// Update is called once per frame
 		void Update ()
 		{
-			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {
-				
+			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {				
 				Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 				whichSpotX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
 				whichSpotY = Mathf.FloorToInt (mouseWorldPos.y / offSetY) - 1;
@@ -71,6 +74,7 @@ namespace Game.Interface.GridBuilder
 		void spawnTower ()
 		{
 			towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers[0], placeTower, transform.rotation);
+			towerGridPos2 [whichSpotX, whichSpotY] = towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers[0];
 			originalTower [whichSpotX, whichSpotY] = TowerMenu.TowerMenuBehaviour.currentMenuItem;
 			originalVector [whichSpotX, whichSpotY] = placeTower;
 			whatUpgrade [whichSpotX, whichSpotY] = 0;
@@ -80,24 +84,28 @@ namespace Game.Interface.GridBuilder
 		{
 			GameObject.Destroy(towerGridPos [whichSpotX, whichSpotY]);
 			towerGridPos[whichSpotX, whichSpotY] = null;
+			towerGridPos2[whichSpotX, whichSpotY] = null;
 		}
 
 		public void Reset (){
-			for (int i = 0; i < towerGridPos.GetLength (0); i++) {
-				for (int j = 0; j < towerGridPos.GetLength (1); j++) {
-					if (towerGridPos [i, j] != null) {
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 7; j++) {
+					if (towerGridPos2 [i, j] != null) {
+						print ("Bajs");
 						GameObject.Destroy (towerGridPos [i, j]);
-						towerGridPos [i, j] = Instantiate(towersAvailable[originalTower[i,j]].upgradedTowers[whatUpgrade[i,j]], originalVector[i,j], transform.rotation);
+						towerGridPos[i, j] = null;
+						towerGridPos [i, j] = Instantiate(towersAvailable[originalTower[i, j]].upgradedTowers[whatUpgrade[i, j]], originalVector[i, j], transform.rotation);
 					}
 				}
 			}
 		}
 		void upgradeTower(){
-			sellTower ();
 			if (2 > whatUpgrade [whichSpotX, whichSpotY]) {
 				whatUpgrade [whichSpotX, whichSpotY] += 1;
 			}
+			sellTower ();
 			towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [originalTower[whichSpotX, whichSpotY]].upgradedTowers[whatUpgrade[whichSpotX, whichSpotY]], originalVector [whichSpotX, whichSpotY], transform.rotation);
+			towerGridPos2 [whichSpotX, whichSpotY] = towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]];
 		}
 	}
 }
