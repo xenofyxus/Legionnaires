@@ -58,12 +58,14 @@ namespace Game.Spawners
             waveObjects = GameObject.FindGameObjectsWithTag("Minion");
             if(waveObjects.Length == 0)
             {
-                gridBuilder.SetActive(true);
-                gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().Reset();
+				gridBuilder.SetActive(true);
+				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().ResetSprite();
                 newWave = true;
             }
             if(newWave && playerReady)
             {
+				gridBuilder.SetActive(true);
+				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().Reset();
                 NextWave();
             }
         }
