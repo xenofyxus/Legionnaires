@@ -21,78 +21,38 @@ namespace Game.Interface.Infobar.Resources
 
         [SerializeField]
         private int gold = 50;
-        private Text goldText = null;
 
         public int Gold
         {
-            get
-            {
-                return gold;
-            }
-            set
-            {
-                if(goldText == null)
-                    goldText = transform.Find("Gold/Gold(Text)").GetComponent<Text>();
-                goldText.text = gold.ToString();
-                gold = value;
-            }
+            get{ return gold; }
+            set{ gold = value; }
         }
 
         [SerializeField]
         private int goldIncome = 100;
-        private Text goldIncomeText = null;
 
         public int GoldIncome
         {
-            get
-            {
-                return goldIncome;
-            }
-            set
-            {
-                if(goldIncomeText == null)
-                    goldIncomeText = transform.Find("GoldIncome/GoldIncome(Text)").GetComponent<Text>();
-                goldIncomeText.text = goldIncome + "/w";
-                goldIncome = value;
-            }
+            get{ return goldIncome; }
+            set{ goldIncome = value; }
         }
 
         [SerializeField]
         private int wood = 100;
-        private Text woodText = null;
 
         public int Wood
         {
-            get
-            {
-                return wood;
-            }
-            set
-            {
-                if(woodText == null)
-                    woodText = transform.Find("Wood/Wood(Text)").GetComponent<Text>();
-                woodText.text = wood.ToString();
-                wood = value;
-            }
+            get { return wood; }
+            set{ wood = value; }
         }
 
         [SerializeField]
         private int woodIncome = 2;
-        private Text woodIncomeText = null;
 
         public int WoodIncome
         {
-            get
-            {
-                return woodIncome;
-            }
-            set
-            {
-                if(woodIncomeText == null)
-                    woodIncomeText = transform.Find("WoodIncome/Income(Text)").GetComponent<Text>();
-                woodIncomeText.text = woodIncome.ToString();
-                woodIncome = value;
-            }
+            get { return woodIncome; }
+            set{ woodIncome = value; }
         }
 
         [SerializeField]
@@ -100,21 +60,11 @@ namespace Game.Interface.Infobar.Resources
         private float woodIncomeTimer = 0f;
 
         private int supply = 0;
-        private Text supplyText = null;
 
         public int Supply
         {
-            get
-            {
-                return supply;
-            }
-            set
-            {
-                if(supplyText == null)
-                    supplyText = transform.Find("Supply/Supply(Text)").GetComponent<Text>();
-                supplyText.text = supply + "/" + supplyMax;
-                supply = value;
-            }
+            get{ return supply; }
+            set{ supply = value; }
         }
 
         [SerializeField]
@@ -122,28 +72,15 @@ namespace Game.Interface.Infobar.Resources
 
         public int SupplyMax
         {
-            get
-            {
-                return supplyMax;
-            }
-            set
-            {
-                if(supplyText == null)
-                    supplyText = transform.Find("Supply/Supply(Text)").GetComponent<Text>();
-                supplyText.text = supply + "/" + supplyMax;
-                supplyMax = value;
-            }
+            get{ return supplyMax; }
+            set{ supplyMax = value; }
         }
 
-        void Start()
-        {
-            Gold = gold;
-            GoldIncome = goldIncome;
-            Wood = wood;
-            WoodIncome = woodIncome;
-            Supply = supply;
-            SupplyMax = supplyMax;
-        }
+        private Text goldText = null;
+        private Text goldIncomeText = null;
+        private Text woodText = null;
+        private Text woodIncomeText = null;
+        private Text supplyText = null;
 
         void Update()
         {
@@ -153,27 +90,51 @@ namespace Game.Interface.Infobar.Resources
                 woodIncomeTimer = 0;
                 Wood += WoodIncome;
             }
+            UpdateInfo();
+        }
+
+        void UpdateInfo()
+        {
+            if(goldText == null)
+                goldText = transform.Find("Gold/Gold(Text)").GetComponent<Text>();
+            goldText.text = gold.ToString();
+
+            if(goldIncomeText == null)
+                goldIncomeText = transform.Find("GoldIncome/GoldIncome(Text)").GetComponent<Text>();
+            goldIncomeText.text = goldIncome + "/w";
+
+            if(woodText == null)
+                woodText = transform.Find("Wood/Wood(Text)").GetComponent<Text>();
+            woodText.text = wood.ToString();
+
+            if(woodIncomeText == null)
+                woodIncomeText = transform.Find("WoodIncome/Income(Text)").GetComponent<Text>();
+            woodIncomeText.text = woodIncome.ToString();
+
+            if(supplyText == null)
+                supplyText = transform.Find("Supply/Supply(Text)").GetComponent<Text>();
+            supplyText.text = supply + "/" + supplyMax;
         }
 
         public bool TryPayingGold(int gold)
         {
-            if(gold > Gold)
+            if(gold > this.gold)
                 return false;
-            Gold -= gold;
+            this.gold -= gold;
             return true;
         }
 
         public bool TryPayingWood(int wood)
         {
-            if(wood > Wood)
+            if(wood > this.wood)
                 return false;
-            Gold -= wood;
+            this.gold -= wood;
             return true;
         }
 
         public void ApplyGoldIncome()
         {
-            Gold += GoldIncome;
+            gold += goldIncome;
         }
     }
 }
