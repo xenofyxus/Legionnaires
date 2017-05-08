@@ -11,7 +11,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine;	
+using UnityEngine.UI;
+using UnityEditor;
 
 namespace Game.Spawners
 {
@@ -47,10 +49,19 @@ namespace Game.Spawners
         private float MaxX = 3;
         private float MinY = 16;
         private float MaxY = 17;
+	GameObject waveBtn;
+	GameObject kingspellsPanel;
+	GameObject shockwaveBtn;
+	GameObject stompBtn;
 
         void Start()
         {
-            gridBuilder = GameObject.Find("GridBuilder");
+           gridBuilder = GameObject.Find("GridBuilder");
+		waveBtn = GameObject.Find ("Wave(Button)");
+		kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
+		shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
+		stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
+       
         }
 
         void Update()
@@ -61,6 +72,10 @@ namespace Game.Spawners
 				gridBuilder.SetActive(true);
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().ResetSprite();
                 newWave = true;
+				//Show wavebutton, reset the cooldown and hide the kingspellspanel
+				waveBtn.SetActive (true); 
+
+				kingspellsPanel.SetActive (false);
             }
             if(newWave && playerReady)
             {
@@ -73,6 +88,8 @@ namespace Game.Spawners
 
         void NextWave()
         {
+			waveBtn.SetActive (false);
+			kingspellsPanel.SetActive (true);
             gridBuilder.SetActive(false);
             for(int i = 0; i < Mathf.Ceil(((float)waveObjList[waveNumber].amountOfMinions) / 4); i++)
             {
@@ -107,6 +124,11 @@ namespace Game.Spawners
                 playerReady = false;
                 newWave = false;
             }
+			shockwaveBtn.GetComponent<Image>().fillAmount = 1;
+			stompBtn.GetComponent<Image>().fillAmount = 1;
+			stompBtn.GetComponent<Units.Spells.Kingspells.StompButton> ().CooldownTimer = 0f; 
+			shockwaveBtn.GetComponent<Units.Spells.Kingspells.ShockwaveButton> ().CooldownTimer = 0f;
+
         }
 
         public void PlayerReady()

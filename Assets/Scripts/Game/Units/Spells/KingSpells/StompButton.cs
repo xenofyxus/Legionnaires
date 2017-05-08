@@ -8,26 +8,40 @@ namespace Game.Units.Spells.Kingspells
 	public class StompButton : MonoBehaviour
 	{
 		[SerializeField]
-		public float cooldown;
+		private float cooldown;
 		private float cooldownTimer;
-
-
+		Image stompBtn;
 		GameObject StompCopy;
-
 		Vector2 kingPosition = new Vector2 (0.17f, -14.49f);
 
+
+		public float Cooldown {
+			get {
+				return this.cooldown;
+			}
+			set {
+				cooldown = value;
+			}
+		}
+
+		public float CooldownTimer {
+			get {
+				return this.cooldownTimer;
+			}
+			set {
+				cooldownTimer = value;
+			}
+		}
+			
 		//Initiate the timer to the cooldown value
 		void Start ()
 		{
-			cooldownTimer = cooldown;
+			stompBtn = this.gameObject.GetComponent<Image> ();
 		}
-
 
 		public void onClick(){
 			if (cooldownTimer <= 0f) {
-
 				StompCopy = Instantiate (Resources.Load ("StompPrefab"), kingPosition, Quaternion.identity) as GameObject;
-
 				cooldownTimer = cooldown;
 			} 
 		}
@@ -38,10 +52,8 @@ namespace Game.Units.Spells.Kingspells
 			//Count down the timer
 			if (cooldownTimer > 0f) {
 				cooldownTimer -= Time.deltaTime;
+				stompBtn.fillAmount = 1 - (cooldownTimer / cooldown);
 			}
-
-			//Checks when it's clicked a second time and if so, spawns shockwave copy
-
 		}
 	}
 }
