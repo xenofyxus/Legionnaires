@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class ToggleGameObjectScript : MonoBehaviour {
 
-	public GameObject current;
+	public List<GameObject> list = new List<GameObject>();
 
 	public void toggleMe()
 	{
-		current.SetActive (!current.activeSelf);
+		foreach(GameObject index in list)
+		{
+			index.SetActive(!index.activeSelf);
+		}
 	}
 
 }
