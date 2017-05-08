@@ -88,7 +88,7 @@ namespace Game.Interface.Infobar.Resources
             if(woodIncomeTimer >= woodIncomeDelay)
             {
                 woodIncomeTimer = 0;
-                Wood += WoodIncome;
+                wood += woodIncome;
             }
             UpdateInfo();
         }

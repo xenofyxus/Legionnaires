@@ -8,7 +8,7 @@ namespace Game.Units.Spells.Abilities
 
         protected override void Apply(UnitBehaviour unit)
         {
-            unit.ApplyDamage(-healingAmount);
+            unit.ApplyHeal(healingAmount, owner);
         }
     }
 }

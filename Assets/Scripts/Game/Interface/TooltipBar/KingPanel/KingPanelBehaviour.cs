@@ -10,7 +10,7 @@ namespace Game.Interface.TooltipBar.KingPanel
 		private static KingPanelBehaviour current = null;
 		// Shockwave and Stomp will not be part of King, implement it differently.
 		private static Game.Units.Spells.Buffs.ImmolationTickBuff immolation;
-		private static Game.Units.Spells.WhenHits.ThornsWhenHit thorns;
+        private static Game.Units.Spells.Passives.ThornsPassive thorns;
 
 		public static KingPanelBehaviour Current
 		{
@@ -50,12 +50,10 @@ namespace Game.Interface.TooltipBar.KingPanel
 		}
 		public void ThornsUpdate()
 		{
-
 			statsPanel = Current.transform.Find ("Thorns(Panel)/ThornsStats(Panel)").gameObject;
-			thorns = GameObject.Find("King").GetComponent<Game.Units.Spells.WhenHits.ThornsWhenHit> ();
+            thorns = GameObject.Find("King").GetComponent<Game.Units.Spells.Passives.ThornsPassive> ();
 
 			Damage = thorns.ReturnedDamage;
-
 		}
 
 	}

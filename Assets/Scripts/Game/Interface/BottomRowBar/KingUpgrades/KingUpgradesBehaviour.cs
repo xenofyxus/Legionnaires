@@ -122,7 +122,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resBeh.Gold >= thornsPrice) 
 			{
-				Game.Units.Spells.WhenHits.ThornsWhenHit thorns = GameObject.Find ("King").GetComponent<Game.Units.Spells.WhenHits.ThornsWhenHit> ();
+                Game.Units.Spells.Passives.ThornsPassive thorns = GameObject.Find ("King").GetComponent<Game.Units.Spells.Passives.ThornsPassive> ();
 
 				thorns.ReturnedDamage = thorns.ReturnedDamage + damage;
 

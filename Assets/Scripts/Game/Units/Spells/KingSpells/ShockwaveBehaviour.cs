@@ -10,7 +10,7 @@ namespace Game.Units.Spells.Kingspells
 	{
 
 		GameObject ShockwaveCopy;
-		Vector2 kingPosition = new Vector2 (0.17f, -14.49f);
+		Vector2 kingPosition = new Vector2(0.17f, -14.49f);
 		Vector2 direction;
 		Vector2 mousePosition;
 	
@@ -19,31 +19,38 @@ namespace Game.Units.Spells.Kingspells
 		public float range;
 
 		//When a copy spawns get the mouseposition of the last click to get direction and assign ShockwaveCopy to that object.
-		void Awake(){
-			mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		void Awake()
+		{
+			mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			direction = mousePosition + (100 * (mousePosition - kingPosition));
 			ShockwaveCopy = this.gameObject;
 		}
 
 
 		//Destroy the shockwave travelled outside of range from the king else move towards the mouseclick
-		void FixedUpdate ()
+		void FixedUpdate()
 		{
-			if (ShockwaveCopy != null) {
-				if (Vector2.Distance (kingPosition, ShockwaveCopy.transform.position) > range) {
-					Destroy (ShockwaveCopy);
-				} else {
-					ShockwaveCopy.transform.position = Vector2.MoveTowards (ShockwaveCopy.transform.position, direction, 0.2f);
+			if(ShockwaveCopy != null)
+			{
+				if(Vector2.Distance(kingPosition, ShockwaveCopy.transform.position) > range)
+				{
+					Destroy(ShockwaveCopy);
+				}
+				else
+				{
+					ShockwaveCopy.transform.position = Vector2.MoveTowards(ShockwaveCopy.transform.position, direction, 0.2f);
 				}
 			}
 		}
 
 
 		//Apply damage to minions when they trigger the rigidbody
-		void OnTriggerEnter2D (Collider2D other)
+		void OnTriggerEnter2D(Collider2D other)
 		{
-			if (other.gameObject.GetComponent<Game.Units.MinionBehaviour> () != null) {
-				other.GetComponent<UnitBehaviour> ().ApplyDamage (damage);
+			float dummyVar;
+			if(other.gameObject.GetComponent<Game.Units.MinionBehaviour>() != null)
+			{
+				other.GetComponent<UnitBehaviour>().ApplyDamage(damage, out dummyVar, null);
 			}
 		}
 

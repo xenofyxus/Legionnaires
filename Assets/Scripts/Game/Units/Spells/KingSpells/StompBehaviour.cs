@@ -44,7 +44,8 @@ namespace Game.Units.Spells.Kingspells
 		void OnTriggerEnter2D (Collider2D other)
 		{
 			if (other.gameObject.GetComponent<Game.Units.MinionBehaviour> () != null) {
-				other.GetComponent<UnitBehaviour> ().ApplyDamage (damage);
+                float dummyVar;
+                other.GetComponent<UnitBehaviour> ().ApplyDamage (damage, out dummyVar, null);
 				Buffs.StunBuff stunBuff = other.GetComponent<UnitBehaviour> ().gameObject.AddComponent<Buffs.StunBuff>();
 				stunBuff.Duration = duration;
 			}

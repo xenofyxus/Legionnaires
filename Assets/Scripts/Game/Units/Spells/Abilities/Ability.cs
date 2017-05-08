@@ -34,17 +34,11 @@ namespace Game.Units.Spells.Abilities
 
 		private float cooldownTimer = 0;
 
-		protected UnitBehaviour owner;
-
 		protected abstract void Apply(UnitBehaviour unit);
 
-		protected virtual void Start()
+        protected override void Update()
 		{
-			owner = GetComponent<UnitBehaviour>();
-		}
-
-		protected virtual void Update()
-		{
+            base.Update();
 			if(cooldownTimer == 0)
 			{
 				UnitBehaviour target = null;

@@ -8,7 +8,7 @@ namespace Game.Units.Spells.Buffs
         [SerializeField]
         private float tickTime = 0f;
 
-        public float TickTimer
+        public float TickTime
         {
             get{ return tickTime; }
             set{ tickTime = value; }
@@ -18,9 +18,13 @@ namespace Game.Units.Spells.Buffs
 
         protected abstract void ApplyTick(float deltaTime);
 
-        protected abstract override void Apply();
+        protected override void Apply()
+        {
+        }
 
-        protected abstract override void Remove();
+        protected override void Remove()
+        {
+        }
 
         protected override void Update()
         {

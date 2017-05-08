@@ -16,24 +16,16 @@ namespace Game.Units.Spells.Auras
             get{ return multiplier; }
             set{ multiplier = value; }
         }
-
-        private Dictionary<UnitBehaviour,OnHits.OnHit> onHits = new Dictionary<UnitBehaviour, Game.Units.Spells.OnHits.OnHit>();
-
         protected override void Apply(UnitBehaviour unit)
         {
-            var effect = unit.gameObject.AddComponent<OnHits.CritOnHit>();
-			effect.HitChance = 100;
-            effect.Multiplier = multiplier;
-            onHits.Add(unit, effect);
+			unit.DamageMax.AddMultiplier(multiplier);
+			unit.DamageMin.AddMultiplier(multiplier);
         }
 
         protected override void Remove(UnitBehaviour unit)
         {
-            OnHits.OnHit onHit;
-            if(onHits.TryGetValue(unit, out onHit))
-            {
-                GameObject.Destroy(onHit);
-            }
+			unit.DamageMax.RemoveMultiplier(multiplier);
+			unit.DamageMin.RemoveMultiplier(multiplier);
         }
     }
 }

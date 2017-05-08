@@ -8,6 +8,8 @@ namespace Game.Units
 {
     public class ProjectileBehaviour : MonoBehaviour
     {
+		public event AttackedEventHandler Attacked;
+
         /// <summary>
         /// The movement speed in <units> per second.
         /// </summary>
@@ -17,9 +19,33 @@ namespace Game.Units
         [NonSerialized]
         public UnitBehaviour owner;
 
-        private float damageMax;
-        private float damageMin;
         private AttackType attackType;
+
+        public AttackType AttackType
+        {
+            get
+            {
+                return this.attackType;
+            }
+            set
+            {
+                attackType = value;
+            }
+        }
+
+		private float damage;
+
+		public float Damage
+    	{
+    		get
+    		{
+    			return this.damage;
+    		}
+    		set
+    		{
+    			damage = value;
+    		}
+    	}
 
         /// <summary>
         /// The target which this projectile is flying towards and going to deal damage to.
@@ -32,32 +58,15 @@ namespace Game.Units
 
         private Collider2D thisCollider;
 
-        // Use this for initialization
         void Start()
         {
-			damageMax = owner.DamageMax;
-			damageMin = owner.DamageMin;
 			attackType = owner.AttackType;
 
             targetCollider = target.GetComponent<Collider2D>();
             thisCollider = GetComponent<Collider2D>();
             targetPosition = target.transform.position;
-
-			if(owner != null)
-			{
-				foreach(Spells.OnHits.OnHit onHit in owner.GetComponents<Spells.OnHits.OnHit>())
-				{
-					Spells.OnHits.OnHit newOnHit = (Spells.OnHits.OnHit)gameObject.AddComponent(onHit.GetType());
-                    FieldInfo[] fieldInfos = onHit.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-					foreach(FieldInfo fieldInfo in fieldInfos)
-					{
-						fieldInfo.SetValue(newOnHit, fieldInfo.GetValue(onHit));
-					}
-				}
-			}
         }
-	
-        // Update is called once per frame
+		
         void Update()
         {
             if(target != null)
@@ -67,35 +76,11 @@ namespace Game.Units
                 targetPosition = target.transform.position;
                 if(thisCollider.Distance(targetCollider).isOverlapped)
                 {
-					UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
+					float actualDamage;
+					target.ApplyDamage(damage, out actualDamage, owner);
 
-                    var postDamageEffects = new List<PostDamageEffect>();
-
-					foreach(Spells.OnHits.OnHit onHit in GetComponents<Spells.OnHits.OnHit>())
-                    {
-                        PostDamageEffect postDamageEffect;
-                        onHit.Hit(damage, target, out postDamageEffect);
-                        if(postDamageEffect != null)
-                            postDamageEffects.Add(postDamageEffect);
-                    }
-
-					damage *= DamageRatios.GetRatio(target.ArmorType, attackType);
-
-					target.ApplyDamage(damage);
-
-					UnitStat healing = 0f;
-
-                    foreach(var postDamageEffect in postDamageEffects)
-                    {
-						postDamageEffect(damage, healing, target);
-                    }
-
-                    if(owner != null)
-                    {
-                        // Applies negative damage which gives negative heals the ability to kill the owner
-                        if(owner.ApplyDamage(-healing))
-                            return;
-                    }
+					if(Attacked != null)
+						Attacked(this, new AttackedEventArgs(actualDamage, target));
 
                     GameObject.Destroy(gameObject);
                 }

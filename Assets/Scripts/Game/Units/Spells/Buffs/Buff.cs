@@ -16,32 +16,19 @@ namespace Game.Units.Spells.Buffs
 			set{duration = value;}
 		}
 
-		protected object metaData;
-
-		/// <summary>
-		/// Gets or sets the meta data.
-		/// </summary>
-		public object MetaData
-		{
-			get{return metaData;}
-			set{metaData = value;}
-		}
-
-		protected UnitBehaviour owner;
-
 		protected abstract void Apply();
 
 		protected abstract void Remove();
 
-
-		void Start()
+		protected override void Start()
 		{
-			owner = GetComponent<UnitBehaviour>();
+			base.Start();
 			Apply();
 		}
 
-		protected virtual void Update()
+		protected override void Update()
 		{
+			base.Update();
 			if(duration > 0)
 				duration -= Time.deltaTime;
 			else
@@ -50,8 +37,9 @@ namespace Game.Units.Spells.Buffs
 			}
 		}
 
-		void OnDestroy()
+		protected override void OnDestroy()
 		{
+			base.OnDestroy();
 			if (owner != null) {
 				Remove ();
 			}
