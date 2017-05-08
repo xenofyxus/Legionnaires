@@ -57,7 +57,6 @@ namespace Game.Interface.TooltipBar.KingPanel
 			Damage = thorns.ReturnedDamage;
 
 		}
-			
 
 	}
 }
