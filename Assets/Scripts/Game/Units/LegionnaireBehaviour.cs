@@ -68,7 +68,7 @@ namespace Game.Units
                     }
                 }
                 //Added visionRange returns enemy if in vision.
-                if(Vector2.Distance(transform.position, closestEnemy.transform.position) < 5)
+				if(Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour> ().Range )
                 {
                     return closestEnemy;
                 }
