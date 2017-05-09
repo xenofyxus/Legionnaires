@@ -140,8 +140,9 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 
         public void UpgradeGoldIncome()
         {
-            if(resources.TryPayingWood(minerWoodCost))
+            if(resources.Supply < resources.SupplyMax && resources.TryPayingWood(minerWoodCost))
             {
+                resources.Supply++;
                 resources.GoldIncome += goldIncomeGain;
                 if(minerCurrentStep++ == minerStepInterval)
                 {
@@ -154,8 +155,9 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 
         public void UpgradeWoodIncome()
         {
-            if(resources.TryPayingGold(woodcutterGoldCost))
+            if(resources.Supply < resources.SupplyMax && resources.TryPayingGold(woodcutterGoldCost))
             {
+                resources.Supply++;
                 resources.WoodIncome += woodIncomeGain;
                 if(woodcutterCurrentStep++ == woodcutterStepInterval)
                 {
