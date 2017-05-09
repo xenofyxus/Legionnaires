@@ -170,5 +170,24 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			}
 		}
 
+		public void ToggleMe(){
+			GameObject tooltipbar = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").gameObject;
+			GameObject kingpanel = tooltipbar.transform.FindChild ("King Panel").gameObject;
+			GameObject kingmenubar = GameObject.Find("GameInterface").transform.Find ("KingMenuBar(Panel)").gameObject;
+
+			if (tooltipbar.activeSelf && kingpanel.activeSelf && kingmenubar.activeSelf) {
+				tooltipbar.SetActive (false);
+				kingpanel.SetActive (false);
+				kingmenubar.SetActive (false);
+			} else if (!kingpanel.activeSelf && kingmenubar.activeSelf) {
+				tooltipbar.SetActive (true);
+				kingpanel.SetActive (true);
+			} else {
+				tooltipbar.SetActive (true);
+				kingpanel.SetActive (true);
+				kingmenubar.SetActive (true);
+			}
+		}
+
     }
 }
