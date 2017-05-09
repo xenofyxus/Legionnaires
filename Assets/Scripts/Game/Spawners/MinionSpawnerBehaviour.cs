@@ -99,7 +99,7 @@ namespace Game.Spawners
                 instantiateTimer -= Time.deltaTime;
                 if(instantiateTimer <= 0)
                 {
-                    instantiateTimer = 2.5f;
+                    instantiateTimer = 10f;
                     for(int j = 0; j < 4; j++)
                     {		// Spawning 4 units per "instantiateTimer"-delay
                         if(numberOfUnitsSpawned >= waveObjList[waveNumber].amountOfMinions)

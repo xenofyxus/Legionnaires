@@ -50,10 +50,8 @@ namespace Game.Interface.GridBuilder
 			//The code in update is all about mouse positions and choosing towers
 			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {				
 				Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-				print (mouseWorldPos.y);
 				whichSpotX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
 				whichSpotY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
-				print (whichSpotY);
 				placeTower = new Vector2 (-3.0f + (whichSpotX * 1.48f), 2.4f + (whichSpotY * 1.47f));
 				if (0 <= whichSpotX && whichSpotX <= 4 && 0 <= whichSpotY && whichSpotY <= 6 && towerGridPosCopy [whichSpotX, whichSpotY] == null) {
 					Instantiate (buyTowers, placeTower, transform.rotation);
