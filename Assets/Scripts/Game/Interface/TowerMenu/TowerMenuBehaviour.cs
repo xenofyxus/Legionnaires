@@ -69,6 +69,7 @@ namespace Game.Interface.TowerMenu
 
 			if (currentMenuItem != -1 && (placeTower == true || sellTower == true) || vectorToMouse.magnitude > 3.5f) {
 				GameObject.Destroy (this.gameObject);
+                TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 			}
 		}
 	}

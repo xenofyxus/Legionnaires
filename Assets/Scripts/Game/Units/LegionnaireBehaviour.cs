@@ -49,11 +49,6 @@ namespace Game.Units
             legionnaires.Remove(this);
         }
 
-        void OnMouseDown()
-        {
-            Game.Interface.TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit(this);
-        }
-
         public override UnitBehaviour GetTarget()
         {
             UnitBehaviour[] enemies = GetEnemies();

@@ -128,7 +128,16 @@ namespace Game.Interface.Infobar.Resources
         {
             if(wood > this.wood)
                 return false;
-            this.gold -= wood;
+            this.wood -= wood;
+            return true;
+        }
+
+        public bool TryPaying(int gold, int wood)
+        {
+            if(gold > this.gold || wood > this.wood)
+                return false;
+            this.gold -= gold;
+            this.wood -= wood;
             return true;
         }
 
