@@ -30,18 +30,6 @@ namespace Game.Interface.TooltipBar
             }
         }
 
-        private GameObject economyPanel = null;
-
-        public GameObject EconomyPanel
-        {
-            get
-            {
-                if(economyPanel == null)
-                    economyPanel = transform.FindChild("Economy Panel").gameObject;
-                return economyPanel;
-            }
-        }
-
         private GameObject kingPanel = null;
 
         public GameObject KingPanel
@@ -73,28 +61,19 @@ namespace Game.Interface.TooltipBar
                 case TooltipBarPanel.TowerPanel:
                     gameObject.SetActive(true);
                     TowerPanel.SetActive(true);
-                    EconomyPanel.SetActive(false);
                     KingPanel.SetActive(false);
                     WaveInfoPanel.SetActive(false);
                     break;
-                case TooltipBarPanel.EconomyPanel:
-                    gameObject.SetActive(true);
-                    TowerPanel.SetActive(false);
-                    EconomyPanel.SetActive(true);
-                    KingPanel.SetActive(false);
-                    WaveInfoPanel.SetActive(false);
-                    break;
+
                 case TooltipBarPanel.KingPanel:
                     gameObject.SetActive(true);
                     TowerPanel.SetActive(false);
-                    EconomyPanel.SetActive(false);
                     KingPanel.SetActive(true);
                     WaveInfoPanel.SetActive(false);
                     break;
                 case TooltipBarPanel.WaveInfo:
                     gameObject.SetActive(true);
                     TowerPanel.SetActive(false);
-                    EconomyPanel.SetActive(false);
                     KingPanel.SetActive(false);
                     WaveInfoPanel.SetActive(true);
                     break;
@@ -109,7 +88,6 @@ namespace Game.Interface.TooltipBar
     {
         Hide,
         TowerPanel,
-        EconomyPanel,
         KingPanel,
         WaveInfo
     }
