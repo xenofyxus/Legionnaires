@@ -37,7 +37,7 @@ namespace Game.Interface.MainCamera
             }
             if(Game.Units.MinionBehaviour.Minions.Count == 0)
             {
-                Camera.main.transform.position = new Vector3(0f, 7.3f, -10);
+                Camera.main.transform.position = new Vector3(0f, 8.9f, -10);
             }
         }
     }

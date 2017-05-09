@@ -40,6 +40,7 @@ namespace Game.Spawners
         private GameObject[] waveObjects;
 
         private bool newWave;
+		private bool reset;
         public bool playerReady = false;
         private int numberOfUnitsSpawned = 0;
         private float instantiateTimer = 5f;
@@ -49,14 +50,14 @@ namespace Game.Spawners
         private float MaxX = 3;
         private float MinY = 16;
         private float MaxY = 17;
-	GameObject waveBtn;
-	GameObject kingspellsPanel;
-	GameObject shockwaveBtn;
-	GameObject stompBtn;
+		GameObject waveBtn;
+		GameObject kingspellsPanel;
+		GameObject shockwaveBtn;
+		GameObject stompBtn;
 
         void Start()
         {
-           gridBuilder = GameObject.Find("GridBuilder");
+        gridBuilder = GameObject.Find("GridBuilder");
 		waveBtn = GameObject.Find ("Wave(Button)");
 		kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 		shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
@@ -64,33 +65,35 @@ namespace Game.Spawners
        
         }
 
-        void Update()
+        void LateUpdate()
         {
-            waveObjects = GameObject.FindGameObjectsWithTag("Minion");
-            if(waveObjects.Length == 0)
+			if(Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false)
             {
 				gridBuilder.SetActive(true);
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().ResetSprite();
-                newWave = true;
+				reset = true;
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
 				waveBtn.SetActive (true); 
-
 				kingspellsPanel.SetActive (false);
             }
-            if(newWave && playerReady)
-            {
-				gridBuilder.SetActive(true);
-				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().Reset();
-                NextWave();
-            }
+
+			if (reset && playerReady) {
+				reset = false;
+				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().Reset ();
+				newWave = true;
+			}
+
+			if (newWave && playerReady) {
+					NextWave();
+			}
         }
 
 
         void NextWave()
         {
+			gridBuilder.SetActive (false);
 			waveBtn.SetActive (false);
 			kingspellsPanel.SetActive (true);
-            gridBuilder.SetActive(false);
             for(int i = 0; i < Mathf.Ceil(((float)waveObjList[waveNumber].amountOfMinions) / 4); i++)
             {
                 instantiateTimer -= Time.deltaTime;

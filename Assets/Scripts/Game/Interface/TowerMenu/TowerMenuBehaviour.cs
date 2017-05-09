@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Game.Interface.TowerMenu
 {
 
-    [System.Serializable]
+	[System.Serializable]
 	public class TowerMenuBehaviour : MonoBehaviour
 	{
 		public List<MenuButton> buttons = new List<MenuButton> ();
@@ -18,11 +18,15 @@ namespace Game.Interface.TowerMenu
 		public static int currentMenuItem = -1;
 		public static bool placeTower;
 		public static bool sellTower;
+		public static bool sellConfirm;
+		public static bool upgradeConfirm;
 		private int oldMenuItem;
 		private GameObject buyBTN;
-
+		private GameObject gridBuilder;
 		void Start ()
 		{
+			gridBuilder = GameObject.Find ("GridFather");
+			gridBuilder.SetActive (false);
 			buyBTN = GameObject.Find ("BUY");
 			buyBTN.SetActive (false);
 			menuItems = buttons.Count;
@@ -41,6 +45,10 @@ namespace Game.Interface.TowerMenu
 
 		public void GetCurrentMenuItem ()
 		{
+			sellTower = false;
+			sellConfirm = false;
+			upgradeConfirm = false;
+			placeTower = false;
 
 			Vector2 mousePos = (Vector2)Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			circleCenter = (Vector2)transform.position;
@@ -54,22 +62,39 @@ namespace Game.Interface.TowerMenu
 
 			if (vectorToMouse.magnitude < 3.5f && vectorToMouse.magnitude > 1.5f) {
 				currentMenuItem = (int)(angle / (360 / menuItems));
-				if (sellTower == false) {
-					buyBTN.SetActive (true);
-				}
+				buyBTN.SetActive (true);
 			}
 
 			if (vectorToMouse.magnitude < 1.5f && currentMenuItem != -1) {
-				if (sellTower == false) {
-					placeTower = true;
-				} else {
+
+				if (this.gameObject.name == "SellMenu(Clone)") {
+					if (currentMenuItem == 0) {
+						sellTower = true;
+					} else {
+						upgradeConfirm = true;
+					}
+				}	
+
+				if (this.gameObject.name == "WizardUpgrade(Clone)") {
+					if (currentMenuItem == 0) {
+						sellTower = true;
+					} else {
+						upgradeConfirm = true;
+					}
+				}	
+
+				if (this.gameObject.name == "SellOnly(Clone)") {
 					sellTower = true;
-				}
+				}	
+
+				if (this.gameObject.name == "TowerMenju(Clone)") {
+					placeTower = true;
+				}	
 			}
 
-			if (currentMenuItem != -1 && (placeTower == true || sellTower == true) || vectorToMouse.magnitude > 3.5f) {
+			if (currentMenuItem != -1 && (placeTower == true || sellTower == true || upgradeConfirm == true) || vectorToMouse.magnitude > 3.5f) {
+				gridBuilder.SetActive (true);
 				GameObject.Destroy (this.gameObject);
-                TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 			}
 		}
 	}

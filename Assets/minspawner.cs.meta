@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: e381e19076ff420478f41960d6815a8d
-timeCreated: 1494326669
+guid: fee0e282a87022b4e865313b3a4ae3e1
+timeCreated: 1494325489
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - gridScript: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
