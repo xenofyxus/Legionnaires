@@ -15,7 +15,7 @@ namespace Game.Interface.GridBuilder
 
 		//Transform.find("x,y).GetComponent<Image>().sprite;
 		float offSetX = 1.48f;
-		float offSetY = 1.47f;
+		float offSetY = 1.5f;
 
 		int maxSupply;
 		int currentSupply;
@@ -25,16 +25,16 @@ namespace Game.Interface.GridBuilder
 		public GameObject sellOrUpgrade;
 		public GameObject onlySell;
 		public GameObject wizardSpecial;
-		int whichSpotX;
-		int whichSpotY;
+		public int whichSpotX;
+		public int whichSpotY;
 		Vector2 placeTower;
 		GameObject[,] towerGridPos = new GameObject[5, 7];
 		//Instantiated tower
 		GameObject[,] towerGridPosCopy = new GameObject[5, 7];
 		//Which exact tower
-		int[,] originalTower = new int[5, 7];
+		public int[,] originalTower = new int[5, 7];
 		//Which type of tower
-		int[,] whatUpgrade = new int[5, 7];
+		public int[,] whatUpgrade = new int[5, 7];
 		//Which level the tower has
 		Vector2[,] originalVector = new Vector2[5, 7];
 		//Tile placed on
@@ -50,9 +50,11 @@ namespace Game.Interface.GridBuilder
 			//The code in update is all about mouse positions and choosing towers
 			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {				
 				Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+				print (mouseWorldPos.y);
 				whichSpotX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
-				whichSpotY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 2.10f);
-				placeTower = new Vector2 (-3.0f + (whichSpotX * 1.48f), 3.9f + (whichSpotY * 1.47f));
+				whichSpotY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
+				print (whichSpotY);
+				placeTower = new Vector2 (-3.0f + (whichSpotX * 1.48f), 2.4f + (whichSpotY * 1.47f));
 				if (0 <= whichSpotX && whichSpotX <= 4 && 0 <= whichSpotY && whichSpotY <= 6 && towerGridPosCopy [whichSpotX, whichSpotY] == null) {
 					Instantiate (buyTowers, placeTower, transform.rotation);
 				} else if (0 <= whichSpotX && whichSpotX <= 4 && 0 <= whichSpotY && whichSpotY <= 6 && towerGridPosCopy [whichSpotX, whichSpotY] != null) {
@@ -67,6 +69,7 @@ namespace Game.Interface.GridBuilder
 					}
 				}
 			}
+
 			if (TowerMenu.TowerMenuBehaviour.currentMenuItem != -1 && TowerMenu.TowerMenuBehaviour.placeTower == true) {
 				createTower ();
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;

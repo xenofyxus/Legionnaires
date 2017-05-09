@@ -22,11 +22,13 @@ namespace Game.Interface.TowerMenu
 		public static bool upgradeConfirm;
 		private int oldMenuItem;
 		private GameObject buyBTN;
-		private GameObject gridBuilder;
+		private GameObject gridFather;
+		private GameObject gridBuild;
 		void Start ()
 		{
-			gridBuilder = GameObject.Find ("GridFather");
-			gridBuilder.SetActive (false);
+			gridFather = GameObject.Find ("GridFather");
+			gridBuild = GameObject.Find ("GridBuilder");
+			gridFather.SetActive (false);
 			buyBTN = GameObject.Find ("BUY");
 			buyBTN.SetActive (false);
 			menuItems = buttons.Count;
@@ -62,6 +64,19 @@ namespace Game.Interface.TowerMenu
 
 			if (vectorToMouse.magnitude < 3.5f && vectorToMouse.magnitude > 1.5f) {
 				currentMenuItem = (int)(angle / (360 / menuItems));
+				int xSpot = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().whichSpotX;
+				int ySpot = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().whichSpotY;
+				int whatUpgrade = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().whatUpgrade [xSpot, ySpot];
+				int originalT = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().originalTower [xSpot, ySpot];
+				if(this.gameObject.name == "TowerMenju(Clone)"){
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [currentMenuItem].upgradedTowers [0].GetComponent<Units.LegionnaireBehaviour>());
+				}
+				if (this.gameObject.name == "SellMenu(Clone)") {
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [originalT].upgradedTowers [whatUpgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+				}
+				if (this.gameObject.name == "WizardUpgrade(Clone)") {
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [originalT].upgradedTowers [whatUpgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+				}
 				buyBTN.SetActive (true);
 			}
 
@@ -72,6 +87,7 @@ namespace Game.Interface.TowerMenu
 						sellTower = true;
 					} else {
 						upgradeConfirm = true;
+
 					}
 				}	
 
@@ -93,7 +109,7 @@ namespace Game.Interface.TowerMenu
 			}
 
 			if (currentMenuItem != -1 && (placeTower == true || sellTower == true || upgradeConfirm == true) || vectorToMouse.magnitude > 3.5f) {
-				gridBuilder.SetActive (true);
+				gridFather.SetActive (true);
 				GameObject.Destroy (this.gameObject);
 			}
 		}
