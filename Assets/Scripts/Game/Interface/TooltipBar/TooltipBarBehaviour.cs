@@ -13,7 +13,7 @@ namespace Game.Interface.TooltipBar
             get
             {
                 if(current == null)
-					current = GameObject.Find("GameInterface").transform.Find ("TooltipBar(Panel)").GetComponent<TooltipBarBehaviour>();
+                    current = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").GetComponent<TooltipBarBehaviour>();
                 return current;
             }
         }
@@ -54,9 +54,9 @@ namespace Game.Interface.TooltipBar
             }
         }
 
-        public void SetPanel(string panelName)
+        public void SetPanel(TooltipBarPanel panel)
         {
-            switch((TooltipBarPanel)System.Enum.Parse(typeof(TooltipBarPanel), panelName, true))
+            switch(panel)
             {
                 case TooltipBarPanel.TowerPanel:
                     gameObject.SetActive(true);
@@ -82,6 +82,12 @@ namespace Game.Interface.TooltipBar
                     break;
             }
         }
+
+        public void SetPanel(string panelName)
+        {
+            SetPanel((TooltipBarPanel)System.Enum.Parse(typeof(TooltipBarPanel), panelName, true));
+        }
+            
     }
 
     public enum TooltipBarPanel

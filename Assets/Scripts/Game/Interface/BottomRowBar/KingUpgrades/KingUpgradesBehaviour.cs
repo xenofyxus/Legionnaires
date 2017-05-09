@@ -6,188 +6,152 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 {
     public class KingUpgradesBehaviour : MonoBehaviour
     {
-		public GameObject shockwavePrefab;
-		public GameObject stompPrefab;
-		private Game.Interface.Infobar.Resources.ResourcesBehaviour resBeh;
+        private Game.Interface.Infobar.Resources.ResourcesBehaviour resources;
 
-		void Awake()
-		{
-			resBeh = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
-		}
-
-		[SerializeField]
-		private int hpMaxPrice = 10;
-
-		public void UpgradeHpMax(int health)
+        void Awake()
         {
-			if (resBeh.Gold >= hpMaxPrice) 
-			{
-				Units.KingBehaviour.Current.HpMax.AddAdder (health);
-				resBeh.Gold = resBeh.Gold - hpMaxPrice;
-			}
+            resources = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
         }
 
-	
+        [Header("Damage")]
 
-		[SerializeField]
-		private int damagePrice = 10;
+        [SerializeField]
+        private int damageCost = 10;
+        [SerializeField]
+        private int damageGain = 10;
 
-		public void UpgradeDamage(int damage)
+        [Header("HP Reg")]
+
+        [SerializeField]
+        private int hpRegCost = 10;
+        [SerializeField]
+        private int hpRegGain = 10;
+
+        [Header("HP")]
+
+        [SerializeField]
+        private int hpCost = 10;
+        [SerializeField]
+        private int hpGain = 10;
+
+        [Header("Shockwave")]
+
+        [SerializeField]
+        private int shockwaveCost = 10;
+        [SerializeField]
+        private int shockwaveDamageGain = 10;
+        [SerializeField]
+        private int shockwaveRangeGain = 10;
+
+        [Header("Stomp")]
+
+        [SerializeField]
+        private int stompCost = 10;
+        [SerializeField]
+        private int stompDamageGain = 10;
+        [SerializeField]
+        private int stompDurationGain = 10;
+
+        [Header("Immolation")]
+
+        [SerializeField]
+        private int immolationCost = 10;
+        [SerializeField]
+        private int immolationDpsGain = 10;
+        [SerializeField]
+        private int immolationRadiusGain = 10;
+
+        [Header("Thorns")]
+
+        [SerializeField]
+        private int thornsCost = 10;
+        [SerializeField]
+        private int thornsDamageGain = 10;
+
+        public void UpgradeDamage()
         {
-			if (resBeh.Gold >= damagePrice) 
-			{
-				Units.KingBehaviour.Current.DamageMax.AddAdder(damage);
-            	Units.KingBehaviour.Current.DamageMin.AddAdder(damage);
-				resBeh.Gold = resBeh.Gold - damagePrice;
-			}
+            if(resources.TryPayingWood(damageCost))
+            {
+                Units.KingBehaviour.Current.DamageMax.AddAdder(damageGain);
+                Units.KingBehaviour.Current.DamageMin.AddAdder(damageGain);
+            }
         }
 
-
-
-		[SerializeField]
-		private int hpRegPrice = 10;
-
-		public void UpgradeHpReg(int regen)
+        public void UpgradeHpReg()
         {
-			if (resBeh.Gold >= hpRegPrice) 
-			{
-           		Units.KingBehaviour.Current.HpReg.AddAdder(regen);
-				resBeh.Gold = resBeh.Gold - hpRegPrice;
-			}
+            if(resources.TryPayingWood(hpRegCost))
+            {
+                Units.KingBehaviour.Current.HpReg.AddAdder(hpRegGain);
+            }
         }
 
+        public void UpgradeHpMax()
+        {
+            if(resources.TryPayingWood(hpCost))
+            {
+                Units.KingBehaviour king = Units.KingBehaviour.Current;
+                float hpRatio = king.Hp / king.HpMax;
+                king.HpMax.AddAdder(hpGain);
+                king.ApplyHeal(hpRatio * hpGain, null);
+            }
+        }
 
+        public void UpgradeShockwave()
+        {
+            if(resources.TryPayingWood(shockwaveCost))
+            {
+                Units.KingBehaviour.Current.ShockwaveDamage += shockwaveDamageGain;
+                Units.KingBehaviour.Current.ShockwaveRange += shockwaveRangeGain;
+            }
+        }
 
-		[SerializeField]
-		private int shockwavePrice = 10;
+        public void UpgradeStomp()
+        {
+            if(resources.TryPayingWood(stompCost))
+            {
+                Units.KingBehaviour.Current.StompDamage += stompDamageGain;
+                Units.KingBehaviour.Current.StompDuration += stompDurationGain;
+            }
+        }
 
-		public void UpgradeShockwave(int damage)
-		{
-			if (resBeh.Gold >= shockwavePrice) 
-			{
-				Game.Units.Spells.Kingspells.ShockwaveBehaviour shockwave = shockwavePrefab.GetComponent<Game.Units.Spells.Kingspells.ShockwaveBehaviour> ();
-				shockwave.damage = shockwave.damage + damage;
-				shockwave.range = shockwave.range + ShockRange;
-				GameObject.Find ("King Panel").GetComponent<Game.Interface.TooltipBar.KingPanel.KingPanelBehaviour> ().ShockwaveUpdate (shockwave);
-				resBeh.Gold = resBeh.Gold - shockwavePrice;
-			}
-		}
+        public void UpgradeImmolation()
+        {
+            if(resources.TryPayingWood(immolationCost))
+            {
+                Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDpsGain;
+                Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().Radius += immolationRadiusGain;
+            }
+        }
 
+        public void UpgradeThorns()
+        {
+            if(resources.TryPayingWood(thornsCost))
+            {
+                Units.KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage = thornsDamageGain;
+            }
+        }
 
+        public void ToggleMe()
+        {
+            GameObject tooltipbar = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").gameObject;
+            GameObject kingpanel = tooltipbar.transform.FindChild("King Panel").gameObject;
+            GameObject kingmenubar = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)").gameObject;
 
-		[SerializeField]
-		private int stompPrice = 10;
-
-		public void UpgradeStomp(int damage)
-		{
-			if (resBeh.Gold >= stompPrice) 
-			{
-				Game.Units.Spells.Kingspells.StompBehaviour stomp = stompPrefab.GetComponent<Game.Units.Spells.Kingspells.StompBehaviour> ();
-
-				stomp.damage = stomp.damage + damage;
-
-				if(stomp.duration != 5.0f)
-					stomp.duration = stomp.duration + StompRadius;
-
-				GameObject.Find ("King Panel").GetComponent<Game.Interface.TooltipBar.KingPanel.KingPanelBehaviour> ().StompUpdate (stomp);
-				resBeh.Gold = resBeh.Gold - stompPrice;
-			}
-		}
-
-
-
-		[SerializeField]
-		private int immolationPrice = 10;
-
-		public void UpgradeImmolation(int damage)
-		{
-			if (resBeh.Gold >= immolationPrice) 
-			{
-				Game.Units.Spells.Buffs.ImmolationTickBuff immolation = GameObject.Find("King").GetComponent<Game.Units.Spells.Buffs.ImmolationTickBuff> ();
-
-				immolation.DamagePerSecond = immolation.DamagePerSecond + damage;
-				immolation.Radius = immolation.Radius + immoRadius;
-
-				GameObject.Find ("King Panel").GetComponent<Game.Interface.TooltipBar.KingPanel.KingPanelBehaviour> ().ImmolationUpdate ();
-				resBeh.Gold = resBeh.Gold - immolationPrice;
-			}
-		}
-
-
-
-		[SerializeField]
-		private int thornsPrice = 10;
-
-		public void UpgradeThorns(int damage)
-		{
-			if (resBeh.Gold >= thornsPrice) 
-			{
-                Game.Units.Spells.Passives.ThornsPassive thorns = GameObject.Find ("King").GetComponent<Game.Units.Spells.Passives.ThornsPassive> ();
-
-				thorns.ReturnedDamage = thorns.ReturnedDamage + damage;
-
-				GameObject.Find ("King Panel").GetComponent<Game.Interface.TooltipBar.KingPanel.KingPanelBehaviour> ().ThornsUpdate ();
-				resBeh.Gold = resBeh.Gold - thornsPrice;
-			}
-		}
-
-		private float immoRadius = 0.0f;
-
-		public float ImmoRadius {
-			get 
-			{
-				return immoRadius;
-			}
-			set 
-			{
-				immoRadius = value;
-			}
-		}
-
-		private float stompRadius = 0.0f;
-
-		public float StompRadius {
-			get 
-			{
-				return stompRadius;
-			}
-			set 
-			{
-				stompRadius = value;
-			}
-		}
-
-		private float range = 0.0f;
-
-		public float ShockRange {
-			get 
-			{
-				return range;
-			}
-			set 
-			{
-				range = value;
-			}
-		}
-
-		public void ToggleMe(){
-			GameObject tooltipbar = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").gameObject;
-			GameObject kingpanel = tooltipbar.transform.FindChild ("King Panel").gameObject;
-			GameObject kingmenubar = GameObject.Find("GameInterface").transform.Find ("KingMenuBar(Panel)").gameObject;
-
-			if (tooltipbar.activeSelf && kingpanel.activeSelf && kingmenubar.activeSelf) {
-				tooltipbar.SetActive (false);
-				kingpanel.SetActive (false);
-				kingmenubar.SetActive (false);
-			} else if (!kingpanel.activeSelf && kingmenubar.activeSelf) {
-				tooltipbar.SetActive (true);
-				kingpanel.SetActive (true);
-			} else {
-				tooltipbar.SetActive (true);
-				kingpanel.SetActive (true);
-				kingmenubar.SetActive (true);
-			}
-		}
+            if(tooltipbar.activeSelf && kingpanel.activeSelf && kingmenubar.activeSelf)
+            {
+                tooltipbar.GetComponent<TooltipBar.TooltipBarBehaviour>().SetPanel(TooltipBar.TooltipBarPanel.Hide);
+                kingmenubar.SetActive(false);
+            }
+            else if(!kingpanel.activeSelf && kingmenubar.activeSelf)
+            {
+                tooltipbar.GetComponent<TooltipBar.TooltipBarBehaviour>().SetPanel(TooltipBar.TooltipBarPanel.KingPanel);
+            }
+            else
+            {
+                tooltipbar.GetComponent<TooltipBar.TooltipBarBehaviour>().SetPanel(TooltipBar.TooltipBarPanel.KingPanel);
+                kingmenubar.SetActive(true);
+            }
+        }
 
     }
 }

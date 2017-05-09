@@ -2,59 +2,71 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Game.Units;
 
 namespace Game.Interface.TooltipBar.KingPanel
 {
-	public partial class KingPanelBehaviour : MonoBehaviour 
-	{
-		private static KingPanelBehaviour current = null;
-		// Shockwave and Stomp will not be part of King, implement it differently.
-		private static Game.Units.Spells.Buffs.ImmolationTickBuff immolation;
-        private static Game.Units.Spells.Passives.ThornsPassive thorns;
+    public partial class KingPanelBehaviour : MonoBehaviour
+    {
+        private static KingPanelBehaviour current = null;
 
-		public static KingPanelBehaviour Current
-		{
-			get
-			{
-				if (current == null)
-					current = GameObject.Find ("King Panel").GetComponent<KingPanelBehaviour> ();
-				return current;
-			}
-		}
+        public static KingPanelBehaviour Current
+        {
+            get
+            {
+                if(current == null)
+                    current = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)/King Panel").GetComponent<KingPanelBehaviour>();
+                return current;
+            }
+        }
 
-		private static GameObject statsPanel;
+        private Text shockwaveDamageText = null;
+        private Text shockwaveRangeText = null;
 
-		public void ShockwaveUpdate(Game.Units.Spells.Kingspells.ShockwaveBehaviour schkwave)
-		{
-			statsPanel = Current.transform.Find("Shockwave(Panel)/ShockwaveStats(Panel)").gameObject;
+        private Text stompDamageText = null;
+        private Text stompDurationText = null;
 
-			Damage = schkwave.damage;
-			Radius = schkwave.range;
-		}
-		public void StompUpdate(Game.Units.Spells.Kingspells.StompBehaviour stomp)
-		{
-			statsPanel = Current.transform.Find ("Stomp(Panel)/StompStats(Panel)").gameObject;
+        private Text immolationDpsText = null;
+        private Text immolationRadiusText = null;
 
-			Damage = stomp.damage;
-			Duration = stomp.duration;
-		}
-		public void ImmolationUpdate()
-		{
-			
-			statsPanel = Current.transform.Find ("Immolation(Panel)/ImmolationStats(Panel)").gameObject;
-			immolation = GameObject.Find("King").GetComponent<Game.Units.Spells.Buffs.ImmolationTickBuff> ();
-		
-			Damage = immolation.DamagePerSecond;
-			Radius = immolation.Radius;
+        private Text thornsDamageText = null;
 
-		}
-		public void ThornsUpdate()
-		{
-			statsPanel = Current.transform.Find ("Thorns(Panel)/ThornsStats(Panel)").gameObject;
-            thorns = GameObject.Find("King").GetComponent<Game.Units.Spells.Passives.ThornsPassive> ();
+        void Start()
+        {
+            GetTextObjects();
+        }
 
-			Damage = thorns.ReturnedDamage;
-		}
+        void Update()
+        {
+            UpdateInfo();
+        }
 
-	}
+        private void GetTextObjects()
+        {
+            shockwaveDamageText = transform.Find("Shockwave(Panel)/ShockwaveStats(Panel)/Dmg").GetComponent<Text>();
+            shockwaveRangeText = transform.Find("Shockwave(Panel)/ShockwaveStats(Panel)/Radius").GetComponent<Text>();
+
+            stompDamageText = transform.Find("Stomp(Panel)/StompStats(Panel)/Dmg").GetComponent<Text>();
+            stompDurationText = transform.Find("Stomp(Panel)/StompStats(Panel)/Duration").GetComponent<Text>();
+
+            immolationDpsText = transform.Find("Immolation(Panel)/ImmolationStats(Panel)/Dmg").GetComponent<Text>();
+            immolationRadiusText = transform.Find("Immolation(Panel)/ImmolationStats(Panel)/Radius").GetComponent<Text>();
+
+            thornsDamageText = transform.Find("Thorns(Panel)/ThornsStats(Panel)/Dmg").GetComponent<Text>();
+        }
+
+        private void UpdateInfo()
+        {
+            shockwaveDamageText.text = KingBehaviour.Current.ShockwaveDamage.ToString("##");
+            shockwaveRangeText.text = KingBehaviour.Current.ShockwaveRange.ToString("##");
+
+            stompDamageText.text = KingBehaviour.Current.StompDamage.ToString("##");
+            stompDurationText.text = KingBehaviour.Current.StompDuration.ToString("##");
+
+            immolationDpsText.text = KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond.ToString("##");
+            immolationRadiusText.text = KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().Radius.ToString("##");
+
+            thornsDamageText.text = KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage.ToString("##");
+        }
+    }
 }

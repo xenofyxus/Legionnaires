@@ -13,6 +13,66 @@ namespace Game.Units
 
         private const float viewDistance = 8;
 
+        [Header("Ability base stats")]
+
+        [SerializeField]
+        private float shockwaveDamage;
+        [SerializeField]
+        private float shockwaveRange;
+
+        [SerializeField]
+        private float stompDamage;
+        [SerializeField]
+        private float stompDuration;
+
+        public float ShockwaveDamage
+        {
+            get
+            {
+                return this.shockwaveDamage;
+            }
+            set
+            {
+                shockwaveDamage = value;
+            }
+        }
+
+        public float ShockwaveRange
+        {
+            get
+            {
+                return this.shockwaveRange;
+            }
+            set
+            {
+                shockwaveRange = value;
+            }
+        }
+
+        public float StompDamage
+        {
+            get
+            {
+                return this.stompDamage;
+            }
+            set
+            {
+                stompDamage = value;
+            }
+        }
+
+        public float StompDuration
+        {
+            get
+            {
+                return this.stompDuration;
+            }
+            set
+            {
+                stompDuration = value;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
