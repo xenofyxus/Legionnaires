@@ -43,7 +43,7 @@ namespace Game.Units.Spells.Passives
 
 						target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
 
-						if(Vector2.Distance(owner.transform.position, target.transform.position) > owner.Range)
+						if(Vector2.Distance(owner.transform.position, target.transform.position) > owner.Range + 1)
 						{
 							enemies.Remove(target);
 							target = null;
