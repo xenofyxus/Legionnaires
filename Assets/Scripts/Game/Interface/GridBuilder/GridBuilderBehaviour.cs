@@ -122,7 +122,7 @@ namespace Game.Interface.GridBuilder
 			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
 			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
+		//	Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
 			GameObject.Destroy (towerGridPos [whichSpotX, whichSpotY]);
 			towerGridPos [whichSpotX, whichSpotY] = null;
 			towerGridPosCopy [whichSpotX, whichSpotY] = null;
@@ -161,17 +161,19 @@ namespace Game.Interface.GridBuilder
 		//Upgrades tower into next versionf
 		void upgradeTower ()
 		{
-			if (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers.Length - 1 > whatUpgrade [whichSpotX, whichSpotY]) {
-				whatUpgrade [whichSpotX, whichSpotY] = TowerMenu.TowerMenuBehaviour.currentMenuItem + whatUpgrade [whichSpotX, whichSpotY];
-				sellToUpgrade ();
-				transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
-				transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
-				towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]]);
-				towerGridPosCopy [whichSpotX, whichSpotY] = towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]];
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold -= towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
-				transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<SpriteRenderer> ().sprite;
-				transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.white;
+			if (currentSupply + towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [whatUpgrade[whichSpotX, whichSpotY]].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
+				if (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers.Length - 1 > whatUpgrade [whichSpotX, whichSpotY]) {
+					whatUpgrade [whichSpotX, whichSpotY] = TowerMenu.TowerMenuBehaviour.currentMenuItem + whatUpgrade [whichSpotX, whichSpotY];
+					sellToUpgrade ();
+					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
+					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
+					towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]]);
+					towerGridPosCopy [whichSpotX, whichSpotY] = towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]];
+					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold -= towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
+					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<SpriteRenderer> ().sprite;
+					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.white;
+				}
 			}
 		}
 	}
