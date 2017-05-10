@@ -26,50 +26,38 @@ namespace Game.Units
 		[SerializeField]
 		private float stompDuration;
 
-		public float ShockwaveDamage
-		{
-			get
-			{
+		public float ShockwaveDamage {
+			get {
 				return this.shockwaveDamage;
 			}
-			set
-			{
+			set {
 				shockwaveDamage = value;
 			}
 		}
 
-		public float ShockwaveRange
-		{
-			get
-			{
+		public float ShockwaveRange {
+			get {
 				return this.shockwaveRange;
 			}
-			set
-			{
+			set {
 				shockwaveRange = value;
 			}
 		}
 
-		public float StompDamage
-		{
-			get
-			{
+		public float StompDamage {
+			get {
 				return this.stompDamage;
 			}
-			set
-			{
+			set {
 				stompDamage = value;
 			}
 		}
 
-		public float StompDuration
-		{
-			get
-			{
+		public float StompDuration {
+			get {
 				return this.stompDuration;
 			}
-			set
-			{
+			set {
 				stompDuration = value;
 			}
 		}
@@ -78,32 +66,33 @@ namespace Game.Units
 		{
 			base.Start();
 			Current = this;
-			Died += delegate (object sender, EventArgs e){
-				SceneManager.LoadScene(2);
-			};
 		}
 
-
+		protected override void OnDied()
+		{
+			base.OnDied();
+			SceneManager.LoadScene("LoosingScene");
+		}
 
 		public override UnitBehaviour GetTarget()
 		{
-			if(stickedTarget == null)
+			if (stickedTarget == null)
 			{
 				UnitBehaviour[] enemies = GetEnemies();
-				if(enemies.Length > 0)
+				if (enemies.Length > 0)
 				{
-					UnitBehaviour closestEnemy = enemies[0];
+					UnitBehaviour closestEnemy = enemies [0];
 					float closestDistance = Vector2.Distance(transform.position, closestEnemy.transform.position);
-					foreach(UnitBehaviour enemy in enemies)
+					foreach (UnitBehaviour enemy in enemies)
 					{
 						float distance = Vector2.Distance(transform.position, enemy.transform.position);
-						if(distance < closestDistance)
+						if (distance < closestDistance)
 						{
 							closestEnemy = enemy;
 							closestDistance = distance;
 						}
 					}
-					if(closestDistance <= viewDistance)
+					if (closestDistance <= viewDistance)
 					{
 						stickedTarget = closestEnemy;
 						return closestEnemy;
@@ -118,15 +107,15 @@ namespace Game.Units
 					return null;
 				}
 			}
-			else if(Vector2.Distance(transform.position, stickedTarget.transform.position) <= viewDistance)
-			{
-				return stickedTarget;
-			}
-			else
-			{
-				stickedTarget = null;
-				return null;
-			}
+			else if (Vector2.Distance(transform.position, stickedTarget.transform.position) <= viewDistance)
+				{
+					return stickedTarget;
+				}
+				else
+				{
+					stickedTarget = null;
+					return null;
+				}
 		}
 
 		public override UnitBehaviour[] GetEnemies()

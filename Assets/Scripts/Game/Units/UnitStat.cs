@@ -7,7 +7,7 @@ namespace Game.Units
     public class UnitStat
     {
         [UnityEngine.SerializeField]
-        private float value;
+        private float value = 0f;
 
         public float BaseValue
         {

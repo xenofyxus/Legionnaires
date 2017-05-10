@@ -3,83 +3,76 @@ using UnityEngine;
 
 namespace Game.Units.Spells
 {
-    public abstract class Spell : MonoBehaviour
-    {
-        [Header("Spell info")]
+	public abstract class Spell : MonoBehaviour
+	{
+		[Header("Spell info")]
 
-        [SerializeField]
-        protected string spellName = "";
+		[SerializeField]
+		protected string spellName = "";
 
-        /// <summary>
-        /// Gets the name of the spell.
-        /// </summary>
-        public string SpellName
-        {
-            get
-            {
-                return spellName;
-            }
-        }
+		/// <summary>
+		/// Gets the name of the spell.
+		/// </summary>
+		public string SpellName {
+			get {
+				return spellName;
+			}
+		}
 
-        [SerializeField]
-        [Multiline()]
-        protected string description = "";
+		[SerializeField]
+		[Multiline()]
+		protected string description = "";
 
-        /// <summary>
-        /// Gets the spell description.
-        /// </summary>
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-        }
+		/// <summary>
+		/// Gets the spell description.
+		/// </summary>
+		public string Description {
+			get {
+				return description;
+			}
+		}
 
-        [SerializeField]
-        protected Sprite icon = null;
+		[SerializeField]
+		protected Sprite icon = null;
 
-        /// <summary>
-        /// Gets the spell icon.
-        /// </summary>
-        public Sprite Icon
-        {
-            get
-            {
-                return icon;
-            }
-        }
+		/// <summary>
+		/// Gets the spell icon.
+		/// </summary>
+		public Sprite Icon {
+			get {
+				return icon;
+			}
+		}
 
-        protected UnitBehaviour owner;
+		protected UnitBehaviour owner;
 
-        public UnitBehaviour Owner
-        {
-            get{ return owner; }
-            set{ owner = value; }
-        }
+		public UnitBehaviour Owner {
+			get{ return owner; }
+			set{ owner = value; }
+		}
 
 		protected object metaData;
 
-		public object MetaData
-		{
+		public object MetaData {
 			get{ return metaData; }
 			set{ metaData = value; }
 		}
 
-        protected virtual void Start()
-        {
-            owner = GetComponent<UnitBehaviour>();
-        }
+		protected virtual void Start ()
+		{
+			owner = GetComponent<UnitBehaviour>();
+			owner.Died += OwnerDied;
+		}
 
-        protected virtual void Update()
-        {
+		protected virtual void Update ()
+		{
 			
-        }
+		}
 
-        protected virtual void OnDestroy()
-        {
+		protected virtual void OwnerDied (object sender, EventArgs e)
+		{
 
-        }
-    }
+		}
+	}
 }
 

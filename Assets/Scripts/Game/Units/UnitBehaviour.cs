@@ -13,7 +13,7 @@ namespace Game.Units
 {
 	public abstract class UnitBehaviour : MonoBehaviour
 	{
-		#region Unit Attributes
+#region Unit Attributes
 
 		[SerializeField]
 		private ArmorType armorType = ArmorType.Unarmored;
@@ -21,8 +21,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets the armor type.
 		/// </summary>
-		public ArmorType ArmorType
-		{
+		public ArmorType ArmorType {
 			get{ return armorType; }
 		}
 
@@ -32,8 +31,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets the attack type.
 		/// </summary>
-		public AttackType AttackType
-		{
+		public AttackType AttackType {
 			get{ return attackType; }
 		}
 
@@ -46,8 +44,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the attack range.
 		/// </summary>
-		public UnitStat Range
-		{
+		public UnitStat Range {
 			get{ return range; }
 		}
 
@@ -58,8 +55,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the movement speed.
 		/// </summary>
-		public UnitStat MovementSpeed
-		{
+		public UnitStat MovementSpeed {
 			get{ return movementSpeed; }
 		}
 
@@ -70,8 +66,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the attack speed.
 		/// </summary>
-		public UnitStat AttackSpeed
-		{
+		public UnitStat AttackSpeed {
 			get{ return attackSpeed; }
 		}
 
@@ -82,8 +77,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the Hit Points.
 		/// </summary>
-		public float Hp
-		{
+		public float Hp {
 			get{ return hp; }
 		}
 
@@ -92,8 +86,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the Maximum Hit Points.
 		/// </summary>
-		public UnitStat HpMax
-		{
+		public UnitStat HpMax {
 			get{ return hpMax; }
 		}
 
@@ -104,8 +97,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the HP regeneration defined in +HP/sec.
 		/// </summary>
-		public UnitStat HpReg
-		{
+		public UnitStat HpReg {
 			get{ return hpReg; }
 		}
 
@@ -116,8 +108,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the maximum damage.
 		/// </summary>
-		public UnitStat DamageMax
-		{
+		public UnitStat DamageMax {
 			get{ return damageMax; }
 		}
 
@@ -128,8 +119,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the minimum damage.
 		/// </summary>
-		public UnitStat DamageMin
-		{
+		public UnitStat DamageMin {
 			get{ return damageMin; }
 		}
 
@@ -142,8 +132,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or sets the projectile. Set to null if there should be none.
 		/// </summary>
-		public GameObject Projectile
-		{
+		public GameObject Projectile {
 			get{ return projectile; }
 			set{ projectile = value; }
 		}
@@ -155,8 +144,7 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Sets the projectile offset along the unit's back vector.
 		/// </summary>
-		public Vector2 ProjectileOffset
-		{
+		public Vector2 ProjectileOffset {
 			get{ return projectileOffset; }
 			set{ projectileOffset = value; }
 		}
@@ -168,15 +156,14 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Sets the projectile speed in <units> per second.
 		/// </summary>
-		public float ProjectileSpeed
-		{
+		public float ProjectileSpeed {
 			get{ return projectileSpeed; }
 			set{ projectileSpeed = value; }
 		}
 
-		#endregion
+#endregion
 
-		#region Event Handlers
+#region Event Handlers
 
 		public static event EventHandler UnitSpawning;
 
@@ -202,7 +189,7 @@ namespace Game.Units
 
 		public event EventHandler MoveStopped;
 
-		#endregion
+#endregion
 
 		private bool moving = false;
 		private Vector2 lastPosition;
@@ -224,40 +211,40 @@ namespace Game.Units
 
 			anim = GetComponent<Animator>();
 
-			if(UnitSpawning != null)
+			if (UnitSpawning != null)
 				UnitSpawning(this, null);
 
-			if(Spawned != null)
+			if (Spawned != null)
 				Spawned(this, null);
 		}
 
 		protected virtual void Update()
 		{
-			if(!alive)
+			if (!alive)
 				return;
 
 			lastPosition = (Vector2)transform.position;
 
-			if(attackDelayTimer > 0)
+			if (attackDelayTimer > 0)
 			{
 				attackDelayTimer += Time.deltaTime;
 				anim.SetBool("fight", false);
-				if(attackDelayTimer >= 1f / attackSpeed)
+				if (attackDelayTimer >= 1f / attackSpeed)
 				{
 					attackDelayTimer = 0;
 				}
 			}
 
 			// Stops the unit from attacking / searching for target while beging stunned / disarmed
-			if(AttackSpeed != 0)
+			if (AttackSpeed != 0)
 			{
 				UnitBehaviour target = GetTarget();
 			    
-				if(target == null)
+				if (target == null)
 				{
 					Vector2? defaultTarget = GetDefaultTargetPosition();
 
-					if(defaultTarget.HasValue)
+					if (defaultTarget.HasValue)
 					{
 						MoveTowards(defaultTarget.Value);
 					}
@@ -270,28 +257,28 @@ namespace Game.Units
 				else
 				{
 					Collider2D targetCollider = target.GetComponent<Collider2D>();
-					if(thisCollider.Distance(targetCollider).distance <= range)
+					if (thisCollider.Distance(targetCollider).distance <= range)
 					{
 						anim.SetFloat("speed", 0f);
-						if(attackDelayTimer == 0)
+						if (attackDelayTimer == 0)
 						{
 							anim.SetBool("fight", true);
 							attackDelayTimer += Time.deltaTime;
 
 							UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
 
-							if(Attacking != null)
-								Attacking(this, new AttackingEventArgs(damage, target));
+							if (Attacking != null)
+								Attacking(this, new AttackingEventArgs (damage, target));
 
 							damage.AddMultiplier(DamageRatios.GetRatio(target.armorType, attackType));
 
-							if(projectile == null)
+							if (projectile == null)
 							{
 								float actualDamage;
 								target.ApplyDamage(damage, out actualDamage, this);
 
-								if(Attacked != null)
-									Attacked(this, new AttackedEventArgs(actualDamage, target));
+								if (Attacked != null)
+									Attacked(this, new AttackedEventArgs (actualDamage, target));
 							}
 							else
 							{
@@ -302,12 +289,12 @@ namespace Game.Units
 								newProjectile.target = target;
 								newProjectile.Damage = damage;
 								newProjectile.Attacked += Attacked;
-								if(projectileSpeed > 0)
+								if (projectileSpeed > 0)
 									newProjectile.movementSpeed = projectileSpeed;
 							}
 						}
 
-						if(anim != null)
+						if (anim != null)
 						{
 							// TODO Fix and sync
 
@@ -328,24 +315,30 @@ namespace Game.Units
 
 			ApplyHeal(hpReg * Time.deltaTime, this);
 
-			if(lastPosition != (Vector2)transform.position)
+			if (lastPosition != (Vector2)transform.position)
 			{
-				if(!moving && MoveStarted != null)
+				if (!moving && MoveStarted != null)
 					MoveStarted(this, null);
 				moving = true;
 			}
 			else
 			{
-				if(moving && MoveStopped != null)
+				if (moving && MoveStopped != null)
 					MoveStopped(this, null);
 				moving = false;
 			}
 		}
 
+		protected virtual void OnDied()
+		{
+			alive = false;
+			if (Died != null)
+				Died(this, null);
+			GameObject.Destroy(gameObject);
+		}
+
 		protected virtual void OnDestroy()
 		{
-			if(Died != null)
-				Died(this, null);
 		}
 
 		/// <summary>
@@ -358,11 +351,11 @@ namespace Game.Units
 			transform.position = (Vector2)transform.position + velocity;
 
 			Vector2 collisionOffset = Vector2.zero;
-			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D(), otherColliders);
-			for(int i = 0; i < colliderCount; i++)
+			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D (), otherColliders);
+			for (int i = 0;i < colliderCount;i++)
 			{
-				Collider2D collider = otherColliders[i];
-				if(collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
+				Collider2D collider = otherColliders [i];
+				if (collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
 				{
 					ColliderDistance2D colliderDistance = thisCollider.Distance(collider);
 					collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
@@ -372,7 +365,7 @@ namespace Game.Units
 			transform.position = (Vector2)transform.position + collisionOffset;
 			RotateTowards(targetPos);
 
-			if(anim != null)
+			if (anim != null)
 			{
 				// TODO Fix and sync
 				anim.SetFloat("speed", movementSpeed);
@@ -394,35 +387,34 @@ namespace Game.Units
 		public bool ApplyDamage(float damage, out float actualDamage, UnitBehaviour attacker)
 		{
 			actualDamage = 0f;
-			if(!alive)
+			if (!alive)
 				return true;
 
 			UnitStat modifiedDamage = damage;
 
-			if(TakingDamage != null)
-				TakingDamage(this, new TakingDamageEventArgs(modifiedDamage, attacker));
+			if (TakingDamage != null)
+				TakingDamage(this, new TakingDamageEventArgs (modifiedDamage, attacker));
 			
-			if(modifiedDamage < 0)
+			if (modifiedDamage < 0)
 			{
 				ApplyHeal(modifiedDamage, attacker);
 				return false;
 			}
 			hp -= modifiedDamage;
 
-			if(TookDamage != null)
-				TookDamage(this, new TookDamageEventArgs(modifiedDamage, attacker));
+			if (TookDamage != null)
+				TookDamage(this, new TookDamageEventArgs (modifiedDamage, attacker));
 
 			actualDamage = modifiedDamage;
 
-			if(hp < 1)
+			if (hp < 1)
 			{
-				if(Dying != null)
+				if (Dying != null)
 					Dying(this, null);
 				
-				if(hp < 1)
+				if (hp < 1)
 				{
-					alive = false;
-					GameObject.Destroy(gameObject);
+					OnDied();
 					return true;
 				}
 			}
@@ -437,19 +429,19 @@ namespace Game.Units
 		{
 			UnitStat modifiedHeal = heal;
 
-			if(TakingHeal != null)
-				TakingHeal(this, new TakingHealEventArgs(modifiedHeal, healer));
+			if (TakingHeal != null)
+				TakingHeal(this, new TakingHealEventArgs (modifiedHeal, healer));
             
 			hp += modifiedHeal;
 
-			if(hp >= hpMax)
+			if (hp >= hpMax)
 			{
 				modifiedHeal.AddAdder(-(hpMax - hp));
 				hp = hpMax;
 			}
 
-			if(TookHeal != null)
-				TookHeal(this, new TookHealEventArgs(modifiedHeal, healer));
+			if (TookHeal != null)
+				TookHeal(this, new TookHealEventArgs (modifiedHeal, healer));
 		}
 
 		/// <summary>
@@ -477,7 +469,7 @@ namespace Game.Units
 		public abstract Vector2? GetDefaultTargetPosition();
 	}
 
-	public delegate void PostDamageEffect(float damage, UnitStat healing, UnitBehaviour target);
+	public delegate void PostDamageEffect (float damage, UnitStat healing, UnitBehaviour target);
 
 	public enum ArmorType
 	{

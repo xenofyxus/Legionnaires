@@ -3,33 +3,32 @@ using UnityEngine;
 
 namespace Game.Units.Spells.Buffs
 {
-    public abstract class Buff : Spell
+	public abstract class Buff : Spell
 	{
-        [Header("Spell data")]
+		[Header("Spell data")]
 
 		[SerializeField]
 		protected float duration = 0;
 
-		public float Duration
-		{
-			get{return duration;}
-			set{duration = value;}
+		public float Duration {
+			get{ return duration; }
+			set{ duration = value; }
 		}
 
-		protected abstract void Apply();
+		protected abstract void Apply ();
 
-		protected abstract void Remove();
+		protected abstract void Remove ();
 
-		protected override void Start()
+		protected override void Start ()
 		{
 			base.Start();
 			Apply();
 		}
 
-		protected override void Update()
+		protected override void Update ()
 		{
 			base.Update();
-			if(duration > 0)
+			if (duration > 0)
 				duration -= Time.deltaTime;
 			else
 			{
@@ -37,11 +36,12 @@ namespace Game.Units.Spells.Buffs
 			}
 		}
 
-		protected override void OnDestroy()
+		protected override void OwnerDied (object sender, EventArgs e)
 		{
-			base.OnDestroy();
-			if (owner != null) {
-				Remove ();
+			base.OwnerDied(sender, e);
+			if (owner != null)
+			{
+				Remove();
 			}
 			
 		}

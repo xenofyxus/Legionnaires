@@ -44,10 +44,6 @@ namespace Game.Units.Spells.Passives
 		protected virtual void OwnerDying(object sender, EventArgs e)
 		{
 		}
-
-		protected virtual void OwnerDied(object sender, EventArgs e)
-		{
-		}
 	}
 }
 
