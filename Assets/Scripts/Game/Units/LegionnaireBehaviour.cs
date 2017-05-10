@@ -29,6 +29,8 @@ namespace Game.Units
 			set{ supply = value; }
 		}
 
+		private bool combatMode = false;
+
 		public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour> ();
 
 		public static List<LegionnaireBehaviour> Legionnaires {
@@ -65,8 +67,13 @@ namespace Game.Units
 					}
 				}
 				//Added visionRange returns enemy if in vision.
-				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range)
+				if (combatMode || Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range)
 				{
+					foreach (LegionnaireBehaviour legionnaire in legionnaires)
+					{
+						legionnaire.combatMode = true;
+						combatMode = true;
+					}
 					return closestEnemy;
 				}
 				return null;
