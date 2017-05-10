@@ -54,7 +54,6 @@ namespace Game.Spawners
 		GameObject kingspellsPanel;
 		GameObject shockwaveBtn;
 		GameObject stompBtn;
-
         void Start()
         {
         gridBuilder = GameObject.Find("GridBuilder");
@@ -62,7 +61,6 @@ namespace Game.Spawners
 		kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 		shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
 		stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
-       
         }
 
         void LateUpdate()
@@ -71,6 +69,9 @@ namespace Game.Spawners
             {
 				gridBuilder.SetActive(true);
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().ResetSprite();
+				if (reset == false) {
+					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
+				}
 				reset = true;
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
 				waveBtn.SetActive (true); 
@@ -124,6 +125,7 @@ namespace Game.Spawners
                 {
                     waveNumber = 0;
                 }
+
                 playerReady = false;
                 newWave = false;
             }
