@@ -35,7 +35,14 @@ namespace Game.Units
 
 		protected override void OnDied()
 		{
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value;
+			if (LegionnaireBehaviour.legionnaires.Count == 0)
+			{
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value / 2;
+			}
+			else
+			{
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value;
+			}
 			base.OnDied();
 		}
 
