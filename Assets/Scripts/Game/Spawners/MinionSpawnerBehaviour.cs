@@ -11,53 +11,51 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;	
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
 namespace Game.Spawners
 {
-    public class MinionSpawnerBehaviour : MonoBehaviour
-    {
+	public class MinionSpawnerBehaviour : MonoBehaviour
+	{
 
-        private static MinionSpawnerBehaviour current = null;
+		private static MinionSpawnerBehaviour current = null;
 
-        public static MinionSpawnerBehaviour Current
-        {
-            get
-            {
-                if(current == null)
-                    current = GameObject.Find("MinionSpawner").GetComponent<MinionSpawnerBehaviour>();
-                return current;
-            }
-        }
+		public static MinionSpawnerBehaviour Current {
+			get {
+				if (current == null)
+					current = GameObject.Find ("MinionSpawner").GetComponent<MinionSpawnerBehaviour> ();
+				return current;
+			}
+		}
 
-        public static int waveNumber = 0;
+		public static int waveNumber = 0;
 		private int waveLoop = 0;
 		[SerializeField]
-		[Tooltip("How much do you want each loop of 10 to scale? 1.2 = 20% more per new loop")]
+		[Tooltip ("How much do you want each loop of 10 to scale? 1.2 = 20% more per new loop")]
 		private float waveLoopFactor;
 		[SerializeField]
-		[Tooltip("How long time until the wave starts by itself?")]
+		[Tooltip ("How long time until the wave starts by itself?")]
 		private float waveTime;
 		private float waveCountdown;
-        [Tooltip("What minion and how many of that minion to Spawn")]
-        public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject>();
+		[Tooltip ("What minion and how many of that minion to Spawn")]
+		public List<Game.Spawners.WaveObject> waveObjList = new List<Game.Spawners.WaveObject> ();
 
-        public GameObject gridScript;
-        private GameObject[] waveObjects;
+		public GameObject gridScript;
+		private GameObject[] waveObjects;
 
-        private bool newWave;
+		private bool newWave;
 		private bool reset;
-        public bool playerReady = false;
-        private int numberOfUnitsSpawned = 0;
-        private float instantiateTimer = 5f;
-        //time until next wave starts.
-        private GameObject gridBuilder;
-        private float MinX = -3;
-        private float MaxX = 3;
-        private float MinY = 16;
-        private float MaxY = 17;
+		public bool playerReady = false;
+		private int numberOfUnitsSpawned = 0;
+		private float instantiateTimer = 5f;
+		//time until next wave starts.
+		private GameObject gridBuilder;
+		private float MinX = -3;
+		private float MaxX = 3;
+		private float MinY = 16;
+		private float MaxY = 17;
 		GameObject waveBtn;
 		GameObject kingspellsPanel;
 		GameObject shockwaveBtn;
@@ -67,24 +65,23 @@ namespace Game.Spawners
 		GameObject lastSpawned;
 
 
-        void Start()
-        {
-			waveTimerGO = GameObject.Find ("Wave timer").GetComponent <Image>();
+		void Start ()
+		{
+			waveTimerGO = GameObject.Find ("Wave timer").GetComponent <Image> ();
 			waveCountdown = waveTime;
-        	gridBuilder = GameObject.Find("GridBuilder");
+			gridBuilder = GameObject.Find ("GridBuilder");
 			waveBtn = GameObject.Find ("Wave(Button)");
 			kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 			shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
 			stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
-        }
+		}
 
-        void LateUpdate()
-        {
-			if(Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false)
-            {
-				gridBuilder.SetActive(true);
+		void LateUpdate ()
+		{
+			if (Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false) {
+				gridBuilder.SetActive (true);
 
-				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour>().ResetSprite();
+				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
 					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
 				}
@@ -92,12 +89,12 @@ namespace Game.Spawners
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
 				waveBtn.SetActive (true); 
 				kingspellsPanel.SetActive (false);
-            }
+			}
 
 			if (waveCountdown <= 0) {
 				playerReady = true;
 				waveTimerGO.fillAmount = 1;
-			} else if (Game.Units.MinionBehaviour.Minions.Count == 0 && !playerReady){
+			} else if (Game.Units.MinionBehaviour.Minions.Count == 0 && !playerReady) {
 				waveTimerGO.fillAmount = waveCountdown / waveTime;
 				waveCountdown -= Time.deltaTime;
 			}
@@ -111,69 +108,64 @@ namespace Game.Spawners
 			}
 
 			if (newWave && playerReady) {
-					NextWave();
+				NextWave ();
+				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = true;
 			}
-        }
+		}
 
 
-        void NextWave()
-        {
+		void NextWave ()
+		{
 			gridBuilder.SetActive (false);
 			waveBtn.SetActive (false);
 			kingspellsPanel.SetActive (true);
-            for(int i = 0; i < Mathf.Ceil(((float)waveObjList[waveNumber].amountOfMinions) / 4); i++)
-            {
-                instantiateTimer -= Time.deltaTime;
-                if(instantiateTimer <= 0)
-                {
-                    instantiateTimer = 4f;
-                    for(int j = 0; j < 4; j++)
-                    {		// Spawning 4 units per "instantiateTimer"-delay
-                        if(numberOfUnitsSpawned >= waveObjList[waveNumber].amountOfMinions)
-                        {
+			for (int i = 0; i < Mathf.Ceil (((float)waveObjList [waveNumber].amountOfMinions) / 4); i++) {
+				instantiateTimer -= Time.deltaTime;
+				if (instantiateTimer <= 0) {
+					instantiateTimer = 4f;
+					for (int j = 0; j < 4; j++) {		// Spawning 4 units per "instantiateTimer"-delay
+						if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) {
 							playerReady = false;
-                            break;
-                        }
-                        float x = Random.Range(MinX, MaxX);
-                        float y = Random.Range(MinY, MaxY);
+							break;
+						}
+						float x = Random.Range (MinX, MaxX);
+						float y = Random.Range (MinY, MaxY);
 
 						//Referens the last spawned minion and change it's value based on which loop it is
-                        lastSpawned = Instantiate(waveObjList[waveNumber].minion, new Vector2(x, y), transform.rotation);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= Mathf.Pow(waveLoopFactor,waveLoop);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= Mathf.Pow(waveLoopFactor,waveLoop);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= Mathf.Pow(waveLoopFactor,waveLoop);
+						lastSpawned = Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= Mathf.Pow (waveLoopFactor, waveLoop);
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= Mathf.Pow (waveLoopFactor, waveLoop);
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= Mathf.Pow (waveLoopFactor, waveLoop);
 						if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
-							lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= Mathf.Pow(waveLoopFactor,waveLoop);
+							lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= Mathf.Pow (waveLoopFactor, waveLoop);
 						}
 						numberOfUnitsSpawned++;
-                    }
+					}
 
-                }
-            }
-            if(numberOfUnitsSpawned >= waveObjList[waveNumber].amountOfMinions)
-            { // When done spawning goes on to next wave.
+				}
+			}
+			if (numberOfUnitsSpawned >= waveObjList [waveNumber].amountOfMinions) { // When done spawning goes on to next wave.
 				playerReady = false;
-                instantiateTimer = 5f;
-                waveNumber++;
-                numberOfUnitsSpawned = 0;
-                if(waveNumber == waveObjList.Count)
-                {
+				instantiateTimer = 5f;
+				waveNumber++;
+				numberOfUnitsSpawned = 0;
+				if (waveNumber == waveObjList.Count) {
 					waveLoop++;
-                    waveNumber = 0;
-                }
-                newWave = false;
-            }
-			shockwaveBtn.GetComponent<Image>().fillAmount = 1;
-			stompBtn.GetComponent<Image>().fillAmount = 1;
+					waveNumber = 0;
+				}
+				newWave = false;
+			}
+			shockwaveBtn.GetComponent<Image> ().fillAmount = 1;
+			stompBtn.GetComponent<Image> ().fillAmount = 1;
 			stompBtn.GetComponent<Units.Spells.Kingspells.StompButton> ().CooldownTimer = 0f; 
 			shockwaveBtn.GetComponent<Units.Spells.Kingspells.ShockwaveButton> ().CooldownTimer = 0f;
 
-        }
+		}
 
-        public void PlayerReady()
-        {
-            playerReady = true;
-        }
-    }
+		public void PlayerReady ()
+		{
+			playerReady = true;
+		}
+	}
 
 }

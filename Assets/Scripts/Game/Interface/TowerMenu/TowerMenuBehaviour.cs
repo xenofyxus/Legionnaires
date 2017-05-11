@@ -19,6 +19,7 @@ namespace Game.Interface.TowerMenu
 		public static bool sellTower;
 		public static bool sellConfirm;
 		public static bool upgradeConfirm;
+		public static bool nextWaveStarted = false;
 		private int oldMenuItem;
 		private GameObject buyBTN;
 		private GameObject gridFather;
@@ -53,6 +54,9 @@ namespace Game.Interface.TowerMenu
 		{
 			if(Input.GetMouseButtonDown (0)){
 				GetCurrentMenuItem();
+			}
+			if (nextWaveStarted) {
+				GameObject.Destroy (this.gameObject);
 			}
 		}
 
@@ -113,12 +117,8 @@ namespace Game.Interface.TowerMenu
 
 			if (currentMenuItem != -1 && (placeTower == true || sellTower == true || upgradeConfirm == true) || vectorToMouse.magnitude > 3.5f) {
 				gridFather.SetActive (true);
-				DestroyMe ();
+				GameObject.Destroy (this.gameObject);
 			}
-		}
-
-		public void DestroyMe(){
-			GameObject.Destroy (this.gameObject);
 		}
 	}
 

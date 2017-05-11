@@ -37,6 +37,15 @@ namespace Game.Interface.Infobar.Resources
             set{ goldIncome = value; }
         }
 
+		[SerializeField]
+		private int goldSpent = 0;
+
+		public int GoldSpent
+		{
+			get{ return goldSpent; }
+			set{ goldSpent = value; }
+		}
+
         [SerializeField]
         private int wood = 100;
 

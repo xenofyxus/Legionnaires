@@ -20,9 +20,10 @@ namespace Game.Interface.GridBuilder
 			public Vector2 position;
 			public int towerType;
 			public int cost;
-			public int supply;
+			public int totalSupply;
 			public int upgrade;
 			public int waveCreated;
+			public int totalCost;
 		}
 
 		float offSetX = 1.48f;
@@ -54,7 +55,7 @@ namespace Game.Interface.GridBuilder
 		// Update is called once per frame
 		void Update ()
 		{ 
-			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {				
+			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {	
 				Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 				towerX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
 				towerY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
@@ -151,10 +152,12 @@ namespace Game.Interface.GridBuilder
 		void removeTower (float sellValue)
 		{	
 			setTile (towerX, towerY, null, Color.clear);
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [towerX, towerY].supply;
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [towerX, towerY].totalSupply;
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
-			towerGridPosCopy [towerX, towerY].supply = 0;
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent -= towerGridPosCopy [towerX, towerY].totalCost;
+			towerGridPosCopy [towerX, towerY].totalSupply = 0;
 			towerGridPosCopy [towerX, towerY].upgrade = 0;
+			towerGridPosCopy [towerX, towerY].totalCost = 0;
 			GameObject.Destroy (towerGridPos [towerX, towerY]);
 			saveTower (towerX, towerY, null, 0, placeTower);
 		}
@@ -187,8 +190,10 @@ namespace Game.Interface.GridBuilder
 			if (tower != null) {
 				towerGridPos [X, Y] = Instantiate (tower);
 				towerGridPosCopy [X, Y].cost = towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
+				towerGridPosCopy [X, Y].totalCost += towerGridPosCopy [X, Y].cost;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-				towerGridPosCopy [X, Y].supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+				towerGridPosCopy [X, Y].totalSupply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 			}
 		}
 
