@@ -31,7 +31,7 @@ namespace Game.Units
 
 		private bool combatMode = false;
 
-		public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour> ();
+		public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
 
 		public static List<LegionnaireBehaviour> Legionnaires {
 			get{ return legionnaires; }
@@ -58,12 +58,12 @@ namespace Game.Units
 			UnitBehaviour[] enemies = GetEnemies();
 			if (enemies.Length > 0)
 			{
-				UnitBehaviour closestEnemy = enemies [0];
-				for (int i = 1;i < enemies.Length;i++)
+				UnitBehaviour closestEnemy = enemies[0];
+				for (int i = 1; i < enemies.Length; i++)
 				{
-					if (Vector2.Distance(transform.position, enemies [i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
+					if (Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
 					{
-						closestEnemy = enemies [i];
+						closestEnemy = enemies[i];
 					}
 				}
 				//Added visionRange returns enemy if in vision.
@@ -83,7 +83,7 @@ namespace Game.Units
 
 		public override UnitBehaviour[] GetFriendlies()
 		{
-			List<LegionnaireBehaviour> friendlies = new List<LegionnaireBehaviour> (legionnaires);
+			List<LegionnaireBehaviour> friendlies = new List<LegionnaireBehaviour>(legionnaires);
 			friendlies.Remove(this);
 			return friendlies.ToArray();
 		}

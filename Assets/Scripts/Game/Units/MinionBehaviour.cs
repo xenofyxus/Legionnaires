@@ -16,7 +16,7 @@ namespace Game.Units
 			set{ this.value = value; }
 		}
 
-		protected static List<MinionBehaviour> minions = new List<MinionBehaviour> ();
+		protected static List<MinionBehaviour> minions = new List<MinionBehaviour>();
 
 		public static List<MinionBehaviour> Minions {
 			get{ return minions; }
@@ -51,12 +51,12 @@ namespace Game.Units
 			UnitBehaviour[] enemies = GetEnemies();
 			if (enemies.Length > 0)
 			{
-				UnitBehaviour closestEnemy = enemies [0];
-				for (int i = 1;i < enemies.Length;i++)
+				UnitBehaviour closestEnemy = enemies[0];
+				for (int i = 1; i < enemies.Length; i++)
 				{
-					if (Vector2.Distance(transform.position, enemies [i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
+					if (Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
 					{
-						closestEnemy = enemies [i];
+						closestEnemy = enemies[i];
 					}
 				}
 				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 6)
@@ -69,7 +69,7 @@ namespace Game.Units
 
 		public override UnitBehaviour[] GetFriendlies()
 		{
-			List<MinionBehaviour> friendlies = new List<MinionBehaviour> (minions);
+			List<MinionBehaviour> friendlies = new List<MinionBehaviour>(minions);
 			friendlies.Remove(this);
 			return friendlies.ToArray();
 		}
@@ -81,18 +81,18 @@ namespace Game.Units
 				return LegionnaireBehaviour.Legionnaires.ToArray();
 			}
 			else if (KingBehaviour.Current != null)
-				{
-					return new UnitBehaviour[]{ KingBehaviour.Current };
-				}
-				else
-				{
-					return new UnitBehaviour[0];
-				}
+			{
+				return new UnitBehaviour[]{ KingBehaviour.Current };
+			}
+			else
+			{
+				return new UnitBehaviour[0];
+			}
 		}
 
 		public override Vector2? GetDefaultTargetPosition()
 		{
-			return new Vector2 (transform.position.x, -15);
+			return new Vector2(transform.position.x, -15);
 		}
 	}
 }

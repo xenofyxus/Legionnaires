@@ -10,8 +10,6 @@ namespace Game.Units
 	{
 		public static KingBehaviour Current{ get; private set; }
 
-		private UnitBehaviour stickedTarget;
-
 		private const float viewDistance = 8;
 
 		[Header("Ability base stats")]
@@ -76,46 +74,33 @@ namespace Game.Units
 
 		public override UnitBehaviour GetTarget()
 		{
-			if (stickedTarget == null)
+			UnitBehaviour[] enemies = GetEnemies();
+			if (enemies.Length > 0)
 			{
-				UnitBehaviour[] enemies = GetEnemies();
-				if (enemies.Length > 0)
+				UnitBehaviour closestEnemy = enemies[0];
+				float closestDistance = Vector2.Distance(transform.position, closestEnemy.transform.position);
+				foreach (UnitBehaviour enemy in enemies)
 				{
-					UnitBehaviour closestEnemy = enemies [0];
-					float closestDistance = Vector2.Distance(transform.position, closestEnemy.transform.position);
-					foreach (UnitBehaviour enemy in enemies)
+					float distance = Vector2.Distance(transform.position, enemy.transform.position);
+					if (distance < closestDistance)
 					{
-						float distance = Vector2.Distance(transform.position, enemy.transform.position);
-						if (distance < closestDistance)
-						{
-							closestEnemy = enemy;
-							closestDistance = distance;
-						}
+						closestEnemy = enemy;
+						closestDistance = distance;
 					}
-					if (closestDistance <= viewDistance)
-					{
-						stickedTarget = closestEnemy;
-						return closestEnemy;
-					}
-					else
-					{
-						return null;
-					}
+				}
+				if (closestDistance <= viewDistance)
+				{
+					return closestEnemy;
 				}
 				else
 				{
 					return null;
 				}
 			}
-			else if (Vector2.Distance(transform.position, stickedTarget.transform.position) <= viewDistance)
-				{
-					return stickedTarget;
-				}
-				else
-				{
-					stickedTarget = null;
-					return null;
-				}
+			else
+			{
+				return null;
+			}
 		}
 
 		public override UnitBehaviour[] GetEnemies()

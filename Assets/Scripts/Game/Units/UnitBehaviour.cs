@@ -234,6 +234,8 @@ namespace Game.Units
 
 		private bool alive = true;
 
+		private UnitBehaviour stickedTarget = null;
+
 		protected virtual void Start()
 		{
 			hpMax = hp;
@@ -269,7 +271,7 @@ namespace Game.Units
 			// Stops the unit from attacking / searching for target while beging stunned / disarmed
 			if (AttackSpeed != 0)
 			{
-				UnitBehaviour target = GetTarget();
+				UnitBehaviour target = stickedTarget == null ? GetTarget() : stickedTarget;
 			    
 				if (target == null)
 				{
@@ -291,6 +293,7 @@ namespace Game.Units
 					ColliderDistance2D distance = thisCollider.Distance(targetCollider);
 					if (distance.distance <= range && distance.distance >= minimumRange)
 					{
+						stickedTarget = target;
 						anim.SetFloat("speed", 0f);
 						if (attackDelayTimer == 0)
 						{
@@ -384,7 +387,7 @@ namespace Game.Units
 
 			Vector2 collisionOffset = Vector2.zero;
 			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D(), otherColliders);
-			for (int i = 0;i < colliderCount;i++)
+			for (int i = 0; i < colliderCount; i++)
 			{
 				Collider2D collider = otherColliders[i];
 				if (collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
