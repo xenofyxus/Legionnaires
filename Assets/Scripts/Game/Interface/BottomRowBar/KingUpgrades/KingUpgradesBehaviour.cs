@@ -18,7 +18,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		[SerializeField]
 		private int damageCost = 10;
 		[SerializeField]
-		private int damageGain = 10;
+		private float damageGain = 10;
 
 		[Header("HP Reg")]
 
@@ -32,34 +32,34 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		[SerializeField]
 		private int hpCost = 10;
 		[SerializeField]
-		private int hpGain = 10;
+		private float hpGain = 10;
 
 		[Header("Shockwave")]
 
 		[SerializeField]
 		private int shockwaveCost = 10;
 		[SerializeField]
-		private int shockwaveDamageGain = 10;
+		private float shockwaveDamageGain = 10;
 		[SerializeField]
-		private int shockwaveRangeGain = 10;
+		private float shockwaveRangeGain = 10;
 
 		[Header("Stomp")]
 
 		[SerializeField]
 		private int stompCost = 10;
 		[SerializeField]
-		private int stompDamageGain = 10;
+		private float stompDamageGain = 10;
 		[SerializeField]
-		private int stompDurationGain = 10;
+		private float stompDurationGain = 10;
 
 		[Header("Immolation")]
 
 		[SerializeField]
 		private int immolationCost = 10;
 		[SerializeField]
-		private int immolationDpsGain = 10;
+		private float immolationDpsGain = 10;
 		[SerializeField]
-		private int immolationRadiusGain = 10;
+		private float immolationRadiusGain = 10;
 
 		[Header("Thorns")]
 

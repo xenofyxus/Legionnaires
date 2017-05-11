@@ -2,7 +2,7 @@
 
 namespace Game.Units.Spells.Abilities
 {
-    public class HealAbility:Ability
+	public class HealAbility:TargetAbility
     {
         public float healingAmount;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Units.Spells.Abilities
 {
-	public class StunAbility : Ability
+	public class StunAbility : TargetAbility
 	{
 		[SerializeField]
 		[Range(0f, 20f)]
