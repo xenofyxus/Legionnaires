@@ -21,7 +21,7 @@ namespace Game.Units.Spells.Auras
 			unit.MovementSpeed.AddMultiplier(multiplier);
         }
 
-        protected override void Remove(UnitBehaviour unit)
+		protected override void Remove(UnitBehaviour unit)
         {
 			unit.MovementSpeed.RemoveMultiplier(multiplier);
         }

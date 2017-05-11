@@ -24,21 +24,33 @@ namespace Game.Units.Spells.Auras
 			switch (targets)
 			{
 			case AuraTarget.Friendlies:
-				units = new List<UnitBehaviour> (owner.GetFriendlies());
+				units = new List<UnitBehaviour>(owner.GetFriendlies());
 				Apply(owner);
 				break;
 			case AuraTarget.Enemies:
-				units = new List<UnitBehaviour> (owner.GetEnemies());
+				units = new List<UnitBehaviour>(owner.GetEnemies());
 				break;
 			default:
 				break;
 			}
 
 			UnitBehaviour.UnitSpawning += delegate(object sender, EventArgs e) {
-				if (sender != null)
+				if (sender != null && this != null)
 				{
+					switch (targets)
+					{
+					case AuraTarget.Friendlies:
+						if (sender.GetType() == owner.GetType())
+							units.Add(sender as UnitBehaviour);
+						break;
+					case AuraTarget.Enemies:
+						if (sender.GetType() != owner.GetType())
+							units.Add(sender as UnitBehaviour);
+						break;
+					default:
+						return;
+					}
 					Apply(sender as UnitBehaviour);
-					units.Add(sender as UnitBehaviour);
 				}
 			};
 

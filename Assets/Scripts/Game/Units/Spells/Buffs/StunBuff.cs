@@ -16,8 +16,9 @@ namespace Game.Units.Spells.Buffs
 			StunPrefabCopy = Instantiate(Resources.Load("StunPrefab"), owner.transform.position, Quaternion.identity) as GameObject;
 		}
 
-		protected override void Remove()
+		public override void Remove()
 		{
+			base.Remove();
 			owner.AttackSpeed.RemoveMultiplier(0f);
 			owner.MovementSpeed.RemoveMultiplier(0f);
 			Destroy (StunPrefabCopy);

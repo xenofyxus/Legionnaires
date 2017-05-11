@@ -20,7 +20,7 @@ namespace Game.Units.Spells.Auras
 			unit.HpReg.AddAdder(modifier);
         }
 
-        protected override void Remove(UnitBehaviour unit)
+		protected override void Remove(UnitBehaviour unit)
         {
 			unit.HpReg.RemoveAdder(modifier);
         }

@@ -15,17 +15,20 @@ namespace Game.Units.Spells.Buffs
 			set{ duration = value; }
 		}
 
-		protected abstract void Apply ();
+		protected abstract void Apply();
 
-		protected abstract void Remove ();
+		public virtual void Remove()
+		{
+			Destroy(this);
+		}
 
-		protected override void Start ()
+		protected override void Start()
 		{
 			base.Start();
 			Apply();
 		}
 
-		protected override void Update ()
+		protected override void Update()
 		{
 			base.Update();
 			if (duration > 0)
@@ -36,7 +39,7 @@ namespace Game.Units.Spells.Buffs
 			}
 		}
 
-		protected override void OwnerDied (object sender, EventArgs e)
+		protected override void OwnerDied(object sender, EventArgs e)
 		{
 			base.OwnerDied(sender, e);
 			if (owner != null)

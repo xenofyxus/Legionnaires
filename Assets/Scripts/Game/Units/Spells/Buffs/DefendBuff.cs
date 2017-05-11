@@ -23,8 +23,9 @@ namespace Game.Units.Spells.Buffs
 			eArgs.Damage.AddMultiplier(damageMultiplier);
 		}
 
-		protected override void Remove()
+		public override void Remove()
 		{
+			base.Remove();
 			owner.TakingDamage -= OwnerTakingDamage;
 		}
 			
