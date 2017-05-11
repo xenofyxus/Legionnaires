@@ -68,13 +68,13 @@ namespace Game.Interface.TooltipBar.TowerPanel
 						spell1 = spell;
 					}
 					else if (spell2 == null)
-						{
-							spell2 = spell;
-						}
-						else
-						{
-							break;
-						}
+					{
+						spell2 = spell;
+					}
+					else
+					{
+						break;
+					}
 				}
 			}
 			TooltipBarBehaviour.Current.SetPanel("TowerPanel");
@@ -93,7 +93,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 
 			// HpMax is null for prefabs cus they are set in Start
 			healthImage.fillAmount = unit.Hp / (unit.HpMax != null ? unit.HpMax : 1);
-			healthText.text = unit.Hp.ToString("####") + ((unit.HpMax > 0f) ? "/" + ((float)unit.HpMax).ToString("####") : "");
+			healthText.text = unit.Hp.ToString("####") + ((unit.HpMax == null || unit.HpMax == 0f) ? "" : "/" + ((float)unit.HpMax).ToString("####"));
 
 			goldCostText.text = unit.Cost.ToString();
 			supplyCostText.text = unit.Supply.ToString();
