@@ -53,14 +53,20 @@ namespace Game.Units
 			UnitBehaviour[] enemies = GetEnemies();
 			if (enemies.Length > 0)
 			{
-				UnitBehaviour closestEnemy = enemies[0];
-				for (int i = 1; i < enemies.Length; i++)
+				UnitBehaviour closestEnemy = null;
+				for (int i = 0; i < enemies.Length; i++)
 				{
-					if (Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
+					if ((closestEnemy == null ||
+					    Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position)) &&
+					    Vector2.Distance(transform.position, enemies[i].transform.position) >= MinimumRange)
 					{
 						closestEnemy = enemies[i];
 					}
 				}
+
+				if (closestEnemy == null)
+					return null;
+
 				//Added visionRange returns enemy if in vision.
 				if (combatMode || Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range)
 				{
@@ -71,7 +77,6 @@ namespace Game.Units
 					}
 					return closestEnemy;
 				}
-				return null;
 			}
 			return null;
 		}

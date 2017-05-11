@@ -56,7 +56,9 @@ namespace Game.Units
 				{
 					if (Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
 					{
-						closestEnemy = enemies[i];
+						if (Math.Abs(Vector2.Distance(transform.position, enemies[i].transform.position) - MinimumRange) <
+						    Math.Abs(Vector2.Distance(transform.position, closestEnemy.transform.position) - MinimumRange))
+							closestEnemy = enemies[i];
 					}
 				}
 				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 6)

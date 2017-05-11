@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System.Reflection;
 
 namespace Game.Units
@@ -328,7 +327,6 @@ namespace Game.Units
 									newProjectile.movementSpeed = projectileSpeed;
 							}
 						}
-
 						if (anim != null)
 						{
 							// TODO Fix and sync
@@ -338,6 +336,7 @@ namespace Game.Units
 					}
 					else
 					{
+						stickedTarget = null;
 						MoveTowards(target.transform.position);
 					}
 				}
