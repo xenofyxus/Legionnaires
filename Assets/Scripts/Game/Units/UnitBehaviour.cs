@@ -16,6 +16,14 @@ namespace Game.Units
 #region Unit Attributes
 
 		[SerializeField]
+		[Multiline(3)]
+		private string description = "Please insert description or user will think we sukky sukk";
+
+		public string Description {
+			get{ return description; }
+		}
+
+		[SerializeField]
 		private ArmorType armorType = ArmorType.Unarmored;
 
 		/// <summary>
@@ -23,6 +31,7 @@ namespace Game.Units
 		/// </summary>
 		public ArmorType ArmorType {
 			get{ return armorType; }
+			set{ armorType = value; }
 		}
 
 		[SerializeField]
@@ -33,9 +42,23 @@ namespace Game.Units
 		/// </summary>
 		public AttackType AttackType {
 			get{ return attackType; }
+			set{ attackType = value; }
 		}
 
 		[Header("Unit Stats")]
+
+		[SerializeField]
+		[Tooltip("Minimum attack range, the unit can't attack enemies that are closer than this")]
+		private UnitStat minimumRange = 0f;
+
+		/// <summary>
+		/// Gets the minimum attack range.
+		/// </summary>
+		/// <value>The minimum attack range.</value>
+		public UnitStat MinimumRange {
+			get{ return minimumRange; }
+			set{ minimumRange = value; }
+		}
 
 		[SerializeField]
 		[Tooltip("Attack range in <units>")]
@@ -46,6 +69,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat Range {
 			get{ return range; }
+			set{ range = value; }
 		}
 
 		[SerializeField]
@@ -57,6 +81,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat MovementSpeed {
 			get{ return movementSpeed; }
+			set{ movementSpeed = value; }
 		}
 
 		[SerializeField]
@@ -68,6 +93,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat AttackSpeed {
 			get{ return attackSpeed; }
+			set{ attackSpeed = value; }
 		}
 
 		[SerializeField]
@@ -79,6 +105,7 @@ namespace Game.Units
 		/// </summary>
 		public float Hp {
 			get{ return hp; }
+			set{ hp = value; }
 		}
 
 		private UnitStat hpMax;
@@ -88,6 +115,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat HpMax {
 			get{ return hpMax; }
+			set{ hpMax = value; }
 		}
 
 		[SerializeField]
@@ -99,6 +127,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat HpReg {
 			get{ return hpReg; }
+			set{ hpReg = value; }
 		}
 
 		[SerializeField]
@@ -110,6 +139,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat DamageMax {
 			get{ return damageMax; }
+			set{ damageMax = value; }
 		}
 
 		[SerializeField]
@@ -121,6 +151,7 @@ namespace Game.Units
 		/// </summary>
 		public UnitStat DamageMin {
 			get{ return damageMin; }
+			set{ damageMin = value; }
 		}
 
 		[Header("Projectile")]
@@ -257,7 +288,8 @@ namespace Game.Units
 				else
 				{
 					Collider2D targetCollider = target.GetComponent<Collider2D>();
-					if (thisCollider.Distance(targetCollider).distance <= range)
+					ColliderDistance2D distance = thisCollider.Distance(targetCollider);
+					if (distance.distance <= range && distance.distance >= minimumRange)
 					{
 						anim.SetFloat("speed", 0f);
 						if (attackDelayTimer == 0)
@@ -268,7 +300,7 @@ namespace Game.Units
 							UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
 
 							if (Attacking != null)
-								Attacking(this, new AttackingEventArgs (damage, target));
+								Attacking(this, new AttackingEventArgs(damage, target));
 
 							damage.AddMultiplier(DamageRatios.GetRatio(target.armorType, attackType));
 
@@ -278,7 +310,7 @@ namespace Game.Units
 								target.ApplyDamage(damage, out actualDamage, this);
 
 								if (Attacked != null)
-									Attacked(this, new AttackedEventArgs (actualDamage, target));
+									Attacked(this, new AttackedEventArgs(actualDamage, target));
 							}
 							else
 							{
@@ -351,10 +383,10 @@ namespace Game.Units
 			transform.position = (Vector2)transform.position + velocity;
 
 			Vector2 collisionOffset = Vector2.zero;
-			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D (), otherColliders);
+			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D(), otherColliders);
 			for (int i = 0;i < colliderCount;i++)
 			{
-				Collider2D collider = otherColliders [i];
+				Collider2D collider = otherColliders[i];
 				if (collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
 				{
 					ColliderDistance2D colliderDistance = thisCollider.Distance(collider);
@@ -393,7 +425,7 @@ namespace Game.Units
 			UnitStat modifiedDamage = damage;
 
 			if (TakingDamage != null)
-				TakingDamage(this, new TakingDamageEventArgs (modifiedDamage, attacker));
+				TakingDamage(this, new TakingDamageEventArgs(modifiedDamage, attacker));
 			
 			if (modifiedDamage < 0)
 			{
@@ -403,7 +435,7 @@ namespace Game.Units
 			hp -= modifiedDamage;
 
 			if (TookDamage != null)
-				TookDamage(this, new TookDamageEventArgs (modifiedDamage, attacker));
+				TookDamage(this, new TookDamageEventArgs(modifiedDamage, attacker));
 
 			actualDamage = modifiedDamage;
 
@@ -430,7 +462,7 @@ namespace Game.Units
 			UnitStat modifiedHeal = heal;
 
 			if (TakingHeal != null)
-				TakingHeal(this, new TakingHealEventArgs (modifiedHeal, healer));
+				TakingHeal(this, new TakingHealEventArgs(modifiedHeal, healer));
             
 			hp += modifiedHeal;
 
@@ -441,7 +473,7 @@ namespace Game.Units
 			}
 
 			if (TookHeal != null)
-				TookHeal(this, new TookHealEventArgs (modifiedHeal, healer));
+				TookHeal(this, new TookHealEventArgs(modifiedHeal, healer));
 		}
 
 		/// <summary>
