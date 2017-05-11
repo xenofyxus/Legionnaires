@@ -123,7 +123,6 @@ namespace Game.Spawners
                         if(numberOfUnitsSpawned >= waveObjList[waveNumber].amountOfMinions)
                         {
 							playerReady = false;
-							print (playerReady);
                             break;
                         }
                         float x = Random.Range(MinX, MaxX);
