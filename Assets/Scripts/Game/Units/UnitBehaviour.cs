@@ -364,16 +364,21 @@ namespace Game.Units
 			}
 		}
 
+		void OnMouseDown()
+		{
+			Game.Interface.TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit(this);
+		}
+
+		protected virtual void OnDestroy()
+		{
+		}
+
 		protected virtual void OnDied()
 		{
 			alive = false;
 			if (Died != null)
 				Died(this, null);
 			GameObject.Destroy(gameObject);
-		}
-
-		protected virtual void OnDestroy()
-		{
 		}
 
 		/// <summary>

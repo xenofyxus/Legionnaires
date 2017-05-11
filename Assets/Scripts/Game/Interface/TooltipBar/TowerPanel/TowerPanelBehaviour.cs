@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Game.Units;
 
 namespace Game.Interface.TooltipBar.TowerPanel
 {
@@ -22,8 +23,16 @@ namespace Game.Interface.TooltipBar.TowerPanel
 		private Image healthImage = null;
 		private Text healthText = null;
 		private Text descriptionText = null;
+
+		private Transform legionnaireDataPanel = null;
 		private Text goldCostText = null;
 		private Text supplyCostText = null;
+
+		private Transform minionDataPanel = null;
+		private Text rewardText = null;
+
+		private Transform kingDataPanel = null;
+
 		private Text armorTypeText = null;
 		private Text attackTypeText = null;
 		private Text damageText = null;
@@ -37,7 +46,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 
 		private bool objectsSet = false;
 
-		private Units.LegionnaireBehaviour unit = null;
+		private Units.UnitBehaviour unit = null;
 
 		Units.Spells.Spell spell1;
 		Units.Spells.Spell spell2;
@@ -54,7 +63,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 			}
 		}
 
-		public void SetUnit(Game.Units.LegionnaireBehaviour unit)
+		public void SetUnit(UnitBehaviour unit)
 		{
 			this.unit = unit;
 
@@ -98,8 +107,35 @@ namespace Game.Interface.TooltipBar.TowerPanel
 
 			descriptionText.text = unit.Description;
 
-			goldCostText.text = unit.Cost.ToString();
-			supplyCostText.text = unit.Supply.ToString();
+			if (unit.GetType() == typeof(LegionnaireBehaviour))
+			{
+				LegionnaireBehaviour legionnaire = unit as LegionnaireBehaviour;
+
+				legionnaireDataPanel.gameObject.SetActive(true);
+				minionDataPanel.gameObject.SetActive(false);
+				kingDataPanel.gameObject.SetActive(false);
+
+				goldCostText.text = legionnaire.Cost.ToString();
+				supplyCostText.text = legionnaire.Supply.ToString();
+			}
+			else if (unit.GetType() == typeof(MinionBehaviour))
+			{
+				MinionBehaviour minion = unit as MinionBehaviour;
+
+				legionnaireDataPanel.gameObject.SetActive(false);
+				minionDataPanel.gameObject.SetActive(true);
+				kingDataPanel.gameObject.SetActive(false);
+
+				rewardText.text = minion.Value.ToString();
+			}
+			else if (unit.GetType() == typeof(KingBehaviour))
+			{
+				KingBehaviour king = unit as KingBehaviour;
+				legionnaireDataPanel.gameObject.SetActive(false);
+				minionDataPanel.gameObject.SetActive(false);
+				kingDataPanel.gameObject.SetActive(true);
+			}
+
 			armorTypeText.text = System.Enum.GetName(typeof(Units.ArmorType), unit.ArmorType);
 			attackTypeText.text = System.Enum.GetName(typeof(Units.AttackType), unit.AttackType);
 			damageText.text = ((float)unit.DamageMin).ToString("####") + "-" + ((float)unit.DamageMax).ToString("####");
@@ -138,8 +174,15 @@ namespace Game.Interface.TooltipBar.TowerPanel
 
 			descriptionText = transform.Find("Stats/Description/Value").GetComponent<Text>();
 
-			goldCostText = transform.Find("Stats/Cost/Gold/Value").GetComponent<Text>();
-			supplyCostText = transform.Find("Stats/Cost/Supply/Value").GetComponent<Text>();
+			legionnaireDataPanel = transform.Find("Stats/Legionnaire");
+			goldCostText = legionnaireDataPanel.transform.Find("Cost/Gold/Value").GetComponent<Text>();
+			supplyCostText = legionnaireDataPanel.transform.Find("Cost/Supply/Value").GetComponent<Text>();
+
+			minionDataPanel = transform.Find("Stats/Minion");
+			rewardText = minionDataPanel.transform.Find("Reward/Gold/Value").GetComponent<Text>();
+
+			kingDataPanel = transform.Find("Stats/King");
+
 			armorTypeText = transform.Find("Stats/ArmorType/Value").GetComponent<Text>();
 			attackTypeText = transform.Find("Stats/AttackType/Value").GetComponent<Text>();
 			damageText = transform.Find("Stats/Damage/Value").GetComponent<Text>();
