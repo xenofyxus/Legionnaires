@@ -21,6 +21,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 		private Image modelImage = null;
 		private Image healthImage = null;
 		private Text healthText = null;
+		private Text descriptionText = null;
 		private Text goldCostText = null;
 		private Text supplyCostText = null;
 		private Text armorTypeText = null;
@@ -95,6 +96,8 @@ namespace Game.Interface.TooltipBar.TowerPanel
 			healthImage.fillAmount = unit.Hp / (unit.HpMax != null ? unit.HpMax : 1);
 			healthText.text = unit.Hp.ToString("####") + ((unit.HpMax == null || unit.HpMax == 0f) ? "" : "/" + ((float)unit.HpMax).ToString("####"));
 
+			descriptionText.text = unit.Description;
+
 			goldCostText.text = unit.Cost.ToString();
 			supplyCostText.text = unit.Supply.ToString();
 			armorTypeText.text = System.Enum.GetName(typeof(Units.ArmorType), unit.ArmorType);
@@ -132,6 +135,8 @@ namespace Game.Interface.TooltipBar.TowerPanel
 			modelImage = transform.Find("Image").GetComponent<Image>();
 			healthImage = transform.Find("Health/ForeGround").GetComponent<Image>();
 			healthText = transform.Find("Health/Value").GetComponent<Text>();
+
+			descriptionText = transform.Find("Stats/Description/Value").GetComponent<Text>();
 
 			goldCostText = transform.Find("Stats/Cost/Gold/Value").GetComponent<Text>();
 			supplyCostText = transform.Find("Stats/Cost/Supply/Value").GetComponent<Text>();
