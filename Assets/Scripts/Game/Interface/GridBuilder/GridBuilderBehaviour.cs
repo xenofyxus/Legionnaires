@@ -65,6 +65,7 @@ namespace Game.Interface.GridBuilder
 						Instantiate (buyTowers, placeTower, transform.rotation);
 						newTower = true;
 					} else if (currentTower != null) {
+						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour>());
 						if (currentTower == towersAvailable [2].upgradedTowers [0]) {
 							Instantiate (wizardSpecial, placeTower, transform.rotation);
 						} else if (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
