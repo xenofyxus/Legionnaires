@@ -73,6 +73,7 @@ namespace Game.Spawners
 			waveCountdown = waveTime;
 			gridBuilder = GameObject.Find ("GridBuilder");
 			waveBtn = GameObject.Find ("Wave(Button)");
+
 			kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 			shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
 			stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
@@ -83,10 +84,10 @@ namespace Game.Spawners
 			waveCounter = (waveLoop) * 10 + waveNumber;
 			if (Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false) {
 				gridBuilder.SetActive (true);
+
 				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
-					
 					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
 				}
 				reset = true;
@@ -104,6 +105,10 @@ namespace Game.Spawners
 			}
 
 			if (reset && playerReady) {
+				//give player wood if starting wave early.
+				int woodIncrease = ((int)(waveCountdown / Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.WoodIncomeDelay) * Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.WoodIncome);
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Wood += woodIncrease;
+
 				waveCountdown = waveTime;
 				waveTimerGO.fillAmount = 0;
 				reset = false;
