@@ -8,136 +8,125 @@ namespace Game.Interface.GridBuilder
 	public class GridBuilderBehaviour : MonoBehaviour
 	{
 		[System.Serializable]
-		public class towerList
+		public class TowerList
 		{
 			public GameObject[] upgradedTowers;
 		}
 
-		//Transform.find("x,y).GetComponent<Image>().sprite;
+		[System.Serializable]
+		public class TowerInfo
+		{
+			public GameObject thisTower;
+			public Vector2 position;
+			public int towerType;
+			public int cost;
+			public int supply;
+			public int upgrade;
+			public int waveCreated;
+		}
+
 		float offSetX = 1.48f;
 		float offSetY = 1.5f;
 
 		int maxSupply;
 		int currentSupply;
-		int currentGold;
-		public towerList[] towersAvailable = new towerList[6];
+		public int towerX;
+		public int towerY;
+
+		bool newTower;
+
 		public GameObject buyTowers;
 		public GameObject sellOrUpgrade;
 		public GameObject onlySell;
 		public GameObject wizardSpecial;
-		public int whichSpotX;
-		public int whichSpotY;
+
 		Vector2 placeTower;
+
+		public TowerList[] towersAvailable = new TowerList[6];
 		GameObject[,] towerGridPos = new GameObject[5, 7];
-		//Instantiated tower
-		GameObject[,] towerGridPosCopy = new GameObject[5, 7];
-		//Which exact tower
-		public int[,] originalTower = new int[5, 7];
-		//Which type of tower
-		public int[,] whatUpgrade = new int[5, 7];
-		//Which level the tower has
-		Vector2[,] originalVector = new Vector2[5, 7];
-		//Tile placed on
+		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 7];
 		// Use this for initialization
 		void Start ()
 		{
-			
+			instantiateTower ();
 		}
 
 		// Update is called once per frame
 		void Update ()
 		{ 
-			//The code in update is all about mouse positions and choosing towers
 			if (Input.GetMouseButtonDown (0) && GameObject.FindGameObjectsWithTag ("TowerMenu").Length == 0) {				
 				Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-				whichSpotX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
-				whichSpotY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
-				placeTower = new Vector2 (-3.0f + (whichSpotX * 1.48f), 2.4f + (whichSpotY * 1.47f));
-				if (0 <= whichSpotX && whichSpotX <= 4 && 0 <= whichSpotY && whichSpotY <= 6 && towerGridPosCopy [whichSpotX, whichSpotY] == null) {
-					Instantiate (buyTowers, placeTower, transform.rotation);
-				} else if (0 <= whichSpotX && whichSpotX <= 4 && 0 <= whichSpotY && whichSpotY <= 6 && towerGridPosCopy [whichSpotX, whichSpotY] != null) {
-					if (towerGridPosCopy [whichSpotX, whichSpotY] == towersAvailable [2].upgradedTowers [0]) {
-						Instantiate (wizardSpecial, placeTower, transform.rotation);
-					} else if (towerGridPosCopy [whichSpotX, whichSpotY] == towersAvailable [2].upgradedTowers [1] || towerGridPosCopy [whichSpotX, whichSpotY] == towersAvailable [2].upgradedTowers [2]) {
-						Instantiate (onlySell, placeTower, transform.rotation);
-					} else if (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers.Length - 1 == whatUpgrade [whichSpotX, whichSpotY]) {
-						Instantiate (onlySell, placeTower, transform.rotation);
-					} else {
-						Instantiate (sellOrUpgrade, placeTower, transform.rotation);
+				towerX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
+				towerY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
+				placeTower = new Vector2 (-3.0f + (towerX * 1.48f), 2.4f + (towerY * 1.47f));
+				if (0 <= towerX && towerX <= 4 && 0 <= towerY && towerY <= 6) {
+					GameObject currentTower = towerGridPosCopy [towerX, towerY].thisTower;
+					if (currentTower == null) {
+						Instantiate (buyTowers, placeTower, transform.rotation);
+						newTower = true;
+					} else if (currentTower != null) {
+						if (currentTower == towersAvailable [2].upgradedTowers [0]) {
+							Instantiate (wizardSpecial, placeTower, transform.rotation);
+						} else if (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
+							Instantiate (onlySell, placeTower, transform.rotation);
+						} else {
+							Instantiate (sellOrUpgrade, placeTower, transform.rotation);
+						}
+						newTower = false;
 					}
 				}
 			}
-
-			if (TowerMenu.TowerMenuBehaviour.currentMenuItem != -1 && TowerMenu.TowerMenuBehaviour.placeTower == true) {
-				createTower ();
-				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-				TowerMenu.TowerMenuBehaviour.placeTower = false;
-			}
-			if (TowerMenu.TowerMenuBehaviour.currentMenuItem == 0 && TowerMenu.TowerMenuBehaviour.sellTower == true) {
-				sellTower ();
-				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-				TowerMenu.TowerMenuBehaviour.sellTower = false;
-			}
-			if (TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1 && TowerMenu.TowerMenuBehaviour.upgradeConfirm == true) {
-				upgradeTower ();
-				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-				TowerMenu.TowerMenuBehaviour.upgradeConfirm = false;
-			}
+				if (TowerMenu.TowerMenuBehaviour.placeTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem != -1) {
+					createTower ();
+					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+					TowerMenu.TowerMenuBehaviour.placeTower = false;
+				}
+				if (TowerMenu.TowerMenuBehaviour.sellTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem == 0) {
+					removeTower (0.5f);
+					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+					TowerMenu.TowerMenuBehaviour.sellTower = false;
+				}
+				if (TowerMenu.TowerMenuBehaviour.upgradeConfirm == true && TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1) {
+					createTower ();
+					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+					TowerMenu.TowerMenuBehaviour.upgradeConfirm = false;
+				}
+			
 			maxSupply = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.SupplyMax;
 			currentSupply = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply;
-			currentGold = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold;
 		}
 
-		//Creates the first version of the tower as you buy it
+		//Creates the tower you buy
 		void createTower ()
 		{
-			if (currentSupply + towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
-				if (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGold (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost)) {
-					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
-					transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.white;
-					towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0]);
-					towerGridPosCopy [whichSpotX, whichSpotY] = towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0];
-					originalTower [whichSpotX, whichSpotY] = TowerMenu.TowerMenuBehaviour.currentMenuItem;
-					originalVector [whichSpotX, whichSpotY] = placeTower;
-					whatUpgrade [whichSpotX, whichSpotY] = 0;
-					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+			if (newTower) {
+				if (checkResources (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0])) {
+					saveTower (towerX, towerY, towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0], TowerMenu.TowerMenuBehaviour.currentMenuItem, placeTower);
+					setTile (towerX, towerY, towerGridPosCopy [towerX, towerY].thisTower.GetComponent<SpriteRenderer> ().sprite, Color.white);
 				}
+			} else {
+				newTower = true;
+				towerGridPosCopy [towerX, towerY].upgrade += TowerMenu.TowerMenuBehaviour.currentMenuItem;
+				if (towerGridPosCopy [towerX, towerY].upgrade < towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length) {
+					if (checkResources (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade])) {
+						saveTower (towerX, towerY, towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade], towerGridPosCopy [towerX, towerY].towerType, placeTower);
+						setTile (towerX, towerY, towerGridPosCopy [towerX, towerY].thisTower.GetComponent<SpriteRenderer> ().sprite, Color.white);
+					} else
+						towerGridPosCopy [towerX, towerY].upgrade -= TowerMenu.TowerMenuBehaviour.currentMenuItem;
+				} else
+					towerGridPosCopy [towerX, towerY].upgrade -= TowerMenu.TowerMenuBehaviour.currentMenuItem;
 			}
 		}
-
-		//sells your tower
-		void sellTower ()
-		{	
-			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
-			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost / 2;
-			GameObject.Destroy (towerGridPos [whichSpotX, whichSpotY]);
-			towerGridPos [whichSpotX, whichSpotY] = null;
-			towerGridPosCopy [whichSpotX, whichSpotY] = null;
-		}
-
-		void sellToUpgrade ()
-		{	
-			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
-			transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-			//	Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
-			GameObject.Destroy (towerGridPos [whichSpotX, whichSpotY]);
-			towerGridPos [whichSpotX, whichSpotY] = null;
-			towerGridPosCopy [whichSpotX, whichSpotY] = null;
-		}
-
+			
 		//Instantiates all the sprites into their character
 		public void Reset ()
 		{
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < 7; j++) {
-					if (towerGridPosCopy [i, j] != null) {
-						transform.Find (i + "/" + j).GetComponent<Image> ().sprite = null;
-						transform.Find (i + "/" + j).GetComponent<Image> ().color = Color.clear;
+					if (towerGridPosCopy [i, j].thisTower != null) {
+						setTile (i, j, null, Color.clear);
 						GameObject.Destroy (towerGridPos [i, j]);
-						towerGridPos [i, j] = Instantiate (towersAvailable [originalTower [i, j]].upgradedTowers [whatUpgrade [i, j]], originalVector [i, j], transform.rotation);
+						towerGridPos [i, j] = Instantiate (towerGridPosCopy [i, j].thisTower, towerGridPosCopy [i, j].position, transform.rotation);
 					}
 				}
 			}
@@ -148,34 +137,66 @@ namespace Game.Interface.GridBuilder
 		{
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < 7; j++) {
-					if (towerGridPosCopy [i, j] != null) {
+					if (towerGridPosCopy [i, j].thisTower != null) {
 						GameObject.Destroy (towerGridPos [i, j]);
 						towerGridPos [i, j] = null;
-						transform.Find (i + "/" + j).GetComponent<Image> ().sprite = towerGridPosCopy [i, j].GetComponent<SpriteRenderer> ().sprite;
-						transform.Find (i + "/" + j).GetComponent<Image> ().color = Color.white;
+						setTile (i, j, towerGridPosCopy [i, j].thisTower.GetComponent<SpriteRenderer> ().sprite, Color.white);
 					}
 				}
 			}
 		}
+			
+		//sells and removes tower
+		void removeTower (float sellValue)
+		{	
+			setTile (towerX, towerY, null, Color.clear);
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [towerX, towerY].supply;
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
+			towerGridPosCopy [towerX, towerY].supply = 0;
+			towerGridPosCopy [towerX, towerY].upgrade = 0;
+			GameObject.Destroy (towerGridPos [towerX, towerY]);
+			saveTower (towerX, towerY, null, 0, placeTower);
+		}
 
-		//Upgrades tower into next versionf
-		void upgradeTower ()
-		{			
-			if (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers.Length - 1 > whatUpgrade [whichSpotX, whichSpotY]) {
-				if (currentSupply + towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
-					whatUpgrade [whichSpotX, whichSpotY] += TowerMenu.TowerMenuBehaviour.currentMenuItem;
-					if (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGold (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]].GetComponent<Game.Units.LegionnaireBehaviour> ().Cost)) {
-						sellToUpgrade ();
-						transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = null;
-						transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.clear;
-						towerGridPos [whichSpotX, whichSpotY] = Instantiate (towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]]);
-						towerGridPosCopy [whichSpotX, whichSpotY] = towersAvailable [originalTower [whichSpotX, whichSpotY]].upgradedTowers [whatUpgrade [whichSpotX, whichSpotY]];
-						Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-						transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().sprite = towerGridPosCopy [whichSpotX, whichSpotY].GetComponent<SpriteRenderer> ().sprite;
-						transform.Find (whichSpotX + "/" + whichSpotY).GetComponent<Image> ().color = Color.white;
-					} else {
-						whatUpgrade [whichSpotX, whichSpotY] -= TowerMenu.TowerMenuBehaviour.currentMenuItem;
-					}
+		//sets a tile sprite and a tile color
+		void setTile (int X, int Y, Sprite tileSprite, Color tileColor)
+		{
+			transform.Find (X + "/" + Y).GetComponent<Image> ().sprite = tileSprite;
+			transform.Find (X + "/" + Y).GetComponent<Image> ().color = tileColor;
+		}
+
+		//checks if theres enough supply left and money to build a tower
+		bool checkResources (GameObject tower)
+		{
+			if (currentSupply + tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
+				if (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGold (tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost)) {
+					return true;
+				} else
+					return false;
+			} else
+				return false;
+		}
+
+		//saves the tower so it can be re-created
+		void saveTower (int X, int Y, GameObject tower, int originalTower, Vector2 pos)
+		{
+			towerGridPosCopy [X, Y].towerType = originalTower;
+			towerGridPosCopy [X, Y].thisTower = tower;
+			towerGridPosCopy [X, Y].position = pos;
+			if (tower != null) {
+				towerGridPos [X, Y] = Instantiate (tower);
+				towerGridPosCopy [X, Y].cost = towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+				towerGridPosCopy [X, Y].supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+			}
+		}
+
+		//has to be done for some reason
+		void instantiateTower ()
+		{
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 7; j++) {
+					towerGridPosCopy [i, j] = new TowerInfo ();
 				}
 			}
 		}
