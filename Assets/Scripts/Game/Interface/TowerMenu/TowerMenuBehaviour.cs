@@ -52,11 +52,11 @@ namespace Game.Interface.TowerMenu
 
 		void Update ()
 		{
-			if(Input.GetMouseButtonDown (0)){
-				GetCurrentMenuItem();
-			}
 			if (nextWaveStarted) {
 				GameObject.Destroy (this.gameObject);
+			}
+			if(Input.GetMouseButtonDown (0)){
+				GetCurrentMenuItem();
 			}
 		}
 

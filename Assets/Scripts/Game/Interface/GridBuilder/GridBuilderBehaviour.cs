@@ -22,7 +22,7 @@ namespace Game.Interface.GridBuilder
 			public int cost;
 			public int totalSupply;
 			public int upgrade;
-			public int waveCreated;
+			public int waveCreated = -1;
 			public int totalCost;
 		}
 
@@ -33,7 +33,6 @@ namespace Game.Interface.GridBuilder
 		int currentSupply;
 		public int towerX;
 		public int towerY;
-
 		bool newTower;
 
 		public GameObject buyTowers;
@@ -66,7 +65,7 @@ namespace Game.Interface.GridBuilder
 						Instantiate (buyTowers, placeTower, transform.rotation);
 						newTower = true;
 					} else if (currentTower != null) {
-						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour>());
+						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour> ());
 						if (currentTower == towersAvailable [2].upgradedTowers [0]) {
 							Instantiate (wizardSpecial, placeTower, transform.rotation);
 						} else if (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
@@ -78,21 +77,21 @@ namespace Game.Interface.GridBuilder
 					}
 				}
 			}
-				if (TowerMenu.TowerMenuBehaviour.placeTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem != -1) {
-					createTower ();
-					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-					TowerMenu.TowerMenuBehaviour.placeTower = false;
-				}
-				if (TowerMenu.TowerMenuBehaviour.sellTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem == 0) {
-					removeTower (0.5f);
-					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-					TowerMenu.TowerMenuBehaviour.sellTower = false;
-				}
-				if (TowerMenu.TowerMenuBehaviour.upgradeConfirm == true && TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1) {
-					createTower ();
-					TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
-					TowerMenu.TowerMenuBehaviour.upgradeConfirm = false;
-				}
+			if (TowerMenu.TowerMenuBehaviour.placeTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem != -1) {
+				createTower ();
+				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+				TowerMenu.TowerMenuBehaviour.placeTower = false;
+			}
+			if (TowerMenu.TowerMenuBehaviour.sellTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem == 0) {
+				removeTower (0.5f);
+				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+				TowerMenu.TowerMenuBehaviour.sellTower = false;
+			}
+			if (TowerMenu.TowerMenuBehaviour.upgradeConfirm == true && TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1) {
+				createTower ();
+				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
+				TowerMenu.TowerMenuBehaviour.upgradeConfirm = false;
+			}
 			
 			maxSupply = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.SupplyMax;
 			currentSupply = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply;
@@ -153,11 +152,16 @@ namespace Game.Interface.GridBuilder
 		{	
 			setTile (towerX, towerY, null, Color.clear);
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [towerX, towerY].totalSupply;
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
+			if (Spawners.MinionSpawnerBehaviour.waveCounter == towerGridPosCopy [towerX, towerY].waveCreated) {
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [towerX, towerY].totalCost;
+			} else {
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
+			}
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent -= towerGridPosCopy [towerX, towerY].totalCost;
 			towerGridPosCopy [towerX, towerY].totalSupply = 0;
 			towerGridPosCopy [towerX, towerY].upgrade = 0;
 			towerGridPosCopy [towerX, towerY].totalCost = 0;
+			towerGridPosCopy [towerX, towerY].waveCreated = -1;
 			GameObject.Destroy (towerGridPos [towerX, towerY]);
 			saveTower (towerX, towerY, null, 0, placeTower);
 		}
@@ -187,6 +191,7 @@ namespace Game.Interface.GridBuilder
 			towerGridPosCopy [X, Y].towerType = originalTower;
 			towerGridPosCopy [X, Y].thisTower = tower;
 			towerGridPosCopy [X, Y].position = pos;
+			towerGridPosCopy [X, Y].waveCreated = Spawners.MinionSpawnerBehaviour.waveNumber;
 			if (tower != null) {
 				towerGridPos [X, Y] = Instantiate (tower);
 				towerGridPosCopy [X, Y].cost = towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;

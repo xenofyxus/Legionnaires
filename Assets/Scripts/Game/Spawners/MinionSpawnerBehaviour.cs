@@ -31,6 +31,7 @@ namespace Game.Spawners
 		}
 
 		public static int waveNumber = 0;
+		public static int waveCounter = 0;
 		private int waveLoop = 0;
 		[SerializeField]
 		[Tooltip ("How much do you want each loop of 10 to scale? 1.2 = 20% more per new loop")]
@@ -44,6 +45,7 @@ namespace Game.Spawners
 
 		public GameObject gridScript;
 		private GameObject[] waveObjects;
+
 
 		private bool newWave;
 		private bool reset;
@@ -78,11 +80,13 @@ namespace Game.Spawners
 
 		void LateUpdate ()
 		{
+			waveCounter = (waveLoop) * 10 + waveNumber;
 			if (Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false) {
 				gridBuilder.SetActive (true);
-
+				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
+					
 					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
 				}
 				reset = true;
