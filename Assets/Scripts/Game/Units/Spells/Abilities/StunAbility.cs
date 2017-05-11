@@ -8,7 +8,7 @@ namespace Game.Units.Spells.Abilities
 	{
 		[SerializeField]
 		[Range(0f, 20f)]
-		private float duration = 5f;
+		private float duration = 0f;
 
 		public float Duration
 		{

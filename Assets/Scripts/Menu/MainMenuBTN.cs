@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuBTN : MonoBehaviour {
 
 	public void StartLevel() {
-		SceneManager.LoadScene (1); //This decides which Scene will load when the play button is pressed.
+		SceneManager.LoadScene ("GameScene"); //This decides which Scene will load when the play button is pressed.
 	}
 
 }
