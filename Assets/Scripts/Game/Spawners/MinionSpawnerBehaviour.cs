@@ -72,7 +72,6 @@ namespace Game.Spawners
 			waveCountdown = waveTime;
 			gridBuilder = GameObject.Find ("GridBuilder");
 			waveBtn = GameObject.Find ("Wave(Button)");
-
 			kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 			shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
 			stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
@@ -141,12 +140,15 @@ namespace Game.Spawners
 						float y = Random.Range (MinY, MaxY);
 
 						//Referens the last spawned minion and change it's value based on which loop it is
+
 						lastSpawned = Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor / 2;
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor / 2;
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
-						if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
-							lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor / 2;
+						if (waveLoop > 0) {
+							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor / 2;
+							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor / 2;
+							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
+							if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
+								lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor / 2;
+							}
 						}
 						numberOfUnitsSpawned++;
 					}
