@@ -14,7 +14,6 @@ namespace Game.Units.Spells.Passives
 			owner.TakingHeal += OwnerTakingHeal;
 			owner.TookHeal += OwnerTookHeal;
 			owner.Dying += OwnerDying;
-			owner.Died += OwnerDied;
 		}
 
 		protected virtual void OwnerAttacking(object sender, AttackingEventArgs e)

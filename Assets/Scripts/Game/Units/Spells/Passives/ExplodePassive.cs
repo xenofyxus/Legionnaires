@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Units.Spells.Passives
 {
 	public class ExplodePassive:Passive
 	{
+		GameObject deathAnimation;
+
 		[Header("Spell Data")]
 
 		[SerializeField]
@@ -33,6 +37,7 @@ namespace Game.Units.Spells.Passives
 
 		protected override void OwnerDied(object sender, EventArgs e)
 		{
+			deathAnimation = (GameObject) Instantiate (Resources.Load ("Pudge Deathanimation"), transform.position, transform.rotation);
 			base.OwnerDied(sender, e);
 			foreach (UnitBehaviour enemy in owner.GetEnemies())
 			{
