@@ -19,7 +19,12 @@ namespace Game.Interface.Infobar.Resources.Remaining
             {
                 minionCount = tags;
                 myText.text = "" + minionCount; 
+				if (minionCount == 0) 
+				{
+					ResourcesBehaviour.Current.Gold += Spawners.MinionSpawnerBehaviour.waveCounter * 2 + 10;
+				}
             } 
+
         }
     }
 }
