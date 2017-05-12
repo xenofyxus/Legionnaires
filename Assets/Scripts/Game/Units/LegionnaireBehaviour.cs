@@ -53,22 +53,24 @@ namespace Game.Units
 			UnitBehaviour[] enemies = GetEnemies();
 			if (enemies.Length > 0)
 			{
-				UnitBehaviour closestEnemy = null;
-				for (int i = 0; i < enemies.Length; i++)
+				UnitBehaviour closestEnemy = enemies[0];
+				Collider2D closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
+				float closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
+				for (int i = 1; i < enemies.Length; i++)
 				{
-					if ((closestEnemy == null ||
-					    Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position)) &&
-					    Vector2.Distance(transform.position, enemies[i].transform.position) >= MinimumRange)
+					closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
+					closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
+					Collider2D enemyCollider = enemies[i].GetComponent<Collider2D>();
+					float enemyDistance = thisCollider.Distance(enemyCollider).distance;
+
+					if ((enemyDistance < closestEnemyDistance && enemyDistance >= MinimumRange) || closestEnemyDistance < MinimumRange)
 					{
 						closestEnemy = enemies[i];
 					}
 				}
 
-				if (closestEnemy == null)
-					return null;
-
 				//Added visionRange returns enemy if in vision.
-				if (combatMode || Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range)
+				if ((combatMode || Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range))
 				{
 					foreach (LegionnaireBehaviour legionnaire in legionnaires)
 					{

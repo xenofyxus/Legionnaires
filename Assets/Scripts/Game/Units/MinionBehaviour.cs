@@ -52,18 +52,19 @@ namespace Game.Units
 			if (enemies.Length > 0)
 			{
 				UnitBehaviour closestEnemy = enemies[0];
+				Collider2D closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
+				float closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
 				for (int i = 1; i < enemies.Length; i++)
 				{
-					if (Vector2.Distance(transform.position, enemies[i].transform.position) < Vector2.Distance(transform.position, closestEnemy.transform.position))
+					closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
+					closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
+					Collider2D enemyCollider = enemies[i].GetComponent<Collider2D>();
+					float enemyDistance = thisCollider.Distance(enemyCollider).distance;
+
+					if ((enemyDistance < closestEnemyDistance && enemyDistance >= MinimumRange) || closestEnemyDistance < MinimumRange)
 					{
-						if (Math.Abs(Vector2.Distance(transform.position, enemies[i].transform.position) - MinimumRange) <
-						    Math.Abs(Vector2.Distance(transform.position, closestEnemy.transform.position) - MinimumRange))
-							closestEnemy = enemies[i];
+						closestEnemy = enemies[i];
 					}
-				}
-				if (Vector2.Distance(transform.position, closestEnemy.transform.position) < 6)
-				{
-					return closestEnemy;
 				}
 			}
 			return null;

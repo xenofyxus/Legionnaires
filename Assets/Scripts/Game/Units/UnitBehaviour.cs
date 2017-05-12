@@ -229,7 +229,7 @@ namespace Game.Units
 		Animator anim;
 
 		Collider2D[] otherColliders = new Collider2D[100];
-		CircleCollider2D thisCollider;
+		protected CircleCollider2D thisCollider;
 
 		private bool alive = true;
 
@@ -289,8 +289,8 @@ namespace Game.Units
 				else
 				{
 					Collider2D targetCollider = target.GetComponent<Collider2D>();
-					ColliderDistance2D distance = thisCollider.Distance(targetCollider);
-					if (distance.distance <= range && distance.distance >= minimumRange)
+					float distance = thisCollider.Distance(targetCollider).distance;
+					if (distance <= range && distance >= minimumRange)
 					{
 						stickedTarget = target;
 						anim.SetFloat("speed", 0f);
@@ -334,10 +334,13 @@ namespace Game.Units
 						}
 						RotateTowards(target.transform.position);
 					}
+					else if (distance >= minimumRange)
+					{
+						MoveTowards(target.transform.position);
+					}
 					else
 					{
 						stickedTarget = null;
-						MoveTowards(target.transform.position);
 					}
 				}
 			}
