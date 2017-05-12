@@ -33,7 +33,7 @@ namespace Game.Spawners
 		public static int waveCounter = 0;
 		private int waveLoop = 0;
 		[SerializeField]
-		[Tooltip ("How much do you want each loop of 10 to scale? 1.2 = 20% more per new loop")]
+		[Tooltip ("How much do you want each loop of 10 to scale? 10 = 10x hp and 5x dps")]
 		private float waveLoopFactor;
 		[SerializeField]
 		[Tooltip ("How long time until the wave starts by itself?")]
@@ -141,11 +141,11 @@ namespace Game.Spawners
 
 						//Referens the last spawned minion and change it's value based on which loop it is
 						lastSpawned = Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= Mathf.Pow (waveLoopFactor, waveLoop);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= Mathf.Pow (waveLoopFactor, waveLoop);
-						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= Mathf.Pow (waveLoopFactor, waveLoop);
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor / 2;
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor / 2;
+						lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
 						if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
-							lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= Mathf.Pow (waveLoopFactor, waveLoop);
+							lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor / 2;
 						}
 						numberOfUnitsSpawned++;
 					}
