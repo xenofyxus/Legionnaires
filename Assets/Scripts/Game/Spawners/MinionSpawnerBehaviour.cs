@@ -28,9 +28,13 @@ namespace Game.Spawners
 				return current;
 			}
 		}
+			
+		public static int waveNumber;
+		public static int waveCounter;
+		//The two init's is for the static int to reset to 0 when we reset the gamescene
+		private int waveNumberInit = 0;
+		private int waveCounterInit = 0;
 
-		public static int waveNumber = 0;
-		public static int waveCounter = 0;
 		private int waveLoop = 0;
 		[SerializeField]
 		[Tooltip ("How much do you want each loop of 10 to scale? 10 = 10x hp and 5x dps")]
@@ -65,6 +69,12 @@ namespace Game.Spawners
 		Image waveTimerGO;
 		GameObject lastSpawned;
 
+
+		void Awake ()
+		{
+			waveNumber = waveNumberInit;
+			waveCounter = waveCounterInit;
+		}
 
 		void Start ()
 		{
