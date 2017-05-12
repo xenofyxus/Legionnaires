@@ -70,7 +70,7 @@ namespace Game.Units
 				}
 
 				//Added visionRange returns enemy if in vision.
-				if ((combatMode || Vector2.Distance(transform.position, closestEnemy.transform.position) < 4 + GetComponent<Game.Units.LegionnaireBehaviour>().Range))
+				if ((combatMode || closestEnemyDistance < Range + 4))
 				{
 					foreach (LegionnaireBehaviour legionnaire in legionnaires)
 					{

@@ -66,6 +66,8 @@ namespace Game.Units
 						closestEnemy = enemies[i];
 					}
 				}
+				if (closestEnemyDistance <= Range + 4)
+					return closestEnemy;
 			}
 			return null;
 		}
