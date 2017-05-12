@@ -22,25 +22,28 @@ namespace Game.Interface.TowerMenu
 		public static bool nextWaveStarted = false;
 		private int oldMenuItem;
 		private GameObject buyBTN;
-		private GameObject gridFather;
-		private GameObject gridBuild;
+		private GameObject gridTiles;
+		private GameObject gridBuilder; 
+		int ex;
+		int ey;
+		Color colorTile = new Color (1f, 0.92f, 0.016f, 0.5f);
 		void Start ()
 		{
-			gridFather = GameObject.Find ("GridFather");
-			gridBuild = GameObject.Find ("GridBuilder");
-			gridFather.SetActive (false);
+			gridTiles = GameObject.Find ("GridTiles");
+			gridBuilder = GameObject.Find ("GridBuilder");
 			buyBTN = GameObject.Find ("BUY");
 			buyBTN.SetActive (false);
 			menuItems = buttons.Count;
-			int ex = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerX;
-			int ey = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerY;
+			ex = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerX;
+			ey = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerY;
+			EnableDisableTiles (colorTile);
 			if (menuItems > 3) {
 				for (int i = 0; i < menuItems; i++) {
-					buttons [i].btnImage.sprite = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [i].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
+					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [i].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
 				}
 			} else {
 				for(int i = 1; i < menuItems; i++){
-					buttons [i].btnImage.sprite = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].towerType].upgradedTowers [i + gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].upgrade].GetComponent<SpriteRenderer> ().sprite;
+					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].towerType].upgradedTowers [i + gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].upgrade].GetComponent<SpriteRenderer> ().sprite;
 
 				}
 			}
@@ -49,10 +52,23 @@ namespace Game.Interface.TowerMenu
 			}
 			currentMenuItem = -1;
 		}
+			
+		void EnableDisableTiles(Color markedTile){
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 7; j++) {
+					if (i == ex && j == ey) {
+						gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().setTile (ex, ey, null, markedTile);
+					} else {
+						gridTiles.transform.Find (i + "/" + j).GetComponent<Image> ().enabled = !gridTiles.transform.Find (i + "/" + j).GetComponent<Image> ().enabled;
+					}
+				}
+			}
+		}
 
 		void Update ()
 		{
 			if (nextWaveStarted) {
+				EnableDisableTiles (Color.clear);
 				GameObject.Destroy (this.gameObject);
 			}
 			if(Input.GetMouseButtonDown (0)){
@@ -84,19 +100,19 @@ namespace Game.Interface.TowerMenu
 				oldMenuItem = currentMenuItem;
 				buttons [currentMenuItem].menuImage.color = buttons[currentMenuItem].pressedColor;
 
-				int xSpot = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerX;
-				int ySpot = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerY;
-				int towerType = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy [xSpot, ySpot].towerType;
-				int upgrade = gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy [xSpot, ySpot].upgrade;
+				int xSpot = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerX;
+				int ySpot = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerY;
+				int towerType = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy [xSpot, ySpot].towerType;
+				int upgrade = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy [xSpot, ySpot].upgrade;
 
 				if(this.gameObject.name == "TowerMenju(Clone)"){
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [currentMenuItem].upgradedTowers [0].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [currentMenuItem].upgradedTowers [0].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				if (this.gameObject.name == "SellMenu(Clone)") {
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				if (this.gameObject.name == "WizardUpgrade(Clone)") {
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuild.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				buyBTN.SetActive (true);
 			}
@@ -116,7 +132,7 @@ namespace Game.Interface.TowerMenu
 			}
 
 			if (currentMenuItem != -1 && (placeTower == true || sellTower == true || upgradeConfirm == true) || vectorToMouse.magnitude > 3.5f) {
-				gridFather.SetActive (true);
+				EnableDisableTiles (Color.clear);
 				GameObject.Destroy (this.gameObject);
 			}
 		}

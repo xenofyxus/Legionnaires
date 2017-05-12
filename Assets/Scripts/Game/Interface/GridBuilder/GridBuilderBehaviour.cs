@@ -39,9 +39,9 @@ namespace Game.Interface.GridBuilder
 		public GameObject sellOrUpgrade;
 		public GameObject onlySell;
 		public GameObject wizardSpecial;
-
+		GameObject gridTiles;
 		Vector2 placeTower;
-
+		Vector2 placeMenu;
 		public TowerList[] towersAvailable = new TowerList[6];
 		GameObject[,] towerGridPos = new GameObject[5, 7];
 		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 7];
@@ -49,8 +49,9 @@ namespace Game.Interface.GridBuilder
 		void Start ()
 		{
 			instantiateTower ();
+			gridTiles = GameObject.Find ("GridTiles");
 		}
-
+			
 		// Update is called once per frame
 		void Update ()
 		{ 
@@ -60,18 +61,23 @@ namespace Game.Interface.GridBuilder
 				towerY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
 				placeTower = new Vector2 (-3.0f + (towerX * 1.48f), 2.4f + (towerY * 1.47f));
 				if (0 <= towerX && towerX <= 4 && 0 <= towerY && towerY <= 6) {
+					if (towerY > 2) {
+						placeMenu = new Vector2 (-3.0f + (2 * 1.48f), 2.4f + (0 * 1.47f));
+					} else {
+						placeMenu = new Vector2 (-3.0f + (2 * 1.48f), 2.4f + (5 * 1.47f));
+					}
 					GameObject currentTower = towerGridPosCopy [towerX, towerY].thisTower;
 					if (currentTower == null) {
-						Instantiate (buyTowers, placeTower, transform.rotation);
+						Instantiate (buyTowers, placeMenu, transform.rotation);
 						newTower = true;
 					} else if (currentTower != null) {
 						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour> ());
 						if (currentTower == towersAvailable [2].upgradedTowers [0]) {
-							Instantiate (wizardSpecial, placeTower, transform.rotation);
+							Instantiate (wizardSpecial, placeMenu, transform.rotation);
 						} else if (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
-							Instantiate (onlySell, placeTower, transform.rotation);
+							Instantiate (onlySell, placeMenu, transform.rotation);
 						} else {
-							Instantiate (sellOrUpgrade, placeTower, transform.rotation);
+							Instantiate (sellOrUpgrade, placeMenu, transform.rotation);
 						}
 						newTower = false;
 					}
@@ -79,16 +85,19 @@ namespace Game.Interface.GridBuilder
 			}
 			if (TowerMenu.TowerMenuBehaviour.placeTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem != -1) {
 				createTower ();
+				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
 				TowerMenu.TowerMenuBehaviour.placeTower = false;
 			}
 			if (TowerMenu.TowerMenuBehaviour.sellTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem == 0) {
 				removeTower (0.5f);
+				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
 				TowerMenu.TowerMenuBehaviour.sellTower = false;
 			}
 			if (TowerMenu.TowerMenuBehaviour.upgradeConfirm == true && TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1) {
 				createTower ();
+				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
 				TowerMenu.TowerMenuBehaviour.upgradeConfirm = false;
 			}
@@ -167,10 +176,10 @@ namespace Game.Interface.GridBuilder
 		}
 
 		//sets a tile sprite and a tile color
-		void setTile (int X, int Y, Sprite tileSprite, Color tileColor)
+		public void setTile (int X, int Y, Sprite tileSprite, Color tileColor)
 		{
-			transform.Find (X + "/" + Y).GetComponent<Image> ().sprite = tileSprite;
-			transform.Find (X + "/" + Y).GetComponent<Image> ().color = tileColor;
+			gridTiles.transform.Find (X + "/" + Y).GetComponent<Image> ().sprite = tileSprite;
+			gridTiles.transform.Find (X + "/" + Y).GetComponent<Image> ().color = tileColor;
 		}
 
 		//checks if theres enough supply left and money to build a tower
