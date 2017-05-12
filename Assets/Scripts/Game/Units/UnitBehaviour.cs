@@ -322,7 +322,7 @@ namespace Game.Units
 								newProjectile.owner = this;
 								newProjectile.target = target;
 								newProjectile.Damage = damage;
-								newProjectile.Attacked += Attacked;
+								newProjectile.Attacked += (sender, e) => Attacked(sender, e);
 								if (projectileSpeed > 0)
 									newProjectile.movementSpeed = projectileSpeed;
 							}

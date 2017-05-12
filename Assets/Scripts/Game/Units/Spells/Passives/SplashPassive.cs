@@ -12,36 +12,30 @@ namespace Game.Units.Spells.Passives
 		[UnityEngine.Range(0f, 5f)]
 		private float radius;
 
-		public float DamageMultiplier
-		{
-			get
-			{
+		public float DamageMultiplier {
+			get {
 				return this.damageMultiplier;
 			}
-			set
-			{
+			set {
 				damageMultiplier = value;
 			}
 		}
 
-		public float Radius
-		{
-			get
-			{
+		public float Radius {
+			get {
 				return this.radius;
 			}
-			set
-			{
+			set {
 				radius = value;
 			}
 		}
 
 		protected override void OwnerAttacked(object sender, AttackedEventArgs e)
 		{
-			foreach(UnitBehaviour unit in e.Target.GetFriendlies())
+			foreach (UnitBehaviour unit in e.Target.GetFriendlies())
 			{
 				float dummyVar;
-				if(UnityEngine.Vector2.Distance(unit.transform.position, owner.transform.position) <= radius)
+				if (UnityEngine.Vector2.Distance(unit.transform.position, e.Target.transform.position) <= radius)
 					unit.ApplyDamage(e.Damage * damageMultiplier, out dummyVar, null);
 			}
 		}
