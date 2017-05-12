@@ -9,11 +9,13 @@ namespace Game.Units
 		[Header("Minion specific attributes")]
 
 		[SerializeField]
-		protected int value;
+		protected int reward;
+		[SerializeField]
+		protected int scoreReward;
 
-		public int Value {
-			get{ return value; }
-			set{ this.value = value; }
+		public int Reward {
+			get{ return reward; }
+			set{ this.reward = value; }
 		}
 
 		protected static List<MinionBehaviour> minions = new List<MinionBehaviour>();
@@ -37,11 +39,12 @@ namespace Game.Units
 		{
 			if (LegionnaireBehaviour.legionnaires.Count == 0)
 			{
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value / 2;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += reward / 2;
 			}
 			else
 			{
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += value;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += reward;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += scoreReward;
 			}
 			base.OnDied();
 		}

@@ -126,7 +126,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 				minionDataPanel.gameObject.SetActive(true);
 				kingDataPanel.gameObject.SetActive(false);
 
-				rewardText.text = minion.Value.ToString();
+				rewardText.text = minion.Reward.ToString();
 			}
 			else if (unit.GetType() == typeof(KingBehaviour))
 			{

@@ -17,6 +17,13 @@ namespace Game.Interface.Infobar.Resources
 			}
 		}
 
+		private int score = 0;
+
+		public int Score {
+			get{ return score; }
+			set{ score = value; }
+		}
+
 		[SerializeField]
 		private int gold = 50;
 
@@ -87,6 +94,7 @@ namespace Game.Interface.Infobar.Resources
 		private Text woodText = null;
 		private Text woodIncomeText = null;
 		private Text supplyText = null;
+		private Text scoreText = null;
 
 		void Update()
 		{
@@ -120,6 +128,10 @@ namespace Game.Interface.Infobar.Resources
 			if (supplyText == null)
 				supplyText = transform.Find("Supply/Supply(Text)").GetComponent<Text>();
 			supplyText.text = supply + "/" + supplyMax;
+
+			if (scoreText == null)
+				scoreText = GameObject.Find ("GameInterface/Infobar(Panel)/Score/Value").GetComponent<Text> ();
+			scoreText.text = score.ToString ();
 		}
 
 		public bool TryPayingGold(int gold)
