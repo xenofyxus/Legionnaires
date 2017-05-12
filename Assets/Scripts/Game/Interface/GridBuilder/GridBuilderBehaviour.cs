@@ -24,6 +24,7 @@ namespace Game.Interface.GridBuilder
 			public int upgrade;
 			public int waveCreated = -1;
 			public int totalCost;
+			public int scoreReward;
 		}
 
 		float offSetX = 1.48f;
@@ -207,6 +208,7 @@ namespace Game.Interface.GridBuilder
 				towerGridPosCopy [X, Y].totalCost += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += 
 				towerGridPosCopy [X, Y].totalSupply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 			}
 		}

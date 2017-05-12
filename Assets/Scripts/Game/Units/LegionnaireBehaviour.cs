@@ -29,6 +29,14 @@ namespace Game.Units
 			set{ supply = value; }
 		}
 
+		[SerializeField]
+		protected int scoreReward;
+
+		public int ScoreReward{
+			get{ return scoreReward;}
+			set{ scoreReward = value;}
+		}
+
 		private bool combatMode = false;
 
 		public static List<LegionnaireBehaviour> legionnaires = new List<LegionnaireBehaviour>();
