@@ -1,17 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Interface.TooltipBar;
 
 namespace Game.Interface.BottomRowBar.KingUpgrades
 {
 	public class KingUpgradesBehaviour : MonoBehaviour
 	{
 		private Game.Interface.Infobar.Resources.ResourcesBehaviour resources;
-
-		void Awake()
-		{
-			resources = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
-		}
 
 		[Header("Damage")]
 
@@ -68,12 +64,48 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		[SerializeField]
 		private int thornsDamageGain = 10;
 
+		private UpgradesPanelBehaviour spellsPanel = null;
+		private UpgradesPanelBehaviour statsPanel = null;
+
+		private void Awake()
+		{
+			spellsPanel = transform.Find("Spells").GetComponent<UpgradesPanelBehaviour>();
+			statsPanel = transform.Find("Stats").GetComponent<UpgradesPanelBehaviour>();
+			resources = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
+		}
+
+		private void OnEnable()
+		{
+			spellsPanel.Disable();
+			statsPanel.Disable();
+		}
+
+		private void OnDisable()
+		{
+			if (spellsPanel.gameObject.activeSelf || statsPanel.gameObject.activeSelf)
+				TooltipBarBehaviour.Current.SetPanel(TooltipBarPanel.Hide);
+		}
+
+		public void OpenSpells()
+		{
+			spellsPanel.Enable();
+			statsPanel.Disable();
+			TooltipBarBehaviour.Current.SetPanel(TooltipBarPanel.KingPanel);
+		}
+
+		public void OpenStats()
+		{
+			spellsPanel.Disable();
+			statsPanel.Enable();
+			TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit(Units.KingBehaviour.Current);
+		}
+
 		public void UpgradeDamage()
 		{
 			if (resources.TryPayingWood(damageCost))
 			{
-				Units.KingBehaviour.Current.DamageMax.AddAdder(damageGain);
-				Units.KingBehaviour.Current.DamageMin.AddAdder(damageGain);
+				Units.KingBehaviour.Current.DamageMax += damageGain;
+				Units.KingBehaviour.Current.DamageMin += damageGain;
 			}
 		}
 
@@ -81,7 +113,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resources.TryPayingWood(hpRegCost))
 			{
-				Units.KingBehaviour.Current.HpReg.AddAdder(hpRegGain);
+				Units.KingBehaviour.Current.HpReg += hpRegGain;
 			}
 		}
 
@@ -131,24 +163,9 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			}
 		}
 
-		public void ToggleMe()
+		public void Toggle()
 		{
-			GameObject tooltipbar = GameObject.Find("GameInterface").transform.Find("TooltipBar(Panel)").gameObject;
-			GameObject kingpanel = tooltipbar.transform.FindChild("King Panel").gameObject;
-			GameObject kingmenubar = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)").gameObject;
-
-			if (kingmenubar.activeSelf)
-			{
-				kingmenubar.SetActive(false);
-				if (kingpanel.activeSelf)
-					tooltipbar.GetComponent<TooltipBar.TooltipBarBehaviour>().SetPanel(TooltipBar.TooltipBarPanel.Hide);
-			}
-			else
-			{
-				kingmenubar.SetActive(true);
-				tooltipbar.GetComponent<TooltipBar.TooltipBarBehaviour>().SetPanel(TooltipBar.TooltipBarPanel.KingPanel);
-			}
+			gameObject.SetActive(!gameObject.activeSelf);
 		}
-
 	}
 }
