@@ -87,11 +87,12 @@ namespace Game.Spawners
 				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
+					waveBtn.SetActive (true);
 					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
 				}
 				reset = true;
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
-				waveBtn.SetActive (true); 
+				 
 				kingspellsPanel.SetActive (false);
 			}
 

@@ -24,11 +24,14 @@ namespace Game.Interface.TowerMenu
 		private GameObject buyBTN;
 		private GameObject gridTiles;
 		private GameObject gridBuilder; 
+		GameObject waveBTN;
 		int ex;
 		int ey;
 		Color colorTile = new Color (1f, 0.92f, 0.016f, 0.5f);
 		void Start ()
 		{
+			waveBTN = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("Wave(Button)").gameObject;
+			waveBTN.SetActive (false);
 			gridTiles = GameObject.Find ("GridTiles");
 			gridBuilder = GameObject.Find ("GridBuilder");
 			buyBTN = GameObject.Find ("BUY");
@@ -132,6 +135,7 @@ namespace Game.Interface.TowerMenu
 			}
 
 			if (currentMenuItem != -1 && (placeTower == true || sellTower == true || upgradeConfirm == true) || vectorToMouse.magnitude > 3.5f) {
+				waveBTN.SetActive (true);
 				EnableDisableTiles (Color.clear);
 				GameObject.Destroy (this.gameObject);
 			}
