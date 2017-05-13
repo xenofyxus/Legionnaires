@@ -13,16 +13,20 @@ namespace Game.Units
 		[SerializeField]
 		protected int scoreReward;
 
-		public int Reward {
+		public int Reward
+		{
 			get{ return reward; }
 			set{ this.reward = value; }
 		}
 
 		protected static List<MinionBehaviour> minions = new List<MinionBehaviour>();
 
-		public static List<MinionBehaviour> Minions {
+		public static List<MinionBehaviour> Minions
+		{
 			get{ return minions; }
 		}
+
+		private bool combatMode = false;
 
 		void Awake()
 		{
@@ -37,7 +41,7 @@ namespace Game.Units
 
 		protected override void OnDied()
 		{
-			if (LegionnaireBehaviour.legionnaires.Count == 0)
+			if(LegionnaireBehaviour.legionnaires.Count == 0)
 			{
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += reward / 2;
 			}
@@ -52,25 +56,32 @@ namespace Game.Units
 		public override UnitBehaviour GetTarget()
 		{
 			UnitBehaviour[] enemies = GetEnemies();
-			if (enemies.Length > 0)
+			if(enemies.Length > 0)
 			{
 				UnitBehaviour closestEnemy = enemies[0];
 				Collider2D closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
 				float closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
-				for (int i = 1; i < enemies.Length; i++)
+				for(int i = 1; i < enemies.Length; i++)
 				{
 					closestEnemyCollider = closestEnemy.GetComponent<Collider2D>();
 					closestEnemyDistance = thisCollider.Distance(closestEnemyCollider).distance;
 					Collider2D enemyCollider = enemies[i].GetComponent<Collider2D>();
 					float enemyDistance = thisCollider.Distance(enemyCollider).distance;
 
-					if ((enemyDistance < closestEnemyDistance && enemyDistance >= MinimumRange) || closestEnemyDistance < MinimumRange)
+					if((enemyDistance < closestEnemyDistance && enemyDistance >= MinimumRange) || closestEnemyDistance < MinimumRange)
 					{
 						closestEnemy = enemies[i];
 					}
 				}
-				if (closestEnemyDistance <= Range + 4)
+				if((combatMode || closestEnemyDistance < Range + 4))
+				{
+					foreach(MinionBehaviour minion in minions)
+					{
+						minion.combatMode = true;
+						combatMode = true;
+					}
 					return closestEnemy;
+				}
 			}
 			return null;
 		}
@@ -84,11 +95,11 @@ namespace Game.Units
 
 		public override UnitBehaviour[] GetEnemies()
 		{
-			if (LegionnaireBehaviour.Legionnaires.Count > 0)
+			if(LegionnaireBehaviour.Legionnaires.Count > 0)
 			{
 				return LegionnaireBehaviour.Legionnaires.ToArray();
 			}
-			else if (KingBehaviour.Current != null)
+			else if(KingBehaviour.Current != null)
 			{
 				return new UnitBehaviour[]{ KingBehaviour.Current };
 			}
