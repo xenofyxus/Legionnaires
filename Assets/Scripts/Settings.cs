@@ -18,4 +18,22 @@ public class Settings
 			tooltipBarEnabled = value;
 		}
 	}
+
+	private int sleepTimeout = UnityEngine.SleepTimeout.NeverSleep;
+
+	public int SleepTimeout
+	{
+		get{
+			return Screen.sleepTimeout;
+		}
+		set{
+			Screen.sleepTimeout = value;
+			sleepTimeout = value;
+		}
+	}
+
+	public void Load()
+	{
+		Screen.sleepTimeout = sleepTimeout;
+	}
 }

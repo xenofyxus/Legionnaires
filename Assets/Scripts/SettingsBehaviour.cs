@@ -44,6 +44,7 @@ public class SettingsBehaviour : MonoBehaviour
 		{
 			Settings.Current = new Settings();
 		}
+		Settings.Current.Load();
 	}
 
 	private void Save()
