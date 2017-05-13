@@ -12,13 +12,14 @@ namespace Game.Units
 {
 	public abstract class UnitBehaviour : MonoBehaviour
 	{
-#region Unit Attributes
+		#region Unit Attributes
 
 		[SerializeField]
 		[Multiline(3)]
 		private string description = "Please insert description or user will think we sukky sukk";
 
-		public string Description {
+		public string Description
+		{
 			get{ return description; }
 		}
 
@@ -28,7 +29,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets the armor type.
 		/// </summary>
-		public ArmorType ArmorType {
+		public ArmorType ArmorType
+		{
 			get{ return armorType; }
 			set{ armorType = value; }
 		}
@@ -39,7 +41,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets the attack type.
 		/// </summary>
-		public AttackType AttackType {
+		public AttackType AttackType
+		{
 			get{ return attackType; }
 			set{ attackType = value; }
 		}
@@ -54,7 +57,8 @@ namespace Game.Units
 		/// Gets the minimum attack range.
 		/// </summary>
 		/// <value>The minimum attack range.</value>
-		public UnitStat MinimumRange {
+		public UnitStat MinimumRange
+		{
 			get{ return minimumRange; }
 			set{ minimumRange = value; }
 		}
@@ -66,7 +70,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the attack range.
 		/// </summary>
-		public UnitStat Range {
+		public UnitStat Range
+		{
 			get{ return range; }
 			set{ range = value; }
 		}
@@ -78,7 +83,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the movement speed.
 		/// </summary>
-		public UnitStat MovementSpeed {
+		public UnitStat MovementSpeed
+		{
 			get{ return movementSpeed; }
 			set{ movementSpeed = value; }
 		}
@@ -90,7 +96,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the attack speed.
 		/// </summary>
-		public UnitStat AttackSpeed {
+		public UnitStat AttackSpeed
+		{
 			get{ return attackSpeed; }
 			set{ attackSpeed = value; }
 		}
@@ -102,7 +109,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the Hit Points.
 		/// </summary>
-		public float Hp {
+		public float Hp
+		{
 			get{ return hp; }
 			set{ hp = value; }
 		}
@@ -112,7 +120,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the Maximum Hit Points.
 		/// </summary>
-		public UnitStat HpMax {
+		public UnitStat HpMax
+		{
 			get{ return hpMax; }
 			set{ hpMax = value; }
 		}
@@ -124,7 +133,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the HP regeneration defined in +HP/sec.
 		/// </summary>
-		public UnitStat HpReg {
+		public UnitStat HpReg
+		{
 			get{ return hpReg; }
 			set{ hpReg = value; }
 		}
@@ -136,7 +146,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the maximum damage.
 		/// </summary>
-		public UnitStat DamageMax {
+		public UnitStat DamageMax
+		{
 			get{ return damageMax; }
 			set{ damageMax = value; }
 		}
@@ -148,7 +159,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Modifies the minimum damage.
 		/// </summary>
-		public UnitStat DamageMin {
+		public UnitStat DamageMin
+		{
 			get{ return damageMin; }
 			set{ damageMin = value; }
 		}
@@ -162,7 +174,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or sets the projectile. Set to null if there should be none.
 		/// </summary>
-		public GameObject Projectile {
+		public GameObject Projectile
+		{
 			get{ return projectile; }
 			set{ projectile = value; }
 		}
@@ -174,7 +187,8 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Sets the projectile offset along the unit's back vector.
 		/// </summary>
-		public Vector2 ProjectileOffset {
+		public Vector2 ProjectileOffset
+		{
 			get{ return projectileOffset; }
 			set{ projectileOffset = value; }
 		}
@@ -186,14 +200,15 @@ namespace Game.Units
 		/// <summary>
 		/// Gets or Sets the projectile speed in <units> per second.
 		/// </summary>
-		public float ProjectileSpeed {
+		public float ProjectileSpeed
+		{
 			get{ return projectileSpeed; }
 			set{ projectileSpeed = value; }
 		}
 
-#endregion
+		#endregion
 
-#region Event Handlers
+		#region Event Handlers
 
 		public static event EventHandler UnitSpawning;
 
@@ -219,7 +234,7 @@ namespace Game.Units
 
 		public event EventHandler MoveStopped;
 
-#endregion
+		#endregion
 
 		private bool moving = false;
 		private Vector2 lastPosition;
@@ -243,40 +258,40 @@ namespace Game.Units
 
 			anim = GetComponent<Animator>();
 
-			if (UnitSpawning != null)
+			if(UnitSpawning != null)
 				UnitSpawning(this, null);
 
-			if (Spawned != null)
+			if(Spawned != null)
 				Spawned(this, null);
 		}
 
 		protected virtual void Update()
 		{
-			if (!alive)
+			if(!alive)
 				return;
 
 			lastPosition = (Vector2)transform.position;
 
-			if (attackDelayTimer > 0)
+			if(attackDelayTimer > 0)
 			{
 				attackDelayTimer += Time.deltaTime;
 				anim.SetBool("fight", false);
-				if (attackDelayTimer >= 1f / attackSpeed)
+				if(attackDelayTimer >= 1f / attackSpeed)
 				{
 					attackDelayTimer = 0;
 				}
 			}
 
 			// Stops the unit from attacking / searching for target while beging stunned / disarmed
-			if (AttackSpeed != 0)
+			if(AttackSpeed != 0)
 			{
 				UnitBehaviour target = stickedTarget == null ? GetTarget() : stickedTarget;
 			    
-				if (target == null)
+				if(target == null)
 				{
 					Vector2? defaultTarget = GetDefaultTargetPosition();
 
-					if (defaultTarget.HasValue)
+					if(defaultTarget.HasValue)
 					{
 						MoveTowards(defaultTarget.Value);
 					}
@@ -290,29 +305,27 @@ namespace Game.Units
 				{
 					Collider2D targetCollider = target.GetComponent<Collider2D>();
 					float distance = thisCollider.Distance(targetCollider).distance;
-					if (distance <= range && distance >= minimumRange)
+					if(distance <= range && distance >= minimumRange)
 					{
 						stickedTarget = target;
 						anim.SetFloat("speed", 0f);
-						if (attackDelayTimer == 0)
+						if(attackDelayTimer == 0)
 						{
 							anim.SetBool("fight", true);
 							attackDelayTimer += Time.deltaTime;
 
 							UnitStat damage = UnityEngine.Random.Range((int)damageMin, (int)damageMax + 1);
 
-							if (Attacking != null)
-								Attacking(this, new AttackingEventArgs(damage, target));
+							OnAttacking(new AttackingEventArgs(damage, target));
 
 							damage.AddMultiplier(DamageRatios.GetRatio(target.armorType, attackType));
 
-							if (projectile == null)
+							if(projectile == null)
 							{
 								float actualDamage;
 								target.ApplyDamage(damage, out actualDamage, this);
 
-								if (Attacked != null)
-									Attacked(this, new AttackedEventArgs(actualDamage, target));
+								OnAttacked(new AttackedEventArgs(actualDamage, target));
 							}
 							else
 							{
@@ -322,19 +335,19 @@ namespace Game.Units
 								newProjectile.owner = this;
 								newProjectile.target = target;
 								newProjectile.Damage = damage;
-								newProjectile.Attacked += (sender, e) => Attacked(sender, e);
-								if (projectileSpeed > 0)
+								newProjectile.Attacked += (sender, e) => OnAttacked(e);
+								if(projectileSpeed > 0)
 									newProjectile.movementSpeed = projectileSpeed;
 							}
 						}
-						if (anim != null)
+						if(anim != null)
 						{
 							// TODO Fix and sync
 
 						}
 						RotateTowards(target.transform.position);
 					}
-					else if (distance >= minimumRange)
+					else if(distance >= minimumRange)
 					{
 						MoveTowards(target.transform.position);
 					}
@@ -352,16 +365,16 @@ namespace Game.Units
 
 			ApplyHeal(hpReg * Time.deltaTime, this);
 
-			if (lastPosition != (Vector2)transform.position)
+			if(lastPosition != (Vector2)transform.position)
 			{
-				if (!moving && MoveStarted != null)
-					MoveStarted(this, null);
+				if(!moving)
+					OnMoveStarted(null);
 				moving = true;
 			}
 			else
 			{
-				if (moving && MoveStopped != null)
-					MoveStopped(this, null);
+				if(moving)
+					OnMoveStopped(null);
 				moving = false;
 			}
 		}
@@ -375,10 +388,90 @@ namespace Game.Units
 		{
 		}
 
+		protected virtual void OnAttacking(AttackingEventArgs eArgs)
+		{
+			var handler = this.Attacking;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnAttacked(AttackedEventArgs eArgs)
+		{
+			var handler = this.Attacked;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnTakingDamage(TakingDamageEventArgs eArgs)
+		{
+			var handler = this.TakingDamage;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnTookDamage(TookDamageEventArgs eArgs)
+		{
+			var handler = this.TookDamage;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnTakingHeal(TakingHealEventArgs eArgs)
+		{
+			var handler = this.TakingHeal;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnTookHeal(TookHealEventArgs eArgs)
+		{
+			var handler = this.TookHeal;
+			if(handler != null)
+				handler(this, eArgs);
+		}
+
+
+		protected virtual void OnSpawned(EventArgs e)
+		{
+			var handler = this.Spawned;
+			if(handler != null)
+				handler(this, e);
+		}
+
+
+		protected virtual void OnDying(EventArgs e)
+		{
+			var handler = this.Dying;
+			if(handler != null)
+				handler(this, e);
+		}
+
+
+		protected virtual void OnMoveStarted(EventArgs e)
+		{
+			var handler = this.MoveStarted;
+			if(handler != null)
+				handler(this, e);
+		}
+
+
+		protected virtual void OnMoveStopped(EventArgs e)
+		{
+			var handler = this.MoveStopped;
+			if(handler != null)
+				handler(this, e);
+		}
+
+
 		protected virtual void OnDied()
 		{
 			alive = false;
-			if (Died != null)
+			if(Died != null)
 				Died(this, null);
 			GameObject.Destroy(gameObject);
 		}
@@ -394,10 +487,10 @@ namespace Game.Units
 
 			Vector2 collisionOffset = Vector2.zero;
 			int colliderCount = thisCollider.OverlapCollider(new ContactFilter2D(), otherColliders);
-			for (int i = 0; i < colliderCount; i++)
+			for(int i = 0; i < colliderCount; i++)
 			{
 				Collider2D collider = otherColliders[i];
-				if (collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
+				if(collider.GetComponent<UnitBehaviour>() != null || collider.name == "Map")
 				{
 					ColliderDistance2D colliderDistance = thisCollider.Distance(collider);
 					collisionOffset += (colliderDistance.pointA - colliderDistance.pointB).normalized * colliderDistance.distance;
@@ -407,7 +500,7 @@ namespace Game.Units
 			transform.position = (Vector2)transform.position + collisionOffset;
 			RotateTowards(targetPos);
 
-			if (anim != null)
+			if(anim != null)
 			{
 				// TODO Fix and sync
 				anim.SetFloat("speed", movementSpeed);
@@ -429,32 +522,29 @@ namespace Game.Units
 		public bool ApplyDamage(float damage, out float actualDamage, UnitBehaviour attacker)
 		{
 			actualDamage = 0f;
-			if (!alive)
+			if(!alive)
 				return true;
 
 			UnitStat modifiedDamage = damage;
 
-			if (TakingDamage != null)
-				TakingDamage(this, new TakingDamageEventArgs(modifiedDamage, attacker));
+			OnTakingDamage(new TakingDamageEventArgs(modifiedDamage, attacker));
 			
-			if (modifiedDamage < 0)
+			if(modifiedDamage < 0)
 			{
 				ApplyHeal(modifiedDamage, attacker);
 				return false;
 			}
 			hp -= modifiedDamage;
 
-			if (TookDamage != null)
-				TookDamage(this, new TookDamageEventArgs(modifiedDamage, attacker));
+			OnTookDamage(new TookDamageEventArgs(modifiedDamage, attacker));
 
 			actualDamage = modifiedDamage;
 
-			if (hp < 1)
+			if(hp < 1)
 			{
-				if (Dying != null)
-					Dying(this, null);
+				OnDying(null);
 				
-				if (hp < 1)
+				if(hp < 1)
 				{
 					OnDied();
 					return true;
@@ -471,19 +561,17 @@ namespace Game.Units
 		{
 			UnitStat modifiedHeal = heal;
 
-			if (TakingHeal != null)
-				TakingHeal(this, new TakingHealEventArgs(modifiedHeal, healer));
+			OnTakingHeal(new TakingHealEventArgs(modifiedHeal, healer));
             
 			hp += modifiedHeal;
 
-			if (hp >= hpMax)
+			if(hp >= hpMax)
 			{
 				modifiedHeal.AddAdder(-(hpMax - hp));
 				hp = hpMax;
 			}
 
-			if (TookHeal != null)
-				TookHeal(this, new TookHealEventArgs(modifiedHeal, healer));
+			OnTookHeal(new TookHealEventArgs(modifiedHeal, healer));
 		}
 
 		/// <summary>
@@ -510,8 +598,6 @@ namespace Game.Units
 		/// <returns>The default target position.</returns>
 		public abstract Vector2? GetDefaultTargetPosition();
 	}
-
-	public delegate void PostDamageEffect (float damage, UnitStat healing, UnitBehaviour target);
 
 	public enum ArmorType
 	{

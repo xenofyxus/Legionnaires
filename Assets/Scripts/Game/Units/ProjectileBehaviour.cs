@@ -79,8 +79,7 @@ namespace Game.Units
 					float actualDamage;
 					target.ApplyDamage(damage, out actualDamage, owner);
 
-					if(Attacked != null)
-						Attacked(this, new AttackedEventArgs(actualDamage, target));
+					OnAttacked(new AttackedEventArgs(actualDamage, target));
 
                     GameObject.Destroy(gameObject);
                 }
@@ -93,5 +92,13 @@ namespace Game.Units
                     GameObject.Destroy(gameObject);
             }
         }
+
+		protected virtual void OnAttacked(AttackedEventArgs eArgs)
+    	{
+    		var handler = this.Attacked;
+    		if(handler != null)
+    			handler(this, eArgs);
+    	}
+    	
     }
 }
