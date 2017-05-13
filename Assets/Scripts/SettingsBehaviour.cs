@@ -9,7 +9,7 @@ public class SettingsBehaviour : MonoBehaviour
 
 	private void Awake()
 	{
-		if (Settings.Current == null)
+		if(Settings.Current == null)
 		{
 			Load();
 		}
@@ -23,15 +23,22 @@ public class SettingsBehaviour : MonoBehaviour
 
 	private void Load()
 	{
-		if (File.Exists(Application.persistentDataPath + "/" + FILENAME))
+		if(File.Exists(Application.persistentDataPath + "/" + FILENAME))
 		{
-			FileStream fileStream = File.OpenRead(Application.persistentDataPath + "/" + FILENAME);
-			BinaryFormatter formatter = new BinaryFormatter();
+			try
+			{
+				FileStream fileStream = File.OpenRead(Application.persistentDataPath + "/" + FILENAME);
+				BinaryFormatter formatter = new BinaryFormatter();
 
-			Settings.Current = (Settings)formatter.Deserialize(fileStream);
+				Settings.Current = (Settings)formatter.Deserialize(fileStream);
 
-			fileStream.Close();
-
+				fileStream.Close();
+			}
+			catch(Exception ex)
+			{
+				Settings.Current = new Settings();
+				Debug.Log("Unity will not save settings: " + ex.Message);
+			}
 		}
 		else
 		{
@@ -41,12 +48,19 @@ public class SettingsBehaviour : MonoBehaviour
 
 	private void Save()
 	{
-		FileStream fileStream = File.Open(Application.persistentDataPath + "/" + FILENAME, FileMode.OpenOrCreate);
-		BinaryFormatter formatter = new BinaryFormatter();
+		try
+		{
+			FileStream fileStream = File.Open(Application.persistentDataPath + "/" + FILENAME, FileMode.OpenOrCreate);
+			BinaryFormatter formatter = new BinaryFormatter();
 
-		formatter.Serialize(fileStream, Settings.Current);
+			formatter.Serialize(fileStream, Settings.Current);
 
-		fileStream.Close();
+			fileStream.Close();
+		}
+		catch(Exception ex)
+		{
+			Debug.Log("Unity has not saved settings: " + ex.Message);
+		}
 	}
 }
 
