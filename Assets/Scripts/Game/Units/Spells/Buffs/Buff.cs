@@ -35,7 +35,7 @@ namespace Game.Units.Spells.Buffs
 				duration -= Time.deltaTime;
 			else
 			{
-				Destroy(this);
+				Remove();
 			}
 		}
 

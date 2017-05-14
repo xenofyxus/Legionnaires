@@ -5,7 +5,7 @@ namespace Game.Units.Spells.Passives
 	public class ThornsPassive:Passive
 	{
 		[UnityEngine.SerializeField]
-		private float returnedDamage=10f;
+		private float returnedDamage = 10f;
 
 		public float ReturnedDamage
 		{
@@ -22,7 +22,8 @@ namespace Game.Units.Spells.Passives
 		protected override void OwnerTookDamage(object sender, TookDamageEventArgs e)
 		{
 			float dummyVar;
-			e.Attacker.ApplyDamage(returnedDamage, out dummyVar, null);
+			if(e.Attacker != null)
+				e.Attacker.ApplyDamage(returnedDamage, out dummyVar, null);
 		}
 	}
 }

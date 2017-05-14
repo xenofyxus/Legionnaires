@@ -21,11 +21,6 @@ namespace Game.Units.Spells.Buffs
 		{
 		}
 
-		public override void Remove()
-		{
-			base.Remove();
-		}
-
 		protected override void Update()
 		{
 			base.Update();
