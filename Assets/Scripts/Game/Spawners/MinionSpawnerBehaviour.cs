@@ -85,8 +85,8 @@ namespace Game.Spawners
 			gridBuilder = GameObject.Find ("GridBuilder");
 			waveBtn = GameObject.Find ("Wave(Button)");
 			kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
-			shockwaveBtn = kingspellsPanel.transform.FindChild ("Shockwave(Button)").gameObject;
-			stompBtn = kingspellsPanel.transform.FindChild ("Stomp(Button)").gameObject;
+			shockwaveBtn = kingspellsPanel.transform.FindChild ("ShockwaveBackground"). FindChild ("Shockwave(Button)").gameObject;
+			stompBtn = kingspellsPanel.transform.FindChild ("StompBackground").FindChild ("Stomp(Button)").gameObject;
 		}
 
 		void LateUpdate ()
@@ -148,7 +148,6 @@ namespace Game.Spawners
 		{
 			gridBuilder.SetActive (false);
 			waveBtn.SetActive (false);
-			kingspellsPanel.SetActive (true);
 			for (int i = 0; i < Mathf.Ceil (((float)waveObjList [waveNumber].amountOfMinions) / 4); i++) {
 				instantiateTimer -= Time.deltaTime;
 				if (instantiateTimer <= 0) {
@@ -165,8 +164,14 @@ namespace Game.Spawners
 
 						lastSpawned = Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
 						if (waveLoop > 0) {
-							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor / 2.5f;
-							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor / 2.5f;
+							if (lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Range > 1) 
+							{
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.3f;
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.3f;
+							} else {
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.4f;
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.4f;
+							}
 							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
 							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Reward *= waveLoop * 2;
 

@@ -65,6 +65,7 @@ namespace Game.Units
 			base.Start();
 			Current = this;
 		}
+			
 
 		protected override void OnDied()
 		{
@@ -91,7 +92,9 @@ namespace Game.Units
 				}
 				if (closestDistance <= viewDistance)
 				{
+					GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject.SetActive (true);
 					return closestEnemy;
+
 				}
 				else
 				{

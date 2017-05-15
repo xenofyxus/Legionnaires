@@ -36,8 +36,6 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		private int shockwaveCost = 10;
 		[SerializeField]
 		private float shockwaveDamageGain = 10;
-		[SerializeField]
-		private float shockwaveRangeGain = 10;
 
 		[Header("Stomp")]
 
@@ -54,8 +52,6 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		private int immolationCost = 10;
 		[SerializeField]
 		private float immolationDpsGain = 10;
-		[SerializeField]
-		private float immolationRadiusGain = 10;
 
 		[Header("Thorns")]
 
@@ -66,14 +62,17 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 
 		private UpgradesPanelBehaviour spellsPanel = null;
 		private UpgradesPanelBehaviour statsPanel = null;
+		private GameObject stompButton;
+		private GameObject shockwaveButton;
 
 		private void Awake()
 		{
 			spellsPanel = transform.Find("Spells").GetComponent<UpgradesPanelBehaviour>();
 			statsPanel = transform.Find("Stats").GetComponent<UpgradesPanelBehaviour>();
 			resources = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
+			stompButton = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").FindChild ("StompBackground").gameObject;
+			shockwaveButton = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").FindChild ("ShockwaveBackground").gameObject;
 		}
-
 		private void OnEnable()
 		{
 			spellsPanel.Disable();
@@ -135,8 +134,11 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resources.TryPayingWood(shockwaveCost))
 			{
+				if (!shockwaveButton.activeSelf) 
+				{
+					shockwaveButton.SetActive (true);
+				}
 				Units.KingBehaviour.Current.ShockwaveDamage += shockwaveDamageGain;
-				Units.KingBehaviour.Current.ShockwaveRange += shockwaveRangeGain;
 			}
 		}
 
@@ -144,6 +146,10 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resources.TryPayingWood(stompCost))
 			{
+				if (!stompButton.activeSelf) 
+				{
+					stompButton.SetActive (true);
+				}
 				Units.KingBehaviour.Current.StompDamage += stompDamageGain;
 				Units.KingBehaviour.Current.StompDuration += stompDurationGain;
 			}
@@ -154,7 +160,6 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			if (resources.TryPayingWood(immolationCost))
 			{
 				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDpsGain;
-				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().Radius += immolationRadiusGain;
 			}
 		}
 
