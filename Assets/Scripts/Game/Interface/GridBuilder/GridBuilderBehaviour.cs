@@ -209,6 +209,7 @@ namespace Game.Interface.GridBuilder
 				towerGridPosCopy [X, Y].totalCost += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent += towerGridPosCopy [X, Y].cost;
+				//Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 				towerGridPosCopy [X, Y].totalSupply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 			}
