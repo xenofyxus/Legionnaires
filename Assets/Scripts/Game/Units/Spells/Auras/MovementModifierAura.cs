@@ -16,12 +16,12 @@ namespace Game.Units.Spells.Auras
             set{ multiplier = value; }
         }
 
-        protected override void Apply(UnitBehaviour unit)
+        protected override void ApplyEffect(UnitBehaviour unit)
         {
 			unit.MovementSpeed.AddMultiplier(multiplier);
         }
 
-		protected override void Remove(UnitBehaviour unit)
+		protected override void RemoveEffect(UnitBehaviour unit)
         {
 			unit.MovementSpeed.RemoveMultiplier(multiplier);
         }

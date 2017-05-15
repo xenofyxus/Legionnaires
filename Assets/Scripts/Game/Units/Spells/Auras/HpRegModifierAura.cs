@@ -15,12 +15,12 @@ namespace Game.Units.Spells.Auras
             set{ modifier = value; }
         }
 
-        protected override void Apply(UnitBehaviour unit)
+        protected override void ApplyEffect(UnitBehaviour unit)
         {
 			unit.HpReg.AddAdder(modifier);
         }
 
-		protected override void Remove(UnitBehaviour unit)
+		protected override void RemoveEffect(UnitBehaviour unit)
         {
 			unit.HpReg.RemoveAdder(modifier);
         }

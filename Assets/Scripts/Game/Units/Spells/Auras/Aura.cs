@@ -13,9 +13,51 @@ namespace Game.Units.Spells.Auras
 
 		private List<UnitBehaviour> units;
 
-		protected abstract void Apply(UnitBehaviour unit);
+		private void Apply(UnitBehaviour unit)
+		{
+			AuraMark[] marks = unit.GetComponents<AuraMark>();
+			AuraMark activeMark = null;
+			foreach (AuraMark mark in marks)
+			{
+				if (mark.auraName == spellName)
+				{
+					activeMark = mark;
+					break;
+				}
+			}
+			if (activeMark != null)
+			{
+				activeMark.auraCount++;
+			}
+			else
+			{
+				unit.gameObject.AddComponent<AuraMark>().auraName = spellName;
+				ApplyEffect(unit);
+			}
+		}
 
-		protected abstract void Remove(UnitBehaviour unit);
+		private void Remove(UnitBehaviour unit)
+		{
+			AuraMark[] marks = unit.GetComponents<AuraMark>();
+			AuraMark activeMark = null;
+			foreach (AuraMark mark in marks)
+			{
+				if (mark.auraName == spellName)
+				{
+					activeMark = mark;
+					break;
+				}
+			}
+			if (activeMark != null && --activeMark.auraCount == 0)
+			{
+				Destroy(activeMark);
+				RemoveEffect(unit);
+			}
+		}
+
+		protected abstract void ApplyEffect(UnitBehaviour unit);
+
+		protected abstract void RemoveEffect(UnitBehaviour unit);
 
 		protected override void Start()
 		{
@@ -63,7 +105,7 @@ namespace Game.Units.Spells.Auras
 			{
 				if (unit != null)
 				{
-					Apply(unit);
+					ApplyEffect(unit);
 					unit.Died += delegate(object sender, EventArgs e) {
 						Remove(sender as UnitBehaviour);
 					};
@@ -79,6 +121,12 @@ namespace Game.Units.Spells.Auras
 				if (unit != null)
 					Remove(unit);
 			}
+		}
+
+		private class AuraMark : Passives.Passive
+		{
+			public int auraCount = 1;
+			public string auraName = "";
 		}
 	}
 

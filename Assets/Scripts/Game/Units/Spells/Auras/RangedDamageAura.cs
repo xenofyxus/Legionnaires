@@ -16,7 +16,7 @@ namespace Game.Units.Spells.Auras
             set{ damageMultiplier = value; }
         }
 
-        protected override void Apply(UnitBehaviour unit)
+        protected override void ApplyEffect(UnitBehaviour unit)
         {
             if(unit.Projectile != null)
             {
@@ -25,7 +25,7 @@ namespace Game.Units.Spells.Auras
             }
         }
 
-        protected override void Remove(UnitBehaviour unit)
+        protected override void RemoveEffect(UnitBehaviour unit)
         {
             if(unit.Projectile != null)
             {

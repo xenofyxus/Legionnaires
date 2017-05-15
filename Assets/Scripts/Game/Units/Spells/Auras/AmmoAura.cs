@@ -18,27 +18,20 @@ namespace Game.Units.Spells.Auras
 			}
 		}
 
-		protected override void Apply(UnitBehaviour unit)
+		protected override void ApplyEffect(UnitBehaviour unit)
 		{
-			if (unit.GetComponent<AmmoAuraMarkPassive>() == null && (unit.name.Contains("Marksman") || unit.name.Contains("Ranger")))
+			if (unit.name.Contains("Marksman") || unit.name.Contains("Ranger"))
 			{
-				unit.gameObject.AddComponent<AmmoAuraMarkPassive>();
 				unit.AttackSpeed.AddMultiplier(attackSpeedMultiplier);
 			}
 		}
 
-		protected override void Remove(UnitBehaviour unit)
+		protected override void RemoveEffect(UnitBehaviour unit)
 		{
-			AmmoAuraMarkPassive mark = unit.GetComponent<AmmoAuraMarkPassive>();
-			if (mark != null && (unit.name.Contains("Marksman") || unit.name.Contains("Ranger")))
+			if (unit.name.Contains("Marksman") || unit.name.Contains("Ranger"))
 			{
-				Destroy(mark);
 				unit.AttackSpeed.RemoveMultiplier(attackSpeedMultiplier);
 			}
-		}
-
-		private class AmmoAuraMarkPassive : Passives.Passive
-		{
 		}
 	}
 }

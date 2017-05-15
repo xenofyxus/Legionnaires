@@ -30,49 +30,19 @@ namespace Game.Units.Spells.Auras
 			}
 		}
 
-		protected override void Apply(UnitBehaviour unit)
+		protected override void ApplyEffect(UnitBehaviour unit)
 		{
 			Buffs.PercentageDotTickBuff heartstopper = unit.GetComponent<Buffs.PercentageDotTickBuff>();
-			HeartStopperMetaData metaData;
-			if (heartstopper == null)
-			{
-				heartstopper = unit.gameObject.AddComponent<Buffs.PercentageDotTickBuff>();
-				heartstopper.Duration = float.PositiveInfinity;
-				heartstopper.TickTime = tickTime;
-				heartstopper.HpPercentageDamage = hpPercentageDamage;
-				metaData = new HeartStopperMetaData();
-				heartstopper.MetaData = metaData;
-			}
-			else
-			{
-				metaData = heartstopper.MetaData as HeartStopperMetaData;
-			}
-			metaData.Count++;
+			heartstopper = unit.gameObject.AddComponent<Buffs.PercentageDotTickBuff>();
+			heartstopper.Duration = float.PositiveInfinity;
+			heartstopper.TickTime = tickTime;
+			heartstopper.HpPercentageDamage = hpPercentageDamage;
 		}
 
-		protected override void Remove(UnitBehaviour unit)
+		protected override void RemoveEffect(UnitBehaviour unit)
 		{
 			Buffs.PercentageDotTickBuff heartstopper = unit.GetComponent<Buffs.PercentageDotTickBuff>();
-			HeartStopperMetaData metaData = heartstopper.MetaData as HeartStopperMetaData;
-
-			if (heartstopper != null && --metaData.Count == 0)
-			{
-				heartstopper.Remove();
-			}
-		}
-
-		private class HeartStopperMetaData
-		{
-			private int count = 0;
-
-			public int Count {
-				get {
-					return this.count;
-				}
-				set {
-					count = value;
-				}
-			}
+			heartstopper.Remove();
 		}
 	}
 }

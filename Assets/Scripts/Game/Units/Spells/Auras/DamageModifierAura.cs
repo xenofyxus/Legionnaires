@@ -15,13 +15,13 @@ namespace Game.Units.Spells.Auras
             get{ return multiplier; }
             set{ multiplier = value; }
         }
-        protected override void Apply(UnitBehaviour unit)
+        protected override void ApplyEffect(UnitBehaviour unit)
         {
 			unit.DamageMax.AddMultiplier(multiplier);
 			unit.DamageMin.AddMultiplier(multiplier);
         }
 
-        protected override void Remove(UnitBehaviour unit)
+        protected override void RemoveEffect(UnitBehaviour unit)
         {
 			unit.DamageMax.RemoveMultiplier(multiplier);
 			unit.DamageMin.RemoveMultiplier(multiplier);
