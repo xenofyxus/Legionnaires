@@ -89,12 +89,22 @@ namespace Game.Interface.Infobar.Resources
 			set{ supplyMax = value; }
 		}
 
+		private int netWorth = 0;
+
+		public int NetWorth {
+			get{ return netWorth; }
+			set{ netWorth = value; }
+		}
+
+
+
 		private Text goldText = null;
 		private Text goldIncomeText = null;
 		private Text woodText = null;
 		private Text woodIncomeText = null;
 		private Text supplyText = null;
 		private Text scoreText = null;
+		private Text netWorthText = null;
 
 		void Update()
 		{
@@ -132,6 +142,10 @@ namespace Game.Interface.Infobar.Resources
 			if (scoreText == null)
 				scoreText = GameObject.Find ("GameInterface/Infobar(Panel)/Score/Value").GetComponent<Text> ();
 			scoreText.text = score.ToString ();
+
+			if (netWorthText == null)
+				netWorthText = GameObject.Find ("GameInterface/Infobar(Panel)/NetWorth/Value").GetComponent<Text> ();
+			netWorthText.text = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent.ToString ();
 		}
 
 		public bool TryPayingGold(int gold)
