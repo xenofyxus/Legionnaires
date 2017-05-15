@@ -43,16 +43,26 @@ namespace Game.Interface.GridBuilder
 		GameObject gridTiles;
 		Vector2 placeTower;
 		Vector2 placeMenu;
-		public TowerList[] towersAvailable = new TowerList[6];
+		public TowerList[] humanTowers = new TowerList[6];
+		public TowerList[] orcTowers = new TowerList[6];
+		public TowerList[] towersUsed = new TowerList[6];
 		GameObject[,] towerGridPos = new GameObject[5, 7];
 		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 7];
 		// Use this for initialization
 		void Start ()
 		{
+			if (Settings.Current.LegionnaireBuilder == LegionnaireBuilder.Human) {
+				towersUsed = humanTowers;
+			}
+			if (Settings.Current.LegionnaireBuilder == LegionnaireBuilder.Orc) {
+				towersUsed = orcTowers;
+			}
 			instantiateTower ();
 			gridTiles = GameObject.Find ("GridTiles");
 		}
-			
+
+		public static GridBuilderBehaviour Current{ get; private set; }
+
 		// Update is called once per frame
 		void Update ()
 		{ 
@@ -73,9 +83,9 @@ namespace Game.Interface.GridBuilder
 						newTower = true;
 					} else if (currentTower != null) {
 						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour> ());
-						if (currentTower == towersAvailable [2].upgradedTowers [0]) {
+						if (currentTower == towersUsed [2].upgradedTowers [0]) {
 							Instantiate (wizardSpecial, placeMenu, transform.rotation);
-						} else if (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
+						} else if (towersUsed [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
 							Instantiate (onlySell, placeMenu, transform.rotation);
 						} else {
 							Instantiate (sellOrUpgrade, placeMenu, transform.rotation);
@@ -111,16 +121,16 @@ namespace Game.Interface.GridBuilder
 		void createTower ()
 		{
 			if (newTower) {
-				if (checkResources (towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0])) {
-					saveTower (towerX, towerY, towersAvailable [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0], TowerMenu.TowerMenuBehaviour.currentMenuItem, placeTower);
+				if (checkResources (towersUsed [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0])) {
+					saveTower (towerX, towerY, towersUsed [TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers [0], TowerMenu.TowerMenuBehaviour.currentMenuItem, placeTower);
 					setTile (towerX, towerY, towerGridPosCopy [towerX, towerY].thisTower.GetComponent<SpriteRenderer> ().sprite, Color.white);
 				}
 			} else {
 				newTower = true;
 				towerGridPosCopy [towerX, towerY].upgrade += TowerMenu.TowerMenuBehaviour.currentMenuItem;
-				if (towerGridPosCopy [towerX, towerY].upgrade < towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length) {
-					if (checkResources (towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade])) {
-						saveTower (towerX, towerY, towersAvailable [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade], towerGridPosCopy [towerX, towerY].towerType, placeTower);
+				if (towerGridPosCopy [towerX, towerY].upgrade < towersUsed [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length) {
+					if (checkResources (towersUsed [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade])) {
+						saveTower (towerX, towerY, towersUsed [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers [towerGridPosCopy [towerX, towerY].upgrade], towerGridPosCopy [towerX, towerY].towerType, placeTower);
 						setTile (towerX, towerY, towerGridPosCopy [towerX, towerY].thisTower.GetComponent<SpriteRenderer> ().sprite, Color.white);
 					} else
 						towerGridPosCopy [towerX, towerY].upgrade -= TowerMenu.TowerMenuBehaviour.currentMenuItem;

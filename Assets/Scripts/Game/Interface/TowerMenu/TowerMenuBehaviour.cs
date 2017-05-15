@@ -42,11 +42,11 @@ namespace Game.Interface.TowerMenu
 			EnableDisableTiles (colorTile);
 			if (menuItems > 3) {
 				for (int i = 0; i < menuItems; i++) {
-					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [i].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
+					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [i].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
 				}
 			} else {
 				for(int i = 1; i < menuItems; i++){
-					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].towerType].upgradedTowers [i + gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].upgrade].GetComponent<SpriteRenderer> ().sprite;
+					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].towerType].upgradedTowers [i + gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy[ex, ey].upgrade].GetComponent<SpriteRenderer> ().sprite;
 
 				}
 			}
@@ -109,13 +109,13 @@ namespace Game.Interface.TowerMenu
 				int upgrade = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerGridPosCopy [xSpot, ySpot].upgrade;
 
 				if(this.gameObject.name == "TowerMenju(Clone)"){
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [currentMenuItem].upgradedTowers [0].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [currentMenuItem].upgradedTowers [0].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				if (this.gameObject.name == "SellMenu(Clone)") {
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				if (this.gameObject.name == "WizardUpgrade(Clone)") {
-					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersAvailable [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
+					TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [towerType].upgradedTowers [upgrade + currentMenuItem].GetComponent<Units.LegionnaireBehaviour>());
 				}
 				buyBTN.SetActive (true);
 			}
