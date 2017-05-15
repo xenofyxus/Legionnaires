@@ -66,6 +66,8 @@ namespace Game.Spawners
 		GameObject shockwaveBtn;
 		GameObject stompBtn;
 
+		GameObject[] summons;
+
 		Image waveTimerGO;
 		GameObject lastSpawned;
 
@@ -95,7 +97,7 @@ namespace Game.Spawners
 
 				//Activate WaveTooltip
 				if (Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted)
-					Game.Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("WaveInfo");
+					Game.Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel ("WaveInfo");
 
 				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
@@ -105,7 +107,13 @@ namespace Game.Spawners
 				}
 				reset = true;
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
-				 
+				summons = GameObject.FindGameObjectsWithTag ("Legionnaire");
+
+				foreach (GameObject summoned in summons) {
+					Destroy (summoned);
+				}
+			
+
 				kingspellsPanel.SetActive (false);
 			}
 
