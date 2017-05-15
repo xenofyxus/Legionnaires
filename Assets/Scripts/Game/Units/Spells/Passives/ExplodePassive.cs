@@ -37,7 +37,6 @@ namespace Game.Units.Spells.Passives
 
 		protected override void OwnerDied(object sender, EventArgs e)
 		{
-			deathAnimation = (GameObject) Instantiate (Resources.Load ("Pudge Deathanimation"), transform.position, transform.rotation);
 			base.OwnerDied(sender, e);
 			foreach (UnitBehaviour enemy in owner.GetEnemies())
 			{
