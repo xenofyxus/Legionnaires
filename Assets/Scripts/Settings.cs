@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using System.Collections;
 
 [Serializable]
 public class Settings
@@ -9,6 +10,16 @@ public class Settings
 	public static Settings Current{ get; set; }
 
 	private bool tooltipBarEnabled = true;
+
+	[SerializeField]
+	private LegionnaireBuilder legionnaire = LegionnaireBuilder.Human;
+
+	public LegionnaireBuilder LegionnaireBuilder
+	{
+		get{ return legionnaire; }
+		set{ legionnaire = value; }
+	}
+
 
 	public bool TooltipBarEnabled {
 		get {
@@ -18,6 +29,7 @@ public class Settings
 			tooltipBarEnabled = value;
 		}
 	}
+
 
 	private int sleepTimeout = UnityEngine.SleepTimeout.NeverSleep;
 
@@ -36,4 +48,10 @@ public class Settings
 	{
 		Screen.sleepTimeout = sleepTimeout;
 	}
+}
+
+public enum LegionnaireBuilder
+{
+	Orc,
+	Human
 }
