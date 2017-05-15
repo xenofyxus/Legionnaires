@@ -106,6 +106,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			{
 				Units.KingBehaviour.Current.DamageMax += damageGain;
 				Units.KingBehaviour.Current.DamageMin += damageGain;
+				GetComponent<Game.Interface.Infobar.Resources.ResourcesBehaviour> ().GoldIncome += 1;
 			}
 		}
 
@@ -114,6 +115,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			if (resources.TryPayingWood(hpRegCost))
 			{
 				Units.KingBehaviour.Current.HpReg += hpRegGain;
+				GetComponent<Game.Interface.Infobar.Resources.ResourcesBehaviour> ().GoldIncome += 1;
 			}
 		}
 
@@ -125,6 +127,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 				float hpRatio = king.Hp / king.HpMax;
 				king.HpMax.AddAdder(hpGain);
 				king.ApplyHeal(hpRatio * hpGain, null);
+				GetComponent<Game.Interface.Infobar.Resources.ResourcesBehaviour> ().GoldIncome += 1;
 			}
 		}
 
