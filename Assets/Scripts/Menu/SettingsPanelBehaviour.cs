@@ -10,18 +10,25 @@ namespace Menu
 	{
 		Toggle tooltipBarEnabledToggle = null;
 		ToggleGroup legionnaireToggle = null;
-
+		Toggle audioToggle = null;
+		public GameObject audio;
 		void Start()
 		{
 			tooltipBarEnabledToggle = transform.Find("TooltipBarEnabled").GetComponent<Toggle>();
 			tooltipBarEnabledToggle.isOn = Settings.Current.TooltipBarEnabled;
-
+			audioToggle = transform.Find ("AudioSettings").GetComponent<Toggle> ();
+			audioToggle.isOn = Settings.Current.AudioEnabled;
 			legionnaireToggle = transform.Find ("LegionnaireToggle").GetComponent<ToggleGroup> ();
 		}
 	
 		void Update()
 		{
 
+		}
+
+		public void ToggleAudio(){
+			Settings.Current.AudioEnabled = audioToggle.isOn;
+			audio.SetActive (audioToggle.isOn);
 		}
 
 		public void ToggleTooltipBarEnabled()
@@ -35,7 +42,6 @@ namespace Menu
 			} else {
 				Settings.Current.LegionnaireBuilder = LegionnaireBuilder.Human;
 			}
-			print (Settings.Current.LegionnaireBuilder);
 		}
 	}
 }

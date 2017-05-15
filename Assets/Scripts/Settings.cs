@@ -10,6 +10,7 @@ public class Settings
 	public static Settings Current{ get; set; }
 
 	private bool tooltipBarEnabled = true;
+	private bool audioEnabled = true;
 
 	[SerializeField]
 	private LegionnaireBuilder legionnaire = LegionnaireBuilder.Human;
@@ -18,6 +19,15 @@ public class Settings
 	{
 		get{ return legionnaire; }
 		set{ legionnaire = value; }
+	}
+
+	public bool AudioEnabled {
+		get {
+			return this.audioEnabled;
+		}
+		set {
+			audioEnabled = value;
+		}
 	}
 
 
