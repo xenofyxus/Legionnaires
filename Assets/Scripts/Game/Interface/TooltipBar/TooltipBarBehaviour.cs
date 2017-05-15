@@ -68,6 +68,7 @@ namespace Game.Interface.TooltipBar
 					TowerPanel.SetActive(true);
 					KingPanel.SetActive(false);
 					WaveInfoPanel.SetActive(false);
+					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (false);
 					break;
 
 				case TooltipBarPanel.KingPanel:
@@ -75,15 +76,18 @@ namespace Game.Interface.TooltipBar
 					TowerPanel.SetActive(false);
 					KingPanel.SetActive(true);
 					WaveInfoPanel.SetActive(false);
+					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (false);
 					break;
 				case TooltipBarPanel.WaveInfo:
 					gameObject.SetActive(true);
 					TowerPanel.SetActive(false);
 					KingPanel.SetActive(false);
 					WaveInfoPanel.SetActive(true);
+					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (false);
 					break;
 				default:
-					gameObject.SetActive(false);
+					gameObject.SetActive (false);
+					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (true);
 					break;
 				}
 			}
