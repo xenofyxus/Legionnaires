@@ -49,7 +49,6 @@ namespace Game.Units.Spells.Passives
             Buffs.DotTickBuff[] activeDots = e.Target.GetComponents<Buffs.DotTickBuff>();
             Buffs.DotTickBuff activeDot = null;
 
-
             foreach(Buffs.DotTickBuff dot in activeDots)
             {
                 DotMetaData dotMetaData = dot.MetaData as DotMetaData;

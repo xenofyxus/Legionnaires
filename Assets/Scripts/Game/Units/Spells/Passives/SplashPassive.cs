@@ -36,8 +36,15 @@ namespace Game.Units.Spells.Passives
 			{
 				float dummyVar;
 				if (UnityEngine.Vector2.Distance(unit.transform.position, e.Target.transform.position) <= radius)
+				{
 					unit.ApplyDamage(e.Damage * damageMultiplier, out dummyVar, null);
+					ApplyAdditionalEffect(unit);
+				}
 			}
+		}
+
+		protected virtual void ApplyAdditionalEffect(UnitBehaviour unit)
+		{
 		}
 	}
 }
