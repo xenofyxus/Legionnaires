@@ -31,6 +31,10 @@ namespace Game.Units.Spells.Abilities
 
 		protected override void Apply()
 		{
+			if (this.GetComponent<Animator> () != null) 
+			{
+				this.GetComponent<Animator> ().SetTrigger ("summon");
+			}
 			Instantiate(summonee, owner.transform.position + (Vector3)spawnOffset, owner.transform.rotation);
 		}
 	}
