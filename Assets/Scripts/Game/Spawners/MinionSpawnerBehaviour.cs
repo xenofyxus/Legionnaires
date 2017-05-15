@@ -93,6 +93,10 @@ namespace Game.Spawners
 			if (Game.Units.MinionBehaviour.Minions.Count == 0 && playerReady == false) {
 				gridBuilder.SetActive (true);
 
+				//Activate WaveTooltip
+				if (Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted)
+					Game.Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("WaveInfo");
+
 				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
