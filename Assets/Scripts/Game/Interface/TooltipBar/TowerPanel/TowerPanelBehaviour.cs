@@ -96,7 +96,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 			if (!objectsSet)
 				GetObjects();
 
-			nameText.text = unit.name.Replace("(Clone)", "");
+			nameText.text = unit.UnitName;
 
 			modelImage.sprite = unit.GetComponent<SpriteRenderer>().sprite;
 			modelImage.transform.rotation = unit.transform.rotation;

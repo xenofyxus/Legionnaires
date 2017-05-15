@@ -15,6 +15,15 @@ namespace Game.Units
 #region Unit Attributes
 
 		[SerializeField]
+		private string unitName = "Unit";
+
+		public string UnitName {
+			get {
+				return this.unitName;
+			}
+		}
+
+		[SerializeField]
 		[Multiline(3)]
 		private string description = "Please insert description or user will think we sukky sukk";
 
@@ -601,7 +610,7 @@ namespace Game.Units
 		Light,
 		Medium,
 		Heavy,
-		BossArmor,
+		Boss,
 		Invulnerable
 	}
 

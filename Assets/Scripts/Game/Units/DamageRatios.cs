@@ -21,7 +21,7 @@ namespace Game.Units
 
             switch(targetArmor)
             {
-                case ArmorType.BossArmor:
+                case ArmorType.Boss:
                     ratio = 0.80f;
                     break;
 
