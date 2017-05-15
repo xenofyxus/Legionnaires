@@ -137,7 +137,7 @@ namespace Game.Interface.GridBuilder
 					if (towerGridPosCopy [i, j].thisTower != null) {
 						setTile (i, j, null, Color.clear);
 						GameObject.Destroy (towerGridPos [i, j]);
-						towerGridPos [i, j] = Instantiate (towerGridPosCopy [i, j].thisTower, towerGridPosCopy [i, j].position, transform.rotation);
+						towerGridPos [i, j] = Instantiate (towerGridPosCopy [i, j].thisTower, towerGridPosCopy [i, j].position, Quaternion.Euler(0,0,180));
 					}
 				}
 			}
@@ -168,6 +168,7 @@ namespace Game.Interface.GridBuilder
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
 			}
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent -= towerGridPosCopy [towerX, towerY].totalCost;
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score -= towerGridPosCopy [towerX, towerY].totalCost;
 			towerGridPosCopy [towerX, towerY].totalSupply = 0;
 			towerGridPosCopy [towerX, towerY].upgrade = 0;
 			towerGridPosCopy [towerX, towerY].totalCost = 0;
@@ -206,9 +207,9 @@ namespace Game.Interface.GridBuilder
 				towerGridPos [X, Y] = Instantiate (tower);
 				towerGridPosCopy [X, Y].cost = towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost;
 				towerGridPosCopy [X, Y].totalCost += towerGridPosCopy [X, Y].cost;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += 
 				towerGridPosCopy [X, Y].totalSupply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 			}
 		}

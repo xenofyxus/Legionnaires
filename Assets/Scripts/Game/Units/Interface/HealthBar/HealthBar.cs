@@ -15,7 +15,7 @@ namespace Game.Units.Interface.HealthBar
         void Awake()
         {
             unit = transform.root.GetComponent<Game.Units.UnitBehaviour>();
-            rotation = transform.rotation;
+			rotation = Quaternion.Euler (transform.rotation.x, transform.rotation.y, transform.rotation.z);
         }
 
         void LateUpdate()

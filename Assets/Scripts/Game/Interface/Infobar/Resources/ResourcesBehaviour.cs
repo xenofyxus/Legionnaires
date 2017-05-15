@@ -16,7 +16,7 @@ namespace Game.Interface.Infobar.Resources
 				return current;
 			}
 		}
-
+		[SerializeField]
 		private int score = 0;
 
 		public int Score {

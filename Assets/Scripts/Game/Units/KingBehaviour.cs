@@ -68,6 +68,7 @@ namespace Game.Units
 
 		protected override void OnDied()
 		{
+			HighScoreBehaviour.UpdateHighScore (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score);
 			base.OnDied();
 			SceneManager.LoadScene("LoosingScene");
 		}
