@@ -41,13 +41,17 @@ namespace Game.Units.Spells.Auras
 					{
 					case AuraTarget.Friendlies:
 						if (sender.GetType() == owner.GetType())
+						{
 							units.Add(sender as UnitBehaviour);
 							Apply(sender as UnitBehaviour);
+						}
 						break;
 					case AuraTarget.Enemies:
 						if (sender.GetType() != owner.GetType())
+						{
 							units.Add(sender as UnitBehaviour);
 							Apply(sender as UnitBehaviour);
+						}
 						break;
 					default:
 						return;
