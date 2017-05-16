@@ -10,14 +10,11 @@ namespace Game.Units.Spells.Abilities
 		[Range(0f, 20f)]
 		private float duration = 0f;
 
-		public float Duration
-		{
-			get
-			{
+		public float Duration {
+			get {
 				return this.duration;
 			}
-			set
-			{
+			set {
 				duration = value;
 			}
 		}
@@ -26,11 +23,11 @@ namespace Game.Units.Spells.Abilities
 		{
 			Buffs.StunBuff activeBuff = unit.GetComponent<Buffs.StunBuff>();
 
-			if(activeBuff != null && activeBuff.Duration < duration)
+			if (activeBuff != null && activeBuff.Duration < duration)
 			{
 				activeBuff.Duration = duration;
 			}
-			else if(activeBuff == null)
+			else if (activeBuff == null)
 			{
 				Destroy(activeBuff);
 				Buffs.StunBuff newStunBuff = unit.gameObject.AddComponent<Buffs.StunBuff>();
