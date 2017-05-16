@@ -9,7 +9,7 @@ public class HighScoreBehaviour : MonoBehaviour {
 
 	public static void UpdateHighScore(int score){
 		string high;
-
+		PlayerPrefs.SetInt ("LatestScore", score);
 		for (int i = 0; i < highScore.Length; i++) {
 			high = string.Format ("HighScore" + (i + 1));
 			highScore [i] = PlayerPrefs.GetInt (high, 0);
