@@ -21,6 +21,13 @@ namespace Game.Interface.TooltipBar.WaveInfo
         private Text minionCountText = null;
         private Text minionNameText = null;
 
+		void Start()
+		{
+			nextMinion = Game.Spawners.MinionSpawnerBehaviour.Current.waveObjList[Game.Spawners.MinionSpawnerBehaviour.waveNumber].minion;
+			lastWaveNumber = Game.Spawners.MinionSpawnerBehaviour.waveNumber;
+			SetInfo();
+		}
+
         void Update()
         {
 			if(Game.Spawners.MinionSpawnerBehaviour.waveNumber != lastWaveNumber && GameObject.Find ("GameInterface").transform.FindChild ("BottomRowBar(Panel)/Wave(Button)").gameObject.activeSelf)
