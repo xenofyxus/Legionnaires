@@ -318,7 +318,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resources.TryPayingWood(immolationCost))
 			{
-				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDpsGain;
+				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDamageGain;
 			}
 			if (immolationCurrentStep++ == immolationStepInterval)
 			{
