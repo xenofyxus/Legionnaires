@@ -105,7 +105,7 @@ namespace Game.Units.Spells.Auras
 			{
 				if (unit != null)
 				{
-					ApplyEffect(unit);
+					Apply(unit);
 					unit.Died += delegate(object sender, EventArgs e) {
 						Remove(sender as UnitBehaviour);
 					};
