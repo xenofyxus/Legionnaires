@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Game.Interface.TooltipBar;
+using UnityEngine.UI;
+#pragma warning disable 0219
 
 namespace Game.Interface.BottomRowBar.KingUpgrades
 {
@@ -185,7 +187,13 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 
 		private int thornsCurrentStep = 1;
 
-
+		private Text immolationWoodCostText = null;
+		private Text thornsWoodCostText = null;
+		private Text stompWoodCostText = null;
+		private Text shockwaveWoodCostText = null;
+		private Text hpWoodCostText = null;
+		private Text damageWoodCostText = null;
+		private Text hpRegWoodCostText = null;
 
 		private UpgradesPanelBehaviour spellsPanel = null;
 		private UpgradesPanelBehaviour statsPanel = null;
@@ -194,12 +202,26 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 
 		private void Awake()
 		{
+			immolationWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Spells/Immolation/Cost/Wood/Value").GetComponent<Text>();
+			thornsWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Spells/Thorns/Cost/Wood/Value").GetComponent<Text>();
+			stompWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Spells/Stomp/Cost/Wood/Value").GetComponent<Text>();
+			shockwaveWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Spells/Shockwave/Cost/Wood/Value").GetComponent<Text>();
+			hpWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Stats/Hp/Cost/Wood/Value").GetComponent<Text>();
+			damageWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Stats/Damage/Cost/Wood/Value").GetComponent<Text>();
+			hpRegWoodCostText = GameObject.Find("GameInterface").transform.Find("KingMenuBar(Panel)/Stats/HpReg/Cost/Wood/Value").GetComponent<Text>();
+
+
+
 			spellsPanel = transform.Find("Spells").GetComponent<UpgradesPanelBehaviour>();
 			statsPanel = transform.Find("Stats").GetComponent<UpgradesPanelBehaviour>();
 			resources = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current;
 			stompButton = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").FindChild ("StompBackground").gameObject;
 			shockwaveButton = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").FindChild ("ShockwaveBackground").gameObject;
 		}
+			
+			
+
+
 		private void OnEnable()
 		{
 			spellsPanel.Disable();
@@ -240,6 +262,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					damageGain += damageGainIncrement;
 				}
 			}
+			damageWoodCostText.text = damageCost.ToString ();
 		}
 
 		public void UpgradeHpReg()
@@ -255,6 +278,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					hpRegGain += hpRegGainIncrement;
 				}
 			}
+			hpRegWoodCostText.text = hpRegCost.ToString ();
 		}
 
 		public void UpgradeHpMax()
@@ -273,6 +297,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					hpGain += hpGainIncrement;
 				}
 			}
+			hpWoodCostText.text = hpCost.ToString ();
 		}
 
 		public void UpgradeShockwave()
@@ -290,6 +315,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					shockwaveCost += shockwaveCostIncrement;
 					shockwaveDamageGain += shockwaveDamageGainIncrement;
 				}
+				shockwaveWoodCostText.text = shockwaveCost.ToString ();
 			}
 		}
 
@@ -312,6 +338,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					stompDamageGain += stompDamageGainIncrement;
 				}
 			}
+			stompWoodCostText.text = stompCost.ToString ();
 		}
 
 		public void UpgradeImmolation()
@@ -326,6 +353,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 				immolationCost += immolationCostIncrement;
 				immolationDamageGain += immolationDamageGainIncrement;
 			}
+			immolationWoodCostText.text = immolationCost.ToString ();
 		}
 
 		public void UpgradeThorns()
@@ -340,6 +368,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 				thornsCost += thornsCostIncrement;
 				thornsDamageGain += thornsDamageGainIncrement;
 			}
+			thornsWoodCostText.text = thornsCost.ToString ();
 		}
 
 		public void Toggle()

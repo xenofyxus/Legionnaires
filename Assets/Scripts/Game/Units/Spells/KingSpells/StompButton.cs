@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+#pragma warning disable 0219
+#pragma warning disable 0414
 
 namespace Game.Units.Spells.Kingspells
 {

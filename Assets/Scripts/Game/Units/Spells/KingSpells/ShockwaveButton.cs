@@ -12,7 +12,6 @@ namespace Game.Units.Spells.Kingspells
 
         GameObject ShockwaveCopy;
         Vector2 mousePosition;
-        Vector2 mousePositionNew;
         Vector2 kingPosition = new Vector2(0.17f, -14.49f);
         bool isClicked = false;
         Image shockwaveBtn;
@@ -20,7 +19,6 @@ namespace Game.Units.Spells.Kingspells
         //Initiate the timer to the cooldown value
         void Start()
         {
-            // ???cooldownTimer = cooldown;
             shockwaveBtn = this.gameObject.GetComponent<Image>();
         }
 
@@ -54,14 +52,15 @@ namespace Game.Units.Spells.Kingspells
         {
             if(cooldownTimer <= 0f)
             {
-                mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                isClicked = true;
+                 isClicked = true;
                 shockwaveBtn.color = new Color(255, 0, 0);
             }
+
+
         }
 
 
-        void FixedUpdate()
+        void Update()
         {
             //Count down the timer
             if(cooldownTimer > 0f)
@@ -70,16 +69,16 @@ namespace Game.Units.Spells.Kingspells
                 shockwaveBtn.fillAmount = 1 - (cooldownTimer / cooldown);
             }
 
-            mousePositionNew = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+			mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             //Checks when it's clicked a second time and if so, spawns shockwave copy
-            if(isClicked && Input.GetMouseButtonDown(0) && (mousePosition != mousePositionNew) && cooldownTimer <= 0f)
+			if(isClicked && Input.GetMouseButtonDown(0)  ) 
             {
-                mousePosition = mousePositionNew;
-                shockwaveBtn.color = new Color(255, 255, 255);
+				 shockwaveBtn.color = new Color(255, 255, 255);
 
                 ShockwaveCopy = Instantiate(Resources.Load("ShockwavePrefab"), kingPosition, Quaternion.identity) as GameObject;
-                ShockwaveCopy.transform.rotation = Quaternion.FromToRotation(Vector2.up, mousePositionNew - (Vector2)ShockwaveCopy.transform.position);
+                ShockwaveCopy.transform.rotation = Quaternion.FromToRotation(Vector2.up, mousePosition - (Vector2)ShockwaveCopy.transform.position);
 
                 isClicked = false;
                 cooldownTimer = cooldown;

@@ -86,8 +86,11 @@ namespace Game.Interface.TooltipBar
 					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (false);
 					break;
 				default:
+					if(gameObject != null)
+					{
 					gameObject.SetActive (false);
 					GameObject.Find ("GameInterface").transform.Find ("WaveInfoButton").gameObject.SetActive (true);
+					}
 					break;
 				}
 			}

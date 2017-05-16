@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Game.Units;
+#pragma warning disable 0219
 
 namespace Game.Interface.TooltipBar.TowerPanel
 {
@@ -139,7 +140,7 @@ namespace Game.Interface.TooltipBar.TowerPanel
 			armorTypeText.text = System.Enum.GetName(typeof(Units.ArmorType), unit.ArmorType);
 			attackTypeText.text = System.Enum.GetName(typeof(Units.AttackType), unit.AttackType);
 			damageText.text = ((float)unit.DamageMin).ToString("####") + "-" + ((float)unit.DamageMax).ToString("####");
-			attackSpeedText.text = ((float)unit.AttackSpeed).ToString("0.0");
+			attackSpeedText.text = ((float)unit.AttackSpeed).ToString("0.0" + " / Sec");
 			rangeText.text = ((float)unit.Range).ToString("0.0");
 
 			if (spell1 != null)
