@@ -18,6 +18,11 @@ namespace Menu
 			audioToggle = transform.Find ("AudioSettings").GetComponent<Toggle> ();
 			audioToggle.isOn = Settings.Current.AudioEnabled;
 			legionnaireToggle = transform.Find ("LegionnaireToggle").GetComponent<ToggleGroup> ();
+			if (Settings.Current.LegionnaireBuilder == LegionnaireBuilder.Human)
+				legionnaireToggle.gameObject.transform.Find ("HumanEnabled").GetComponent<Toggle> ().isOn = true;
+			else {
+				legionnaireToggle.gameObject.transform.Find ("OrcEnabled").GetComponent<Toggle> ().isOn = true;
+			}
 		}
 	
 		void Update()
