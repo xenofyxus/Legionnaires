@@ -27,7 +27,7 @@ namespace Game.Interface.TowerMenu
 		GameObject waveBTN;
 		int ex;
 		int ey;
-		Color colorTile = new Color (1f, 0.92f, 0.016f, 0.5f);
+		public Sprite tileMarker;
 		void Start ()
 		{
 			waveBTN = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("Wave(Button)").gameObject;
@@ -39,7 +39,7 @@ namespace Game.Interface.TowerMenu
 			menuItems = buttons.Count;
 			ex = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerX;
 			ey = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towerY;
-			EnableDisableTiles (colorTile);
+			EnableDisableTiles (Color.white);
 			if (menuItems > 3) {
 				for (int i = 0; i < menuItems; i++) {
 					buttons [i].btnImage.sprite = gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().towersUsed [i].upgradedTowers [0].GetComponent<SpriteRenderer> ().sprite;
@@ -60,7 +60,7 @@ namespace Game.Interface.TowerMenu
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < 7; j++) {
 					if (i == ex && j == ey) {
-						gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().setTile (ex, ey, null, markedTile);
+						gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().setTile (ex, ey, tileMarker, markedTile);
 					} else {
 						gridTiles.transform.Find (i + "/" + j).GetComponent<Image> ().enabled = !gridTiles.transform.Find (i + "/" + j).GetComponent<Image> ().enabled;
 					}

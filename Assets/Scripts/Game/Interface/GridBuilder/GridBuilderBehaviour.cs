@@ -42,7 +42,6 @@ namespace Game.Interface.GridBuilder
 		public GameObject wizardSpecial;
 		GameObject gridTiles;
 		Vector2 placeTower;
-		Vector2 placeMenu;
 		public TowerList[] humanTowers = new TowerList[6];
 		public TowerList[] orcTowers = new TowerList[6];
 		public TowerList[] towersUsed = new TowerList[6];
@@ -72,23 +71,18 @@ namespace Game.Interface.GridBuilder
 				towerY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
 				placeTower = new Vector2 (-3.0f + (towerX * 1.48f), 2.4f + (towerY * 1.47f));
 				if (0 <= towerX && towerX <= 4 && 0 <= towerY && towerY <= 6) {
-					if (towerY > 2) {
-						placeMenu = new Vector2 (-3.0f + (2 * 1.48f), 2.4f + (0 * 1.47f));
-					} else {
-						placeMenu = new Vector2 (-3.0f + (2 * 1.48f), 2.4f + (5 * 1.47f));
-					}
 					GameObject currentTower = towerGridPosCopy [towerX, towerY].thisTower;
 					if (currentTower == null) {
-						Instantiate (buyTowers, placeMenu, transform.rotation);
+						Instantiate (buyTowers, placeTower, transform.rotation);
 						newTower = true;
 					} else if (currentTower != null) {
 						TooltipBar.TowerPanel.TowerPanelBehaviour.Current.SetUnit (currentTower.GetComponent<Units.LegionnaireBehaviour> ());
 						if (currentTower == towersUsed [2].upgradedTowers [0]) {
-							Instantiate (wizardSpecial, placeMenu, transform.rotation);
+							Instantiate (wizardSpecial, placeTower, transform.rotation);
 						} else if (towersUsed [towerGridPosCopy [towerX, towerY].towerType].upgradedTowers.Length - 1 == towerGridPosCopy [towerX, towerY].upgrade) {
-							Instantiate (onlySell, placeMenu, transform.rotation);
+							Instantiate (onlySell, placeTower, transform.rotation);
 						} else {
-							Instantiate (sellOrUpgrade, placeMenu, transform.rotation);
+							Instantiate (sellOrUpgrade, placeTower, transform.rotation);
 						}
 						newTower = false;
 					}
