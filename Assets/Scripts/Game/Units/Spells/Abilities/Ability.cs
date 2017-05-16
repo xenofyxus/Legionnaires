@@ -26,11 +26,12 @@ namespace Game.Units.Spells.Abilities
 		protected override void Update()
 		{
 			base.Update();
-			cooldownTimer += Time.deltaTime;
-			if (cooldownTimer >= cooldown)
+			if (cooldownTimer > 0)
+				cooldownTimer -= Time.deltaTime;
+			if (cooldownTimer <= 0 && owner.GetTarget() != null)
 			{
 				Apply();
-				cooldownTimer = 0;
+				cooldownTimer = cooldown;
 			}
 		}
 	}
