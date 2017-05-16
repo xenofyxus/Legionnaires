@@ -11,7 +11,6 @@ namespace Menu
 		Toggle tooltipBarEnabledToggle = null;
 		ToggleGroup legionnaireToggle = null;
 		Toggle audioToggle = null;
-		public GameObject audio;
 		void Start()
 		{
 			tooltipBarEnabledToggle = transform.Find("TooltipBarEnabled").GetComponent<Toggle>();
@@ -27,8 +26,8 @@ namespace Menu
 		}
 
 		public void ToggleAudio(){
+			
 			Settings.Current.AudioEnabled = audioToggle.isOn;
-			audio.SetActive (audioToggle.isOn);
 		}
 
 		public void ToggleTooltipBarEnabled()
