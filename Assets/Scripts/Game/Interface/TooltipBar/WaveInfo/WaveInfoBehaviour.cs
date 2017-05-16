@@ -26,10 +26,19 @@ namespace Game.Interface.TooltipBar.WaveInfo
 			if(Game.Spawners.MinionSpawnerBehaviour.waveNumber != lastWaveNumber && GameObject.Find ("GameInterface").transform.FindChild ("BottomRowBar(Panel)/Wave(Button)").gameObject.activeSelf)
             {
                 nextMinion = Game.Spawners.MinionSpawnerBehaviour.Current.waveObjList[Game.Spawners.MinionSpawnerBehaviour.waveNumber].minion;
+				//CurrentMinionStats ();
+				//if(Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop > 0)
+					//nextMinion.GetComponent<Game.Units.UnitBehaviour>().Hp *= Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor;
+				
                 lastWaveNumber = Game.Spawners.MinionSpawnerBehaviour.waveNumber;
                 SetInfo();
             }
         }
+
+		private void CurrentMinionStats(){
+			if(Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop > 1)
+				nextMinion.GetComponent<Game.Units.UnitBehaviour>().Hp *= Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor;
+		}
 
         public void SetInfo()
         {
@@ -50,7 +59,11 @@ namespace Game.Interface.TooltipBar.WaveInfo
 	
             if(healthText == null)
                 healthText = valuesPanel.Find("Health/HealthValue").GetComponent<Text>();
-            healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour>().Hp).ToString();
+			if (Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop > 0) {
+				healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor).ToString ();
+			} else {
+				healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp).ToString ();
+			}
 
             if(minionCountText == null)
                 minionCountText = valuesPanel.Find("Count/CountValue").GetComponent<Text>();

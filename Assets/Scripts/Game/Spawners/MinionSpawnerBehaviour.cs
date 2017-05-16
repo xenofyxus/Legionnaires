@@ -35,10 +35,10 @@ namespace Game.Spawners
 		private int waveNumberInit = 0;
 		private int waveCounterInit = 0;
 
-		private int waveLoop = 0;
+		public int waveLoop = 0;
 		[SerializeField]
 		[Tooltip ("How much do you want each loop of 10 to scale? 10 = 10x hp and 5x dps")]
-		private float waveLoopFactor;
+		public float waveLoopFactor;
 		[SerializeField]
 		[Tooltip ("How long time until the wave starts by itself?")]
 		private float waveTime;
