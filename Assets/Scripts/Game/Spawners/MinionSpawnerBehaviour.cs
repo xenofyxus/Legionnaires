@@ -65,6 +65,7 @@ namespace Game.Spawners
 		GameObject kingspellsPanel;
 		GameObject shockwaveBtn;
 		GameObject stompBtn;
+		Text waveNumberText;
 
 		GameObject[] summons;
 
@@ -87,6 +88,7 @@ namespace Game.Spawners
 			kingspellsPanel = GameObject.Find ("BottomRowBar(Panel)").transform.FindChild ("KingSpells(Panel)").gameObject;
 			shockwaveBtn = kingspellsPanel.transform.FindChild ("ShockwaveBackground"). FindChild ("Shockwave(Button)").gameObject;
 			stompBtn = kingspellsPanel.transform.FindChild ("StompBackground").FindChild ("Stomp(Button)").gameObject;
+			waveNumberText = (Text) GameObject.Find ("Wave number").GetComponent <Text> ();
 		}
 
 		void LateUpdate ()
@@ -102,10 +104,12 @@ namespace Game.Spawners
 				Interface.TowerMenu.TowerMenuBehaviour.nextWaveStarted = false;
 				gridScript.GetComponent<Interface.GridBuilder.GridBuilderBehaviour> ().ResetSprite ();
 				if (reset == false) {
+					waveNumberText.text = (waveCounter + 1).ToString ();
 					waveBtn.SetActive (true);
 					Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.ApplyGoldIncome ();
 				}
 				reset = true;
+
 				//Show wavebutton, reset the cooldown and hide the kingspellspanel
 				summons = GameObject.FindGameObjectsWithTag ("Legionnaire");
 

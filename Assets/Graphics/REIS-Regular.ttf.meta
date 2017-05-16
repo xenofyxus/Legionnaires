@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 7eea879c49f222046b695f3396ff594f
+timeCreated: 1494927327
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: REIS
+  fontNames:
+  - REIS
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
