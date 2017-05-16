@@ -514,7 +514,7 @@ namespace Game.Units
 
 		void RotateTowards(Vector2 targetPos)
 		{
-			Quaternion targetRotation = Quaternion.FromToRotation(Vector2.down, targetPos - (Vector2)transform.position);
+			Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, (Vector2)transform.position - targetPos);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
 		}
 
