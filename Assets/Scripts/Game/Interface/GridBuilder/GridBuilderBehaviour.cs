@@ -45,8 +45,8 @@ namespace Game.Interface.GridBuilder
 		public TowerList[] humanTowers = new TowerList[6];
 		public TowerList[] orcTowers = new TowerList[6];
 		public TowerList[] towersUsed = new TowerList[6];
-		GameObject[,] towerGridPos = new GameObject[5, 7];
-		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 7];
+		GameObject[,] towerGridPos = new GameObject[5, 6];
+		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 6];
 		// Use this for initialization
 		void Start ()
 		{
@@ -70,7 +70,7 @@ namespace Game.Interface.GridBuilder
 				towerX = Mathf.FloorToInt ((mouseWorldPos.x + 3.8f) / offSetX);
 				towerY = Mathf.FloorToInt ((mouseWorldPos.y / offSetY) - 1f);
 				placeTower = new Vector2 (-3.0f + (towerX * 1.48f), 2.4f + (towerY * 1.47f));
-				if (0 <= towerX && towerX <= 4 && 0 <= towerY && towerY <= 6) {
+				if (0 <= towerX && towerX <= 4 && 0 <= towerY && towerY <= 5) {
 					GameObject currentTower = towerGridPosCopy [towerX, towerY].thisTower;
 					if (currentTower == null) {
 						Instantiate (buyTowers, placeTower, transform.rotation);
@@ -137,7 +137,7 @@ namespace Game.Interface.GridBuilder
 		public void Reset ()
 		{
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					if (towerGridPosCopy [i, j].thisTower != null) {
 						setTile (i, j, null, Color.clear);
 						GameObject.Destroy (towerGridPos [i, j]);
@@ -151,7 +151,7 @@ namespace Game.Interface.GridBuilder
 		public void ResetSprite ()
 		{
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					if (towerGridPosCopy [i, j].thisTower != null) {
 						GameObject.Destroy (towerGridPos [i, j]);
 						towerGridPos [i, j] = null;
@@ -222,7 +222,7 @@ namespace Game.Interface.GridBuilder
 		void instantiateTower ()
 		{
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					towerGridPosCopy [i, j] = new TowerInfo ();
 				}
 			}

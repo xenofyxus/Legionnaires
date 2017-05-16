@@ -58,7 +58,7 @@ namespace Game.Interface.TowerMenu
 			
 		void EnableDisableTiles(Color markedTile){
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					if (i == ex && j == ey) {
 						gridBuilder.GetComponent<GridBuilder.GridBuilderBehaviour> ().setTile (ex, ey, tileMarker, markedTile);
 					} else {
