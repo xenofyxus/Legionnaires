@@ -12,53 +12,180 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		[Header("Damage")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading damgage")]
 		private int damageCost = 10;
+
 		[SerializeField]
+		[Tooltip("Damage gained per upgrade")]
 		private float damageGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int damageCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of damage gained per tier step")]
+		private int damageGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int damageStepInterval = 2;
+
+		private int damageCurrentStep = 1;
+
+
 
 		[Header("HP Reg")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading hpReg")]
 		private int hpRegCost = 10;
+
 		[SerializeField]
-		private int hpRegGain = 10;
+		[Tooltip("HpReg gained per upgrade")]
+		private float hpRegGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int hpRegCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of hpReg gained per tier step")]
+		private int hpRegGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int hpRegStepInterval = 2;
+
+		private int hpRegCurrentStep = 1;
 
 		[Header("HP")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading Hp")]
 		private int hpCost = 10;
+
 		[SerializeField]
+		[Tooltip("Hp gained per upgrade")]
 		private float hpGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int hpCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of hp gained per tier step")]
+		private int hpGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int hpStepInterval = 2;
+
+		private int hpCurrentStep = 1;
+
 
 		[Header("Shockwave")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading Shockwave")]
 		private int shockwaveCost = 10;
+
 		[SerializeField]
+		[Tooltip("Damage gained per upgrade")]
 		private float shockwaveDamageGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int shockwaveCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of Damage gained per tier step")]
+		private int shockwaveDamageGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int shockwaveStepInterval = 2;
+
+		private int shockwaveCurrentStep = 1;
 
 		[Header("Stomp")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading Shockwave")]
 		private int stompCost = 10;
+
 		[SerializeField]
+		[Tooltip("Damage gained per upgrade")]
 		private float stompDamageGain = 10;
+
 		[SerializeField]
+		[Tooltip("Stun duration gained per upgrade")]
 		private float stompDurationGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int stompCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of Damage gained per tier step")]
+		private int stompDamageGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int stompStepInterval = 2;
+
+		private int stompCurrentStep = 1;
+
 
 		[Header("Immolation")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading Shockwave")]
 		private int immolationCost = 10;
+
 		[SerializeField]
-		private float immolationDpsGain = 10;
+		[Tooltip("Damage gained per upgrade")]
+		private float immolationDamageGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int immolationCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of Damage gained per tier step")]
+		private int immolationDamageGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int immolationStepInterval = 2;
+
+		private int immolationCurrentStep = 1;
 
 		[Header("Thorns")]
 
 		[SerializeField]
+		[Tooltip("Starting price for upgrading Thorns")]
 		private int thornsCost = 10;
+
 		[SerializeField]
-		private int thornsDamageGain = 10;
+		[Tooltip("Damage gained per upgrade")]
+		private float thornsDamageGain = 10;
+
+		[SerializeField]
+		[Tooltip("Increment of price per tier step")]
+		private int thornsCostIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Increment of Damage gained per tier step")]
+		private int thornsDamageGainIncrement = 0;
+
+		[SerializeField]
+		[Tooltip("Interval length between steps of upgrade tiers")]
+		private int thornsStepInterval = 2;
+
+		private int thornsCurrentStep = 1;
+
+
 
 		private UpgradesPanelBehaviour spellsPanel = null;
 		private UpgradesPanelBehaviour statsPanel = null;
@@ -106,6 +233,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 				Units.KingBehaviour.Current.DamageMax += damageGain;
 				Units.KingBehaviour.Current.DamageMin += damageGain;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldIncome += 1;
+				if (damageCurrentStep++ == damageStepInterval)
+				{
+					damageCurrentStep = 1;
+					damageCost += damageCostIncrement;
+					damageGain += damageGainIncrement;
+				}
 			}
 		}
 
@@ -115,6 +248,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			{
 				Units.KingBehaviour.Current.HpReg += hpRegGain;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldIncome += 1;
+				if (hpRegCurrentStep++ == hpRegStepInterval)
+				{
+					hpRegCurrentStep = 1;
+					hpRegCost += hpRegCostIncrement;
+					hpRegGain += hpRegGainIncrement;
+				}
 			}
 		}
 
@@ -127,6 +266,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 				king.HpMax.AddAdder(hpGain);
 				king.ApplyHeal(hpRatio * hpGain, null);
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldIncome += 1;
+				if (hpCurrentStep++ == hpStepInterval)
+				{
+					hpCurrentStep = 1;
+					hpCost += hpCostIncrement;
+					hpGain += hpGainIncrement;
+				}
 			}
 		}
 
@@ -139,6 +284,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					shockwaveButton.SetActive (true);
 				}
 				Units.KingBehaviour.Current.ShockwaveDamage += shockwaveDamageGain;
+				if (shockwaveCurrentStep++ == shockwaveStepInterval)
+				{
+					shockwaveCurrentStep = 1;
+					shockwaveCost += shockwaveCostIncrement;
+					shockwaveDamageGain += shockwaveDamageGainIncrement;
+				}
 			}
 		}
 
@@ -151,7 +302,15 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 					stompButton.SetActive (true);
 				}
 				Units.KingBehaviour.Current.StompDamage += stompDamageGain;
-				Units.KingBehaviour.Current.StompDuration += stompDurationGain;
+				if (Units.KingBehaviour.Current.StompDuration < 10) {
+					Units.KingBehaviour.Current.StompDuration += stompDurationGain;
+				}
+				if (stompCurrentStep++ == stompStepInterval)
+				{
+					stompCurrentStep = 1;
+					stompCost += stompCostIncrement;
+					stompDamageGain += stompDamageGainIncrement;
+				}
 			}
 		}
 
@@ -161,6 +320,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			{
 				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDpsGain;
 			}
+			if (immolationCurrentStep++ == immolationStepInterval)
+			{
+				immolationCurrentStep = 1;
+				immolationCost += immolationCostIncrement;
+				immolationDamageGain += immolationDamageGainIncrement;
+			}
 		}
 
 		public void UpgradeThorns()
@@ -168,6 +333,12 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			if (resources.TryPayingWood(thornsCost))
 			{
 				Units.KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage = thornsDamageGain;
+			}
+			if (thornsCurrentStep++ == thornsStepInterval)
+			{
+				thornsCurrentStep = 1;
+				thornsCost += thornsCostIncrement;
+				thornsDamageGain += thornsDamageGainIncrement;
 			}
 		}
 
