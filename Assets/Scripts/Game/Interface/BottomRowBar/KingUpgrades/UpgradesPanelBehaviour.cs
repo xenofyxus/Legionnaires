@@ -14,7 +14,13 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		private Vector2 loweredPosition;
 		private RectTransform rectTransform;
 
-		private bool disabling = false;
+		private bool disabling = true;
+
+		public bool Disabling {
+			get {
+				return this.disabling;
+			}
+		}
 
 		private void Awake()
 		{
