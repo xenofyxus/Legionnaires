@@ -121,6 +121,10 @@ namespace Game.Spawners
 				playerReady = true;
 				waveTimerGO.fillAmount = 1;
 			} else if (Game.Units.MinionBehaviour.Minions.Count == 0 && !playerReady) {
+				float colorSpeed = 1f;
+				if (waveCountdown < 10)
+					colorSpeed = 0.5f;
+				waveTimerGO.color = new Color(waveTimerGO.color.r, waveTimerGO.color.g, waveTimerGO.color.b, Mathf.PingPong(Time.time, colorSpeed));
 				waveTimerGO.fillAmount = waveCountdown / waveTime;
 				waveCountdown -= Time.deltaTime;
 			}
