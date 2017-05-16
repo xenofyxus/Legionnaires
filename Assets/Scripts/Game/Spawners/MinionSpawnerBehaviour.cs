@@ -172,11 +172,12 @@ namespace Game.Spawners
 
 						lastSpawned = Instantiate (waveObjList [waveNumber].minion, new Vector2 (x, y), transform.rotation);
 						if (waveLoop == 1) {
+							
 							if (lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Range > 1) {
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.3f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.3f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
-							} else if (waveNumber == 1) {
+							} else if (waveNumber == 0) {
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.4f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.4f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor * 1.5f;
@@ -197,7 +198,7 @@ namespace Game.Spawners
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.5f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.5f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor;
-							} else if (waveNumber == 1) {
+							} else if (waveNumber == 0) {
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.65f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.65f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor * 1.5f;

@@ -60,7 +60,12 @@ namespace Game.Interface.TooltipBar.WaveInfo
             if(healthText == null)
                 healthText = valuesPanel.Find("Health/HealthValue").GetComponent<Text>();
 			if (Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop > 0) {
-				healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor).ToString ();
+				if (Game.Spawners.MinionSpawnerBehaviour.waveNumber == 0) {
+					healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop* 1.5f * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor).ToString ();
+				} else {
+
+					healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoop * Game.Spawners.MinionSpawnerBehaviour.Current.waveLoopFactor).ToString ();
+				}
 			} else {
 				healthText.text = ((int)nextMinion.GetComponent<Game.Units.UnitBehaviour> ().Hp).ToString ();
 			}
