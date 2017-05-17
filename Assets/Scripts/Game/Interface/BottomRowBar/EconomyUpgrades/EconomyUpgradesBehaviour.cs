@@ -159,7 +159,7 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 			{
 				resources.Supply++;
 				resources.WoodIncome += woodIncomeGain;
-				resources.Score += woodcutterGoldCost; // Increment score with woodcutter cost.
+				resources.Score += woodcutterGoldCost/10; // Increment score with woodcutter cost.
 				if (woodcutterCurrentStep++ == woodcutterStepInterval)
 				{
 					woodcutterCurrentStep = 1;
@@ -174,7 +174,7 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 			if (resources.TryPaying(supplyGoldCost, supplyWoodCost))
 			{
 				resources.SupplyMax += supplyGain;
-				resources.Score += supplyGoldCost; // Increment score with supply gold cost.
+				resources.Score += supplyGoldCost/10; // Increment score with supply gold cost.
 				if (supplyCurrentStep++ == supplyStepInterval)
 				{
 					supplyCurrentStep = 1;

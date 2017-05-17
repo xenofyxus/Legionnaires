@@ -360,7 +360,7 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 		{
 			if (resources.TryPayingWood(thornsCost))
 			{
-				Units.KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage = thornsDamageGain;
+				Units.KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage += thornsDamageGain;
 			}
 			if (thornsCurrentStep++ == thornsStepInterval)
 			{
