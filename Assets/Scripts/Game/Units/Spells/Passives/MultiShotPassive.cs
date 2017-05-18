@@ -34,12 +34,12 @@ namespace Game.Units.Spells.Passives
 
 				List<UnitBehaviour> enemies = new List<UnitBehaviour>(owner.GetEnemies());
 				for(int i = 0; i < splitAmount; i++)
-                {
+				{
 					UnitBehaviour target = null;
 					while(target == null)
 					{
-                        if(enemies.Count == 0)
-                            return;
+						if(enemies.Count == 0)
+							return;
 
 						target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
 
@@ -49,13 +49,14 @@ namespace Game.Units.Spells.Passives
 							target = null;
 						}
 					}
-					
+					enemies.Remove(target);
+
 					ProjectileBehaviour newProjectile = Instantiate(Owner.Projectile, (Vector2)Owner.transform.position + Owner.ProjectileOffset, transform.rotation).GetComponent<ProjectileBehaviour>();
 					newProjectile.transform.RotateAround(Owner.transform.position, Vector3.forward, Quaternion.AngleAxis(transform.rotation.eulerAngles.z, Vector3.forward).eulerAngles.z);
 					newProjectile.transform.rotation = Owner.transform.rotation;
 					newProjectile.owner = Owner;
 					newProjectile.target = target;
-                    newProjectile.Damage = Random.Range(owner.DamageMin, owner.DamageMax);
+					newProjectile.Damage = Random.Range(owner.DamageMin, owner.DamageMax);
 					if(Owner.ProjectileSpeed > 0)
 						newProjectile.movementSpeed = Owner.ProjectileSpeed;
 				}
