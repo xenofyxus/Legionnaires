@@ -13,8 +13,10 @@ namespace Game.Units.Spells
 		/// <summary>
 		/// Gets the name of the spell.
 		/// </summary>
-		public string SpellName {
-			get {
+		public string SpellName
+		{
+			get
+			{
 				return spellName;
 			}
 		}
@@ -26,8 +28,10 @@ namespace Game.Units.Spells
 		/// <summary>
 		/// Gets the spell description.
 		/// </summary>
-		public string Description {
-			get {
+		public string Description
+		{
+			get
+			{
 				return description;
 			}
 		}
@@ -38,38 +42,43 @@ namespace Game.Units.Spells
 		/// <summary>
 		/// Gets the spell icon.
 		/// </summary>
-		public Sprite Icon {
-			get {
+		public Sprite Icon
+		{
+			get
+			{
 				return icon;
 			}
 		}
 
 		protected UnitBehaviour owner;
 
-		public UnitBehaviour Owner {
+		public UnitBehaviour Owner
+		{
 			get{ return owner; }
 			set{ owner = value; }
 		}
 
 		protected object metaData;
 
-		public object MetaData {
+		public object MetaData
+		{
 			get{ return metaData; }
 			set{ metaData = value; }
 		}
 
-		protected virtual void Start ()
+		protected virtual void Start()
 		{
 			owner = GetComponent<UnitBehaviour>();
-			owner.Died += OwnerDied;
+			if(owner != null)
+				owner.Died += OwnerDied;
 		}
 
-		protected virtual void Update ()
+		protected virtual void Update()
 		{
 			
 		}
 
-		protected virtual void OwnerDied (object sender, EventArgs e)
+		protected virtual void OwnerDied(object sender, EventArgs e)
 		{
 
 		}

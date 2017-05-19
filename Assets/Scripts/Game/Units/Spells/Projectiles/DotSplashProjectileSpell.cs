@@ -1,16 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Units.Spells.Passives
+namespace Game.Units.Spells.ProjectileSpells
 {
-	public class DotSplashPassive:SplashPassive
+	public class DotSplashProjectileSpell:SplashProjectileSpell
 	{
 		[Header("Dot attributes")]
 
 		[SerializeField]
 		protected float totalDamage;
 
-		public float TotalDamage {
+		public float TotalDamage
+		{
 			get{ return totalDamage; }
 			set{ totalDamage = value; }
 		}
@@ -18,7 +19,8 @@ namespace Game.Units.Spells.Passives
 		[SerializeField]
 		protected int maxStacks;
 
-		public int MaxStacks {
+		public int MaxStacks
+		{
 			get{ return maxStacks; }
 			set{ maxStacks = value; }
 		}
@@ -27,7 +29,8 @@ namespace Game.Units.Spells.Passives
 		[UnityEngine.Range(1f, 2f)]
 		protected float stackMultiplier = 1f;
 
-		public float StackMultiplier {
+		public float StackMultiplier
+		{
 			get{ return stackMultiplier; }
 			set{ stackMultiplier = value; }
 		}
@@ -36,7 +39,8 @@ namespace Game.Units.Spells.Passives
 		[UnityEngine.Range(0f, 20f)]
 		protected float duration;
 
-		public float Duration {
+		public float Duration
+		{
 			get{ return duration; }
 			set{ duration = value; }
 		}
@@ -44,14 +48,12 @@ namespace Game.Units.Spells.Passives
 		protected override void ApplyAdditionalEffect(UnitBehaviour unit)
 		{
 			base.ApplyAdditionalEffect(unit);
-
 			Buffs.DotTickBuff[] activeDots = unit.GetComponents<Buffs.DotTickBuff>();
 			Buffs.DotTickBuff activeDot = null;
 
-			foreach (Buffs.DotTickBuff dot in activeDots)
+			foreach(Buffs.DotTickBuff dot in activeDots)
 			{
-				DotMetaData dotMetaData = dot.MetaData as DotMetaData;
-				if (dotMetaData.dotName == spellName)
+				if(dot.SpellName == spellName)
 				{
 					activeDot = dot;
 					break;
@@ -59,7 +61,7 @@ namespace Game.Units.Spells.Passives
 			}
 
 
-			if (activeDot == null)
+			if(activeDot == null)
 			{
 				Buffs.DotTickBuff dot = unit.gameObject.AddComponent<Buffs.DotTickBuff>();
 
@@ -75,7 +77,7 @@ namespace Game.Units.Spells.Passives
 			else
 			{
 				DotMetaData activeDotMetaData = activeDot.MetaData as DotMetaData;
-				if (activeDotMetaData.stacks < maxStacks)
+				if(activeDotMetaData.stacks < maxStacks)
 				{
 					activeDotMetaData.stacks += 1;
 
