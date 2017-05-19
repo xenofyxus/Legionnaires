@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DisableEnableAudio : MonoBehaviour {
 
-	public GameObject audio;
+	public new GameObject audio;
 
 	// Use this for initialization
 	void Start () {

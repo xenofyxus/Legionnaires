@@ -125,10 +125,6 @@ namespace Game.Spawners
 				playerReady = true;
 				waveTimerGO.fillAmount = 1;
 			} else if (Game.Units.MinionBehaviour.Minions.Count == 0 && !playerReady) {
-				float colorSpeed = 1f;
-				if (waveCountdown < 10)
-					colorSpeed = 0.5f;
-				waveTimerGO.color = new Color(waveTimerGO.color.r, waveTimerGO.color.g, waveTimerGO.color.b, Mathf.PingPong(Time.time, colorSpeed));
 				waveTimerGO.fillAmount = waveCountdown / waveTime;
 				waveCountdown -= Time.deltaTime;
 			}
@@ -219,7 +215,7 @@ namespace Game.Spawners
 							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Reward *= waveLoop * 2;
 
 							if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
-								lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor / 2;
+								lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor * 0.4f;
 							}
 
 						} else if (waveLoop > 1) {
@@ -255,7 +251,7 @@ namespace Game.Spawners
 							lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Reward *= waveLoop * 2;
 
 							if (lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> () != null) {
-								lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor / 2;
+								lastSpawned.gameObject.GetComponent<Units.Spells.Passives.DotPassive> ().TotalDamage *= waveLoop * waveLoopFactor * 0.65f;
 							}
 						}
 

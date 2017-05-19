@@ -346,13 +346,15 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			if (resources.TryPayingWood(immolationCost))
 			{
 				Units.KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond += immolationDamageGain;
+
+				if (immolationCurrentStep++ == immolationStepInterval)
+				{
+					immolationCurrentStep = 1;
+					immolationCost += immolationCostIncrement;
+					immolationDamageGain += immolationDamageGainIncrement;
+				}
 			}
-			if (immolationCurrentStep++ == immolationStepInterval)
-			{
-				immolationCurrentStep = 1;
-				immolationCost += immolationCostIncrement;
-				immolationDamageGain += immolationDamageGainIncrement;
-			}
+
 			immolationWoodCostText.text = immolationCost.ToString ();
 		}
 
@@ -361,13 +363,15 @@ namespace Game.Interface.BottomRowBar.KingUpgrades
 			if (resources.TryPayingWood(thornsCost))
 			{
 				Units.KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage += thornsDamageGain;
+
+				if (thornsCurrentStep++ == thornsStepInterval)
+				{
+					thornsCurrentStep = 1;
+					thornsCost += thornsCostIncrement;
+					thornsDamageGain += thornsDamageGainIncrement;
+				}
 			}
-			if (thornsCurrentStep++ == thornsStepInterval)
-			{
-				thornsCurrentStep = 1;
-				thornsCost += thornsCostIncrement;
-				thornsDamageGain += thornsDamageGainIncrement;
-			}
+
 			thornsWoodCostText.text = thornsCost.ToString ();
 		}
 

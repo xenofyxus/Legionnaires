@@ -24,10 +24,11 @@ namespace Game.Units.Spells.Passives
 
 		protected override void OwnerTookDamage(object sender, TookDamageEventArgs e)
 		{
-			returnedDamage = UnityEngine.Random.Range (e.Attacker.DamageMin, e.Attacker.DamageMax) * returnedDamageFactor;
 			float dummyVar;
-			if(e.Attacker != null)
-				e.Attacker.ApplyDamage(returnedDamage, out dummyVar, null);
+			if (e.Attacker != null) {
+				returnedDamage = UnityEngine.Random.Range (e.Attacker.DamageMin, e.Attacker.DamageMax) * returnedDamageFactor;
+				e.Attacker.ApplyDamage (returnedDamage, out dummyVar, null);
+			}
 		}
 	}
 }

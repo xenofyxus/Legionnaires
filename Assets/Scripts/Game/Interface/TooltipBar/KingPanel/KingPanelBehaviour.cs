@@ -53,14 +53,20 @@ namespace Game.Interface.TooltipBar.KingPanel
 
         private void UpdateInfo()
         {
+			if(KingBehaviour.Current.ShockwaveDamage != 10){
             shockwaveDamageText.text = KingBehaviour.Current.ShockwaveDamage.ToString("##");
+			}
+			if (KingBehaviour.Current.StompDamage != 5) {
+				stompDamageText.text = KingBehaviour.Current.StompDamage.ToString ("##");
+				stompDurationText.text = KingBehaviour.Current.StompDuration.ToString ("##");
+			}
 
-            stompDamageText.text = KingBehaviour.Current.StompDamage.ToString("##");
-            stompDurationText.text = KingBehaviour.Current.StompDuration.ToString("##");
-
-            immolationDpsText.text = KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff>().DamagePerSecond.ToString("##");
-
-            thornsDamageText.text = KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive>().ReturnedDamage.ToString("##");
+			if (KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff> ().DamagePerSecond != 0) {
+				immolationDpsText.text = KingBehaviour.Current.GetComponent<Units.Spells.Buffs.ImmolationTickBuff> ().DamagePerSecond.ToString ("##") + "/sec";
+			}
+			if (KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive> ().ReturnedDamage != 0) {
+				thornsDamageText.text = KingBehaviour.Current.GetComponent<Units.Spells.Passives.ThornsPassive> ().ReturnedDamage.ToString ("##") + "%";
+			}
         }
     }
 }

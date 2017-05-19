@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LoadingSceneScript : MonoBehaviour {
 
@@ -31,7 +32,8 @@ public class LoadingSceneScript : MonoBehaviour {
 	}
 	IEnumerator LoadNewScene() {
 		yield return new WaitForSeconds(2);
-		AsyncOperation async = Application.LoadLevelAsync(scene);
+		//AsyncOperation async = Application.LoadLevelAsync(scene);  <- old command that was unsynched
+		AsyncOperation async = SceneManager.LoadSceneAsync(scene);  // changed it to this, leaving the previous one if this causes a bug
 
 		while (!async.isDone) {
 			textCount++;
