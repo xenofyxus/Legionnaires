@@ -205,6 +205,10 @@ namespace Game.Spawners
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.35f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.35f;
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor * 0.85f;
+							} else if (waveNumber == 8) {
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.40f;
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMin *= waveLoop * waveLoopFactor * 0.40f;
+								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().Hp *= waveLoop * waveLoopFactor * 0.95f; // this was 1 at v.1.0 
 							}
 							else {
 								lastSpawned.gameObject.GetComponent<Units.MinionBehaviour> ().DamageMax *= waveLoop * waveLoopFactor * 0.4f;
