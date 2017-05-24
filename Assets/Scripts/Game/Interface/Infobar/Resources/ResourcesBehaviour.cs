@@ -96,6 +96,8 @@ namespace Game.Interface.Infobar.Resources
 			set{ netWorth = value; }
 		}
 
+		[SerializeField]
+		private GameObject buildMessage;
 
 
 		private Text goldText = null;
@@ -105,6 +107,9 @@ namespace Game.Interface.Infobar.Resources
 		private Text supplyText = null;
 		private Text scoreText = null;
 		private Text netWorthText = null;
+
+		public static string confirmMessage = null;
+		private bool coroutineIsRunning = false;
 
 		void Update()
 		{
@@ -148,34 +153,94 @@ namespace Game.Interface.Infobar.Resources
 			netWorthText.text = Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent.ToString ();
 		}
 
-		public bool TryPayingGold(int gold)
+		public bool TryPayingGoldSupply(int gold, int supply)
 		{
-			if (gold > this.gold)
+			if (supply > supplyMax - this.supply || gold > this.gold) 
+			{
+				if(!coroutineIsRunning && gold > this.gold) 
+					StartCoroutine (ShowText ("Not enough gold"));
+				else if(!coroutineIsRunning) 
+					StartCoroutine(ShowText("Not enough supply"));
 				return false;
+			}
 			this.gold -= gold;
+			this.supply += supply;
+			if(!coroutineIsRunning) 
+				StartCoroutine (ShowText (confirmMessage));
 			return true;
 		}
 
 		public bool TryPayingWood(int wood)
 		{
-			if (wood > this.wood)
+			if (wood > this.wood) 
+			{
+				if(!coroutineIsRunning) 
+					StartCoroutine (ShowText ("Not enough wood"));
 				return false;
+			}
 			this.wood -= wood;
+			if(!coroutineIsRunning) 
+				StartCoroutine (ShowText ("Upgrade complete"));
 			return true;
 		}
 
-		public bool TryPaying(int gold, int wood)
+		public bool TryPayingGoldWood(int gold, int wood)
 		{
-			if (gold > this.gold || wood > this.wood)
+			if (gold > this.gold || wood > this.wood) 
+			{
+				if (!coroutineIsRunning && gold > this.gold)
+					StartCoroutine (ShowText ("Not enough gold"));
+				else if (!coroutineIsRunning)
+					StartCoroutine (ShowText ("Not enough wood"));
 				return false;
+			}
 			this.gold -= gold;
 			this.wood -= wood;
+			if(!coroutineIsRunning) 
+				StartCoroutine (ShowText (confirmMessage));
+			return true;
+		}
+		public bool TryPayingWoodSupply(int wood, int supply)
+		{
+			if (supply > supplyMax - this.supply || wood > this.wood) 
+			{
+				if(!coroutineIsRunning && wood > this.wood) 
+					StartCoroutine (ShowText ("Not enough wood"));
+				else if(!coroutineIsRunning) 
+					StartCoroutine(ShowText("Not enough supply"));
+				return false;
+			}
+			this.wood -= wood;
+			this.supply += supply;
+			if(!coroutineIsRunning) 
+				StartCoroutine (ShowText (confirmMessage));
 			return true;
 		}
 
 		public void ApplyGoldIncome()
 		{
 			gold += goldIncome;
+		}
+
+		//coroutine that shows message when trying to place tower, upgrade or anything alike, message fades until invisible and is deactivated
+		IEnumerator ShowText(string message){
+			coroutineIsRunning = true;
+			if (message.StartsWith("N")) {
+				buildMessage.GetComponent<TextMesh> ().color = Color.red;
+			} else {
+				buildMessage.GetComponent<TextMesh> ().color = Color.green;
+			}
+			buildMessage.GetComponent<TextMesh> ().text = message;
+			buildMessage.SetActive (true);
+			buildMessage.transform.position = new Vector2 (0f, GameObject.Find ("Main Camera").transform.position.y + 3);
+			for(float f = 1.0f; f >= 0.1; f -= 0.1f){
+				Color textColor = buildMessage.GetComponent<TextMesh> ().color;
+				textColor.a = f;
+				buildMessage.GetComponent<TextMesh> ().color = textColor;
+				yield return new WaitForSeconds(0.1f);
+			}
+			buildMessage.SetActive (false);
+			coroutineIsRunning = false;
 		}
 	}
 }

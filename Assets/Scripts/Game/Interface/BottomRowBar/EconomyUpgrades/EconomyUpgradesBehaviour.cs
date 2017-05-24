@@ -140,9 +140,10 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 
 		public void UpgradeGoldIncome()
 		{
-			if (resources.Supply < resources.SupplyMax && resources.TryPayingWood(minerWoodCost))
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Upgrade complete";
+			if (resources.TryPayingWoodSupply(minerWoodCost, 1))
 			{
-				resources.Supply++;
+				//resources.Supply++;
 				resources.GoldIncome += goldIncomeGain;
 				if (minerCurrentStep++ == minerStepInterval)
 				{
@@ -155,9 +156,10 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 
 		public void UpgradeWoodIncome()
 		{
-			if (resources.Supply < resources.SupplyMax && resources.TryPayingGold(woodcutterGoldCost))
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Upgrade complete";
+			if (resources.TryPayingGoldSupply(woodcutterGoldCost, 1))
 			{
-				resources.Supply++;
+				//resources.Supply++;
 				resources.WoodIncome += woodIncomeGain;
 				resources.Score += woodcutterGoldCost/10; // Increment score with woodcutter cost.
 				if (woodcutterCurrentStep++ == woodcutterStepInterval)
@@ -171,7 +173,8 @@ namespace Game.Interface.BottomRowBar.EconomyUpgrades
 
 		public void UpgradeSupply()
 		{
-			if (resources.TryPaying(supplyGoldCost, supplyWoodCost))
+			Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Upgrade complete";
+			if (resources.TryPayingGoldWood(supplyGoldCost, supplyWoodCost))
 			{
 				resources.SupplyMax += supplyGain;
 				resources.Score += supplyGoldCost/10; // Increment score with supply gold cost.

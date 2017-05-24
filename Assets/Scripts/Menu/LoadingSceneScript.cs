@@ -13,13 +13,18 @@ public class LoadingSceneScript : MonoBehaviour {
 	private int scene;
 	[SerializeField]
 	private Text loadingText;
+	[SerializeField]
+	private Text tipText;
 	private int textCount = 0;
+
+	private string[] tips = {"TIP: You can change legionnaire in settings.", "TIP: Magic attack is good vs Heavy armor.", "TIP: Build close to the walls for maximum stacking.", "TIP: Get high income to survive longer.", "TIP: Build tanks and melee in front.", "TIP: Audio can be disabled in settings."};
 
 	void Update() {
 
 		if (loadScene == false) {
 			loadScene = true;
 			loadingText.text = "Regenerating King";
+			tipText.text = tips [Random.Range (0, tips.Length)];
 			StartCoroutine(LoadNewScene());
 
 		}

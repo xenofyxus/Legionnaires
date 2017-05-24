@@ -48,12 +48,9 @@ namespace Game.Interface.GridBuilder
 		GameObject[,] towerGridPos = new GameObject[5, 6];
 		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 6];
 
-		private GameObject buildMessage;
 		// Use this for initialization
 		void Start ()
 		{
-			buildMessage = transform.Find("ConfirmationText").gameObject;
-			buildMessage.SetActive (false);
 			if (Settings.Current.LegionnaireBuilder == LegionnaireBuilder.Human) {
 				towersUsed = humanTowers;
 			}
@@ -93,18 +90,21 @@ namespace Game.Interface.GridBuilder
 				}
 			}
 			if (TowerMenu.TowerMenuBehaviour.placeTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem != -1) {
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Built" + '\n' + towersUsed[TowerMenu.TowerMenuBehaviour.currentMenuItem].upgradedTowers[0].name;
 				createTower ();
 				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
 				TowerMenu.TowerMenuBehaviour.placeTower = false;
 			}
 			if (TowerMenu.TowerMenuBehaviour.sellTower == true && TowerMenu.TowerMenuBehaviour.currentMenuItem == 0) {
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Sold" + '\n' + towerGridPosCopy[towerX, towerY].thisTower.name;
 				removeTower (0.5f);
 				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
 				TowerMenu.TowerMenuBehaviour.sellTower = false;
 			}
 			if (TowerMenu.TowerMenuBehaviour.upgradeConfirm == true && TowerMenu.TowerMenuBehaviour.currentMenuItem >= 1) {
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.confirmMessage = "Upgraded To" + '\n' +towersUsed[towerGridPosCopy[towerX, towerY].towerType].upgradedTowers[TowerMenu.TowerMenuBehaviour.currentMenuItem].name;
 				createTower ();
 				Interface.TooltipBar.TooltipBarBehaviour.Current.SetPanel("Hide");
 				TowerMenu.TowerMenuBehaviour.currentMenuItem = -1;
@@ -169,11 +169,10 @@ namespace Game.Interface.GridBuilder
 		void removeTower (float sellValue)
 		{	
 			setTile (towerX, towerY, null, Color.clear);
-			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply -= towerGridPosCopy [towerX, towerY].totalSupply;
 			if (Spawners.MinionSpawnerBehaviour.waveCounter == towerGridPosCopy [towerX, towerY].waveCreated) {
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += towerGridPosCopy [towerX, towerY].totalCost;
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGoldSupply (-towerGridPosCopy [towerX, towerY].totalCost, -towerGridPosCopy [towerX, towerY].totalSupply);
 			} else {
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Gold += Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost);
+				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGoldSupply (-Mathf.RoundToInt (sellValue * towerGridPosCopy [towerX, towerY].cost), -towerGridPosCopy [towerX, towerY].totalSupply);
 			}
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent -= towerGridPosCopy [towerX, towerY].totalCost;
 			Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score -= towerGridPosCopy [towerX, towerY].totalCost / 10;
@@ -195,18 +194,7 @@ namespace Game.Interface.GridBuilder
 		//checks if theres enough supply left and money to build a tower
 		bool checkResources (GameObject tower)
 		{
-			if (currentSupply + tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
-				if (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGold (tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost)) {
-					StartCoroutine (ShowText ("Build complete"));
-					return true;
-				} else {
-					StartCoroutine (ShowText("Not enough gold"));
-					return false;
-				}
-			} else{
-				StartCoroutine (ShowText("Not enough supply"));		
-				return false;
-			}
+			return (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGoldSupply (tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost, tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply));
 		}
 
 		//saves the tower so it can be re-created
@@ -222,7 +210,7 @@ namespace Game.Interface.GridBuilder
 				towerGridPosCopy [X, Y].totalCost += towerGridPosCopy [X, Y].cost;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Score += towerGridPosCopy [X, Y].cost / 10;
 				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.GoldSpent += towerGridPosCopy [X, Y].cost;
-				Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
+				//Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.Supply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 				towerGridPosCopy [X, Y].totalSupply += towerGridPosCopy [X, Y].thisTower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply;
 			}
 		}
@@ -235,24 +223,6 @@ namespace Game.Interface.GridBuilder
 					towerGridPosCopy [i, j] = new TowerInfo ();
 				}
 			}
-		}
-		//coroutine that shows message when trying to place tower, message fades until invisible and is deactivated
-		IEnumerator ShowText(string message){
-			if (message == "Build complete") {
-				buildMessage.GetComponent<TextMesh> ().color = Color.green;
-			} else {
-				buildMessage.GetComponent<TextMesh> ().color = Color.red;
-			}
-			buildMessage.GetComponent<TextMesh> ().text = message;
-			buildMessage.SetActive (true);
-			buildMessage.transform.position = new Vector2 (0f, 12f);
-			for(float f = 1.0f; f >= 0; f -= 0.1f){
-				Color textColor = buildMessage.GetComponent<TextMesh> ().color;
-				textColor.a = f;
-				buildMessage.GetComponent<TextMesh> ().color = textColor;
-				yield return new WaitForSeconds(0.1f);
-			}
-			buildMessage.SetActive (false);
 		}
 	}
 }
