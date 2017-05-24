@@ -47,9 +47,13 @@ namespace Game.Interface.GridBuilder
 		public TowerList[] towersUsed = new TowerList[6];
 		GameObject[,] towerGridPos = new GameObject[5, 6];
 		public TowerInfo[,] towerGridPosCopy = new TowerInfo[5, 6];
+
+		private GameObject buildMessage;
 		// Use this for initialization
 		void Start ()
 		{
+			buildMessage = transform.Find("ConfirmationText").gameObject;
+			buildMessage.SetActive (false);
 			if (Settings.Current.LegionnaireBuilder == LegionnaireBuilder.Human) {
 				towersUsed = humanTowers;
 			}
@@ -193,11 +197,16 @@ namespace Game.Interface.GridBuilder
 		{
 			if (currentSupply + tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Supply <= maxSupply) {
 				if (Game.Interface.Infobar.Resources.ResourcesBehaviour.Current.TryPayingGold (tower.GetComponent<Game.Units.LegionnaireBehaviour> ().Cost)) {
+					StartCoroutine (ShowText ("Build complete"));
 					return true;
-				} else
+				} else {
+					StartCoroutine (ShowText("Not enough gold"));
 					return false;
-			} else
+				}
+			} else{
+				StartCoroutine (ShowText("Not enough supply"));		
 				return false;
+			}
 		}
 
 		//saves the tower so it can be re-created
@@ -226,6 +235,24 @@ namespace Game.Interface.GridBuilder
 					towerGridPosCopy [i, j] = new TowerInfo ();
 				}
 			}
+		}
+		//coroutine that shows message when trying to place tower, message fades until invisible and is deactivated
+		IEnumerator ShowText(string message){
+			if (message == "Build complete") {
+				buildMessage.GetComponent<TextMesh> ().color = Color.green;
+			} else {
+				buildMessage.GetComponent<TextMesh> ().color = Color.red;
+			}
+			buildMessage.GetComponent<TextMesh> ().text = message;
+			buildMessage.SetActive (true);
+			buildMessage.transform.position = new Vector2 (0f, 12f);
+			for(float f = 1.0f; f >= 0; f -= 0.1f){
+				Color textColor = buildMessage.GetComponent<TextMesh> ().color;
+				textColor.a = f;
+				buildMessage.GetComponent<TextMesh> ().color = textColor;
+				yield return new WaitForSeconds(0.1f);
+			}
+			buildMessage.SetActive (false);
 		}
 	}
 }
